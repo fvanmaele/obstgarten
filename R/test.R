@@ -25,6 +25,7 @@ c2 <- .Tree(childs = list(), depth = 2)
 
 #---------------------------------------
 #R6 test
+library(R6)
 
 Tree <- R6Class("Tree", list(
   name = NULL,
