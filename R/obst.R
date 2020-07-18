@@ -1,8 +1,9 @@
-Obst <- R6::R6Class("Obst",
+# TODO: packen in private() wo Zugriff ausserhalb der Klasse nicht notwendig ist
+Gabel <- R6::R6Class("Gabel",
   public = list(
     # differentiate between unset (NA) and undefined (NULL)
-    child_left = NA,
-    child_right = NA,
+    childL = NA,
+    childR = NA,
     parent = NA,
     label = NA_integer_, # unique node labeling through integers 0...N
     depth = 0L,
@@ -20,8 +21,8 @@ Obst <- R6::R6Class("Obst",
 
     # create edges between tree nodes (bi-directional)
     setChildren = function(Node1, Node2) { # &Node1, &Node2
-      stopifnot(class(Node1) == "Obst")
-      stopifnot(class(Node2) == "Obst")
+      stopifnot(class(Node1) == "Gabel")
+      stopifnot(class(Node2) == "Gabel")
 
       # check labels for uniqueness
       stopifnot("each node must be identified by a label"
@@ -32,8 +33,8 @@ Obst <- R6::R6Class("Obst",
                 = self$label != Node2$label)
 
       # set child pointers
-      self$child_left  <- Node1 # *Obst child_left = Node1
-      self$child_right <- Node2 # *Obst child_right = Node2
+      self$childL <- Node1 # *Gabel childL = Node1
+      self$childR <- Node2 # *Gabel childR = Node2
 
       # set parent pointers and increment depth
       Node1$parent <- self
@@ -42,8 +43,8 @@ Obst <- R6::R6Class("Obst",
       Node2$depth  <- self$depth + 1
     },
 
-    is_leaf = function() {
-      all(is.na(child_left), is.na(child_right))
+    is_obst = function() {
+      all(is.na(childL), is.na(childR))
     },
 
     print = function(...) {
@@ -52,14 +53,14 @@ Obst <- R6::R6Class("Obst",
       cat("  s: ", self$j, "\n", sep = "")
       cat("  y: ", self$y, "\n", sep = "")
       cat("  Teilbaumtiefe:  ", self$depth, "\n", sep = "")
-      cat("  Blatt:  ", self$is_leaf(), "\n", sep = "")
+      cat("  Blatt:  ", self$is_obst(), "\n", sep = "")
 
       invisible(self)
     }
   )
 )
 
-Obstbaum <- R6::R6Class("Obstbaum",
+Baum <- R6::R6Class("Baum",
   public = list(
     # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
     nodes = list(),
@@ -67,7 +68,7 @@ Obstbaum <- R6::R6Class("Obstbaum",
     root = function() { return(nodes[[0]]) },
 
     initialize = function(Root) {
-      stopifnot(class(Root) == "Obst")
+      stopifnot(class(Root) == "Gabel")
       stopifnot("the root node must have label 0" = Node$label == 0L)
       self$nodes[[0]] <- Root
     },
@@ -89,8 +90,8 @@ Obstbaum <- R6::R6Class("Obstbaum",
 
       # disallow appending if parent node is not a leaf
       parentNode <- self$nodes[[label]] # range check with [[
-      stopifnot(is.na(parentNode$child_left))
-      stopifnot(is.na(parentNode$child_right))
+      stopifnot(is.na(parentNode$childL))
+      stopifnot(is.na(parentNode$childR))
 
       # increment labels from $label, left to right
       Node1$label <- label+1
@@ -105,10 +106,6 @@ Obstbaum <- R6::R6Class("Obstbaum",
     dfs = function() {
       # TODO
     }
-
-    validate = function() {
-      # TODO: check for cycles (DFS)
-    },
 
     print = function(...) {
       # TODO: traverse tree (DFS)

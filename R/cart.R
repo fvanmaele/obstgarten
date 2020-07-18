@@ -17,7 +17,7 @@ isCart <- function(Tree, ...) {
   UseMethod("isCart")
 }
 
-isCart.Obstbaum <- function(Tree, mode) {
+isCart.Baum <- function(Tree, mode) {
   # TODO
 }
 
@@ -45,6 +45,10 @@ plotCart <- function(Tree) {
   UseMethod("plotCart")
 }
 
+plotCart.Baum <- function(Tree) {
+  #TODO
+}
+
 #' Return a pruned subtree of a given tree,
 #'
 #' A pruned subtree is a subtree with the same root as the tree it is taken from.
@@ -55,11 +59,11 @@ pruneBranch <- function(Tree, ...) {
   UseMethod("pruneBranch")
 }
 
-pruneBranch.Obstbaum <- function(Tree, Node) {
+pruneBranch.Baum <- function(Tree, Node) {
   #TODO
 }
 
-#' Evaluates a decision rule
+#' Evaluate a decision rule
 #'
 #' The decision rule on a CART is given by:
 #' \deqn{f(x) = \sum_{m=1}{#T} y_m I_{A_{m}(x)}}
@@ -73,7 +77,7 @@ evalCart <- function(Tree, ...) {
   UseMethod("evalCart")
 }
 
-evalCart.Obstbaum <- function(Tree, x) {
+evalCart.Baum <- function(Tree, x) {
   #TODO
 }
 
@@ -82,10 +86,10 @@ addSiblings <- function(Tree, ...) {
   UseMethod("addSiblings")
 }
 
-addSiblings.Obstbaum <- function(Tree, Node, Child0, Child1) {
-  stopifnot(class(Node) == "Obst")
-  stopifnot(class(Child0) == "Obst")
-  stopifnot(class(Child1) == "Obst")
+addSiblings.Baum <- function(Tree, Node, Child0, Child1) {
+  stopifnot(class(Node) == "Gabel")
+  stopifnot(class(Child0) == "Gabel")
+  stopifnot(class(Child1) == "Gabel")
   #Node$setChildren(Child0, Child1)
 }
 
