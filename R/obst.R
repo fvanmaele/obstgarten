@@ -35,13 +35,11 @@ Obst <- R6::R6Class("Obst",
       self$child_left  <- Node1 # *Obst child_left = Node1
       self$child_right <- Node2 # *Obst child_right = Node2
 
-      # set parent pointers
+      # set parent pointers and increment depth
       Node1$parent <- self
       Node2$parent <- self
-
-      # increment depth
-      Node1$depth <- self$depth + 1
-      Node2$depth <- self$depth + 1
+      Node1$depth  <- self$depth + 1
+      Node2$depth  <- self$depth + 1
     },
 
     is_leaf = function() {
@@ -68,10 +66,10 @@ Obstbaum <- R6::R6Class("Obstbaum",
     # In particular, nodes[[0]] == root
     root = function() { return(nodes[[0]]) },
 
-    initialize = function(Node) {
-      stopifnot(class(Node) == "Obst")
+    initialize = function(Root) {
+      stopifnot(class(Root) == "Obst")
       stopifnot("the root node must have label 0" = Node$label == 0L)
-      self$nodes[[0]] <- Node
+      self$nodes[[0]] <- Root
     },
 
     #' @description
@@ -85,22 +83,23 @@ Obstbaum <- R6::R6Class("Obstbaum",
     #' @param Node
     #' @return
     append = function(label, Node1, Node2) { # Parent, Child1, Child2
-      parent <- self$nodes[[label]] # range check with [[
-
       # labels are initialized inside the tree
       stopifnot(identical(Node1$label, NA_integer_))
       stopifnot(identical(Node2$label, NA_integer_))
 
-      # disallow appending if parent is not a leaf
-      stopifnot(is.na(parent$child_left))
-      stopifnot(is.na(parent$child_right))
+      # disallow appending if parent node is not a leaf
+      parentNode <- self$nodes[[label]] # range check with [[
+      stopifnot(is.na(parentNode$child_left))
+      stopifnot(is.na(parentNode$child_right))
 
       # increment labels from $label, left to right
-      Node1$label = label + 1
-      Node2$label = label + 2
+      Node1$label <- label+1
+      Node2$label <- label+2
+      self$nodes[[label+1]] <- Node1
+      self$nodes[[label+2]] <- Node2
 
-      # use Node::setChildren for remaining logic
-      parent$setChildren(Node1, Node2)
+      # set bi-directional edges with Node::setChildren
+      parentNode$setChildren(Node1, Node2)
     },
 
     dfs = function() {
