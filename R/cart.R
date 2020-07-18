@@ -61,8 +61,7 @@ plotCart.default <- function(Tree) {
 #' A pruned subtree is a subtree with the same root as the tree it is taken from.
 #' @param Tree the tree to prune.
 #' @param Node the first node of the branch to remove.
-#' @return Subtree with the same root. The return value should be a copy and not
-#'   modify the specified tree.
+#' @return A list containing the leaves of the pruned subtree.
 pruneBranch <- function(Tree, Node) {
   UseMethod("pruneBranch")
 }
@@ -71,8 +70,7 @@ pruneBranch <- function(Tree, Node) {
 #'
 #' @param Tree the tree to prune.
 #' @param Node the first node of the branch to remove.
-#' @return Deep copy of the the matching nodes of the original tree
-#'   (data.tree.Clone)
+#' @return A list containing the leaves of the pruned subtree.
 pruneBranch.data.tree <- function(Tree, Node) {
   #TODO
 }
