@@ -2,53 +2,29 @@
 #'
 #' This means:
 #' * The tree is a binary tree.
-#' * Every inner node (a node with 2 child nodes) has a split index (integer) and a split
-#'   point (numeric) attribute.
+#' * Every inner node (a node with 2 child nodes) has a split index (integer)
+#'   and a split point (numeric) attribute.
 #' * Every leaf has a value y as attribute. For a regression tree, y is numeric;
 #'   for a classification tree, y is an integer.
 #'
-#' @param Tree the tree to check. isCart() is generic and can be implemented for any graph data structure (e.g. igraph).
-#' @param mode "regression" for a regression tree, "classification" for a classification tree.
+#' @param Tree the tree to check. isCart() is generic and can be implemented for
+#'   any graph data structure (e.g. igraph).
+#' @param mode "regression" for a regression tree, "classification" for a
+#'   classification tree.
 #' @return TRUE if Tree is a regression or classification tree, FALSE otherwise.
 #' @seealso [isRegressionTree()], [isClassificationTree()]
 isCart <- function(Tree, ...) {
-  UseMethod("isCart", Tree)
-}
-
-#' Implementation of isCart() for data.tree (data.tree package).
-isCart.Node <- function(Tree, mode) {
-  stopifnot(mode == "regression" || mode == "classification")
-  # visit all nodes and check for attributes and amount of children
-  n <- length(Tree$children)
-
-  if (n == 2 && all(is.numeric(Tree$s), is.integer(Tree$j))) {
-    # inner node: split index and split point (ok) -> visit children
-    return(all(sapply(Tree$children, isCart)))
-  } else if (n == 2) {
-    return(FALSE) # inner node: invalid attributes
-  } else if (n == 0) { # leaf: value y
-    if (mode == "regression") {
-      return(is.numeric(Tree$y))
-    } else if (mode == "classification") {
-      return(is.integer(Tree$y))
-    } # no other modes
-  } else { # n-ary tree, n \in 1,3,..
-    return(FALSE)
-  }
+  UseMethod("isCart")
 }
 
 isCart.Obstbaum <- function(Tree, mode) {
   # TODO
 }
 
-isCart.default <- function(Tree) {
-  stop("argument Tree does not belong to a supported tree class")
-}
-
 #' Use isCart() to check if a given tree is a regression tree
 #'
 #' @param Tree the tree to check.
-#' @return TRUE if Tree is a regression tree, FALSE otherwise.
+#' @return TRUE for a regression tree, FALSE otherwise.
 isRegressionTree <- function(Tree) {
   return(isCart(Tree, mode = "regression"))
 }
@@ -56,7 +32,7 @@ isRegressionTree <- function(Tree) {
 #' Use isCart() to check if a given tree is a classification tree
 #'
 #' @param Tree the tree to check.
-#' @return TRUE if Tree is a regression tree, FALSE otherwise.
+#' @return TRUE for a classification tree, FALSE otherwise.
 isClassificationTree <- function(Tree) {
   return(isCart(Tree, mode = "classification"))
 }
@@ -69,37 +45,18 @@ plotCart <- function(Tree) {
   UseMethod("plotCart")
 }
 
-#' Implementation of plotCart() for data.tree
-plotCart.Node <- function(Tree) {
-  # TODO
-}
-
-plotCart.default <- function(Tree) {
-  stop("argument Tree does not belong to a supported tree class")
-}
-
 #' Return a pruned subtree of a given tree,
 #'
 #' A pruned subtree is a subtree with the same root as the tree it is taken from.
 #' @param Tree the tree to prune.
 #' @param Node the first node of the branch to remove.
 #' @return A list containing the leaves of the pruned subtree.
-pruneBranch <- function(Tree, Node) {
+pruneBranch <- function(Tree, ...) {
   UseMethod("pruneBranch")
 }
 
-#' Implementation of pruneBranch() for data.tree
-#'
-#' @param Tree the tree to prune.
-#' @param Node the first node of the branch to remove.
-#' @return A list containing the leaves of the pruned subtree.
-pruneBranch.Node <- function(Tree, Node) {
-  # TODO
-}
-
-pruneBranch.default <- function(Tree, Node) {
-  # Note: polymorphism on first argument class(Tree)
-  stop("argument Tree does not belong to a supported tree class")
+pruneBranch.Obstbaum <- function(Tree, Node) {
+  #TODO
 }
 
 #' Evaluates a decision rule
@@ -112,28 +69,23 @@ pruneBranch.default <- function(Tree, Node) {
 #' @param Tree the CART to evaluate.
 #' @param x a numeric vector representing a given data point x.
 #' @return
-evalCart <- function(Tree, x) {
+evalCart <- function(Tree, ...) {
   UseMethod("evalCart")
 }
 
-evalCart.Node <- function(Tree, x) {
-  # TODO
+evalCart.Obstbaum <- function(Tree, x) {
+  #TODO
 }
 
-evalCart.default <- function(Tree, x) {
-  stop("argument Tree does not belong to a supported tree class")
-}
-
-addSiblings <- function(Node, Child0, Child1) {
+# TODO: Node or Tree?
+addSiblings <- function(Tree, ...) {
   UseMethod("addSiblings")
 }
 
-addSiblings.Node <- function(Node, Child0, Child1) {
-  stopifnot(class(Node) == class(Child0))
-  stopifnot(class(node) == class(Child1))
-  # TODO
+addSiblings.Obstbaum <- function(Tree, Node, Child0, Child1) {
+  stopifnot(class(Node) == "Obst")
+  stopifnot(class(Child0) == "Obst")
+  stopifnot(class(Child1) == "Obst")
+  #Node$setChildren(Child0, Child1)
 }
 
-addSiblings.default <- function(Node, Child0, Child1) {
-  stop("argument Node does not belong to a supported node class")
-}
