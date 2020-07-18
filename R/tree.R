@@ -47,7 +47,7 @@ Tree <- R6Class("Tree", list(
   }
 ))
 
-Node <- R6Class("Node", list(
+TreeNode <- R6Class("TreeNode", list(
   s = NULL,
   y = NULL,
   left_child = 0,
@@ -83,45 +83,45 @@ Node <- R6Class("Node", list(
   },
 
   get_depth = function(){
-    if(class(self$left_child) != "Node" && class(self$right_child) != "Node"){
+    if(class(self$left_child) != "TreeNode" && class(self$right_child) != "TreeNode"){
       return(1)
     }
-    if(class(self$left_child) == "Node" && class(self$right_child) != "Node"){
+    if(class(self$left_child) == "TreeNode" && class(self$right_child) != "TreeNode"){
       return(self$left_child$get_depth() + 1)
     }
-    if(class(self$left_child) != "Node" && class(self$right_child) == "Node"){
+    if(class(self$left_child) != "TreeNode" && class(self$right_child) == "TreeNode"){
       return(self$right_child$get_depth() + 1)
     }
     return(max(self$left_child$get_depth() + 1, self$right_child$get_depth() + 1))
   },
 
   get_s = function(){
-    if(class(self$left_child) != "Node" && class(self$right_child) != "Node"){
+    if(class(self$left_child) != "TreeNode" && class(self$right_child) != "TreeNode"){
       return(self$s)
     }
-    if(class(self$left_child) == "Node" && class(self$right_child) != "Node"){
+    if(class(self$left_child) == "TreeNode" && class(self$right_child) != "TreeNode"){
       return(c(self$left_child$get_s(), self$s))
     }
-    if(class(self$left_child) != "Node" && class(self$right_child) == "Node"){
+    if(class(self$left_child) != "TreeNode" && class(self$right_child) == "TreeNode"){
       return(c(self$s ,self$right_child$get_s()))
     }
     return( c(self$left_child$get_s(), self$s, self$right_child$get_s()) )
   },
 
   get_y = function(){
-    if(class(self$left_child) != "Node" && class(self$right_child) != "Node"){
+    if(class(self$left_child) != "TreeNode" && class(self$right_child) != "TreeNode"){
       return(self$y)
     }
-    if(class(self$left_child) == "Node" && class(self$right_child) != "Node"){
+    if(class(self$left_child) == "TreeNode" && class(self$right_child) != "TreeNode"){
       return(c(self$left_child$get_y(), self$y))
     }
-    if(class(self$left_child) != "Node" && class(self$right_child) == "Node"){
+    if(class(self$left_child) != "TreeNode" && class(self$right_child) == "TreeNode"){
       return(c(self$y ,self$right_child$get_y()))
     }
     return( c(self$left_child$get_y(), self$right_child$get_y()) )
   },
 
-  is_leef = function(){
+  is_leaf = function(){
     return( self$get_depth() == 1 )
   }
 ))
