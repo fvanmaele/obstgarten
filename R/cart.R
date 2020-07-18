@@ -8,32 +8,37 @@
 #'   for a classification tree, y is an integer.
 #'
 #' @param Tree the tree to check. isCart() is generic and can be implemented for any graph data structure (e.g. igraph).
-#' @return 1 for a regression tree, 2 for a classification tree, and 0 otherwise.
+#' @param mode "regression" for a regression tree, "classification" for a classification tree.
+#' @return TRUE if Tree is a regression or classification tree, FALSE otherwise.
 #' @seealso [isRegressionTree()], [isClassificationTree()]
-isCart <- function(Tree) {
-  UseMethod("isCart")
+isCart <- function(Tree, ...) {
+  UseMethod("isCart", Tree)
 }
 
 #' Implementation of isCart() for data.tree (data.tree package).
-isCart.data.tree <- function(Tree) {
+isCart.Node <- function(Tree, mode) {
+  stopifnot(mode == "regression" || mode == "classification")
   # visit all nodes and check for attributes and amount of children
-  children <- Tree$children
-  if (n == 2) { # inner node, split index and split point
-    if (!all(is.numeric(Tree$s), is.integer(Tree$j))) {
-      return(0)
-    }
-    return(isCart.data.tree(children))
-  } else if (n == 0) { # leaf, value y
-    if (is.numeric(Tree$y)) {
-      return(1)
-    } else if (is.integer(Tree$y)) {
-      return(2)
-    } else {
-      return(0)
-    }
+  n <- length(Tree$children)
+
+  if (n == 2 && all(is.numeric(Tree$s), is.integer(Tree$j))) {
+    # inner node: split index and split point (ok) -> visit children
+    return(all(sapply(Tree$children, isCart)))
+  } else if (n == 2) {
+    return(FALSE) # inner node: invalid attributes
+  } else if (n == 0) { # leaf: value y
+    if (mode == "regression") {
+      return(is.numeric(Tree$y))
+    } else if (mode == "classification") {
+      return(is.integer(Tree$y))
+    } # no other modes
   } else { # n-ary tree, n \in 1,3,..
-    return(0)
+    return(FALSE)
   }
+}
+
+isCart.Obstbaum <- function(Tree, mode) {
+  # TODO
 }
 
 isCart.default <- function(Tree) {
@@ -45,7 +50,7 @@ isCart.default <- function(Tree) {
 #' @param Tree the tree to check.
 #' @return TRUE if Tree is a regression tree, FALSE otherwise.
 isRegressionTree <- function(Tree) {
-  return(isCart(Tree) == 1)
+  return(isCart(Tree, mode = "regression"))
 }
 
 #' Use isCart() to check if a given tree is a classification tree
@@ -53,7 +58,7 @@ isRegressionTree <- function(Tree) {
 #' @param Tree the tree to check.
 #' @return TRUE if Tree is a regression tree, FALSE otherwise.
 isClassificationTree <- function(Tree) {
-  return(isCart(Tree) == 2)
+  return(isCart(Tree, mode = "classification"))
 }
 
 #' Visualize a regression or classification tree
@@ -65,8 +70,8 @@ plotCart <- function(Tree) {
 }
 
 #' Implementation of plotCart() for data.tree
-plotCart.data.tree <- function(Tree) {
-  #TODO
+plotCart.Node <- function(Tree) {
+  # TODO
 }
 
 plotCart.default <- function(Tree) {
@@ -88,8 +93,8 @@ pruneBranch <- function(Tree, Node) {
 #' @param Tree the tree to prune.
 #' @param Node the first node of the branch to remove.
 #' @return A list containing the leaves of the pruned subtree.
-pruneBranch.data.tree <- function(Tree, Node) {
-  #TODO
+pruneBranch.Node <- function(Tree, Node) {
+  # TODO
 }
 
 pruneBranch.default <- function(Tree, Node) {
@@ -111,8 +116,8 @@ evalCart <- function(Tree, x) {
   UseMethod("evalCart")
 }
 
-evalCart.data.tree <- function(Tree, x) {
-  #TODO
+evalCart.Node <- function(Tree, x) {
+  # TODO
 }
 
 evalCart.default <- function(Tree, x) {

@@ -29,6 +29,7 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Suggests: 
-    testthat
+    testthat,
+    data.tree
 Imports: 
     R6 (>= 2.4.1)
