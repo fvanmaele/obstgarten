@@ -2,8 +2,8 @@
 #'
 #' This means:
 #' * The tree is a binary tree.
-#' * Every inner node (a node with 2 child nodes) has a split index and a split
-#'   point attribute.
+#' * Every inner node (a node with 2 child nodes) has a split index (integer) and a split
+#'   point (numeric) attribute.
 #' * Every leaf has a value y as attribute. For a regression tree, y is numeric;
 #'   for a classification tree, y is an integer.
 #'
@@ -16,7 +16,24 @@ isCart <- function(Tree) {
 
 #' Implementation of isCart() for data.tree (data.tree package).
 isCart.data.tree <- function(Tree) {
-  #TODO
+  # visit all nodes and check for attributes and amount of children
+  children <- Tree$children
+  if (n == 2) { # inner node, split index and split point
+    if (!all(is.numeric(Tree$s), is.integer(Tree$j))) {
+      return(0)
+    }
+    return(isCart.data.tree(children))
+  } else if (n == 0) { # leaf, value y
+    if (is.numeric(Tree$y)) {
+      return(1)
+    } else if (is.integer(Tree$y)) {
+      return(2)
+    } else {
+      return(0)
+    }
+  } else { # n-ary tree, n \in 1,3,..
+    return(0)
+  }
 }
 
 isCart.default <- function(Tree) {
