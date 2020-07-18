@@ -1,4 +1,4 @@
-Tree <- R6Class("Tree", list(
+Tree <- R6::R6Class("Tree", list(
   name = NULL,
   root = NA,
   sub_root = NA,
@@ -47,7 +47,7 @@ Tree <- R6Class("Tree", list(
   }
 ))
 
-TreeNode <- R6Class("TreeNode", list(
+TreeNode <- R6::R6Class("TreeNode", list(
   s = NULL,
   y = NULL,
   left_child = 0,
