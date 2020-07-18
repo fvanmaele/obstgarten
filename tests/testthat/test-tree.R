@@ -1,11 +1,11 @@
 context("tree and node classes")
 
 test_that("add nodes to binary tree", {
-  a <- Node$new()
-  a$add_left_child(Node$new())
-  a$add_right_child(Node$new())
-  a$left_child$add_left_child(Node$new())
-  a$left_child$add_right_child(Node$new())
+  a <- TreeNode$new()
+  a$add_left_child(TreeNode$new())
+  a$add_right_child(TreeNode$new())
+  a$left_child$add_left_child(TreeNode$new())
+  a$left_child$add_right_child(TreeNode$new())
   b_tree1 <- Tree$new("binary tree 1", a)
   b_tree1
   a
@@ -13,13 +13,13 @@ test_that("add nodes to binary tree", {
 
   create_tree <- function(node, depth){
     if(depth > 0){
-      node$add_left_child(Node$new())
-      node$add_right_child(Node$new())
+      node$add_left_child(TreeNode$new())
+      node$add_right_child(TreeNode$new())
       create_tree(node$get_left_child(), depth - 1)
       create_tree(node$get_right_child(), depth - 1)
     }
   }
-  b <- Node$new()
+  b <- TreeNode$new()
   create_tree(b, 10)
   b_tree2 <- Tree$new("binary tree 2", b)
   b_tree2
@@ -38,8 +38,8 @@ test_that("populate tree with normally distributed data", {
     if(depth > 0){
       s = mean(x)
       node$s = s
-      node$add_left_child(Node$new())
-      node$add_right_child(Node$new())
+      node$add_left_child(TreeNode$new())
+      node$add_right_child(TreeNode$new())
       create_regression_tree(node$get_left_child(), x[x<s], y[x<s], depth - 1)
       create_regression_tree(node$get_right_child(), x[x>=s], y[x>=s], depth - 1)
     }
@@ -48,7 +48,7 @@ test_that("populate tree with normally distributed data", {
     }
   }
 
-  b <- Node$new()
+  b <- TreeNode$new()
   create_regression_tree(b, x, y, 3)
   b_regression_tree <- Tree$new("binary regression tree", b)
   b_regression_tree
