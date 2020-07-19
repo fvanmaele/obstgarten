@@ -1,7 +1,5 @@
-# TODO: packen in private() wo Zugriff ausserhalb der Klasse nicht notwendig ist
 Gabel <- R6::R6Class("Gabel",
   public = list(
-    # TODO: differentiate between unset (NA) and undefined (NULL)
     childL = NULL,
     childR = NULL,
     parent = NULL,
@@ -39,10 +37,17 @@ Gabel <- R6::R6Class("Gabel",
       all(is.null(self$childL), is.null(self$childR))
     },
 
+    # get set
     # TODO: print partition
     print = function(...) {
       cat("Knoten: \n")
       cat("  Label: ", self$label, "\n", sep = "")
+      if (!is.null(self$parent))
+        cat("  Elternknoten: ", self$parent$label, "\n", sep = "")
+      if(!is.null(self$childL))
+        cat("  Kind (L): ", self$childL$label, "\n", sep = "")
+      if(!is.null(self$childR))
+        cat("  Kind (R): ", self$childR$label, "\n", sep = "")
       cat("  s: ", self$s, "\n", sep = "")
       cat("  j: ", self$j, "\n", sep = "")
       cat("  y: ", self$y, "\n", sep = "")
@@ -56,15 +61,19 @@ Gabel <- R6::R6Class("Gabel",
 
 Baum <- R6::R6Class("Baum",
   public = list(
-    # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
-    nodes = list(),
-    # In particular, nodes[[1]] == root
-    root = function() { return(nodes[[1]]) },
+    nodes = list(), # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
+    leaves = list(),
 
     initialize = function(Root) {
       stopifnot("the root node must have label 1" = Root$label == 1L)
       stopifnot("the root node must have depth 0" = Root$depth == 0L)
+
       self$nodes[[1]] <- Root
+      self$leaves[[1]] <- 1L
+    },
+
+    obstkorb = function() {
+      return(self$nodes[which(!is.na(self$leaves))])
     },
 
     #' @description
@@ -78,8 +87,9 @@ Baum <- R6::R6Class("Baum",
     #' @param Node
     #' @return
     append = function(label, Node1, Node2) { # Parent, Child1, Child2
-      # disallow appending if parent node is not a leaf
       parentNode <- self$nodes[[label]] # range check with [[
+
+      # disallow appending if parent node is not a leaf
       stopifnot(is.null(parentNode$childL))
       stopifnot(is.null(parentNode$childR))
 
@@ -93,10 +103,9 @@ Baum <- R6::R6Class("Baum",
       # append nodes to tree
       self$nodes[[label+1]] <- Node1
       self$nodes[[label+2]] <- Node2
-    },
 
-    dfs = function() {
-      stop("function not implemented") # TODO
+      # update labels of leaves
+      self$leaves[c(label, label+1, label+2)] <- c(NA, label+1, label+2)
     },
 
     print = function(...) {
