@@ -5,7 +5,7 @@ Gabel <- R6::R6Class("Gabel",
     childL = NA,
     childR = NA,
     parent = NA,
-    label = NA_integer_, # unique node labeling through integers 0...N
+    label = NA_integer_, # unique node labeling through integers 1...N
     depth = 0L,
     partition = list(), # induced partition of space X (CART algorithm)
 
@@ -14,16 +14,8 @@ Gabel <- R6::R6Class("Gabel",
     j = NA_integer_,
     y = NA, # < NA_integer_, NA_real_
 
-    initialize = function(label) {
-      stopifnot(is.integer(label))
-      self$label <- label # label is required
-    },
-
     # create edges between tree nodes (bi-directional)
     setChildren = function(Node1, Node2) { # &Node1, &Node2
-      stopifnot(class(Node1) == "Gabel")
-      stopifnot(class(Node2) == "Gabel")
-
       # check labels for uniqueness
       stopifnot("each node must be identified by a label"
                 = !anyNA(c(self$label, Node1$label, Node2$label)))
@@ -44,13 +36,13 @@ Gabel <- R6::R6Class("Gabel",
     },
 
     is_obst = function() {
-      all(is.na(childL), is.na(childR))
+      all(is.na(self$childL), is.na(self$childR))
     },
 
     print = function(...) {
       cat("Knoten: \n")
       cat("  s: ", self$s, "\n", sep = "")
-      cat("  s: ", self$j, "\n", sep = "")
+      cat("  j: ", self$j, "\n", sep = "")
       cat("  y: ", self$y, "\n", sep = "")
       cat("  Teilbaumtiefe:  ", self$depth, "\n", sep = "")
       cat("  Blatt:  ", self$is_obst(), "\n", sep = "")
@@ -64,13 +56,13 @@ Baum <- R6::R6Class("Baum",
   public = list(
     # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
     nodes = list(),
-    # In particular, nodes[[0]] == root
-    root = function() { return(nodes[[0]]) },
+    # In particular, nodes[[1]] == root
+    root = function() { return(nodes[[1]]) },
 
     initialize = function(Root) {
-      stopifnot(class(Root) == "Gabel")
-      stopifnot("the root node must have label 0" = Node$label == 0L)
-      self$nodes[[0]] <- Root
+      stopifnot("the root node must have label 1" = Root$label == 1L)
+      stopifnot("the root node must have depth 0" = Root$depth == 0L)
+      self$nodes[[1]] <- Root
     },
 
     #' @description
@@ -84,10 +76,6 @@ Baum <- R6::R6Class("Baum",
     #' @param Node
     #' @return
     append = function(label, Node1, Node2) { # Parent, Child1, Child2
-      # labels are initialized inside the tree
-      stopifnot(identical(Node1$label, NA_integer_))
-      stopifnot(identical(Node2$label, NA_integer_))
-
       # disallow appending if parent node is not a leaf
       parentNode <- self$nodes[[label]] # range check with [[
       stopifnot(is.na(parentNode$childL))
@@ -96,16 +84,18 @@ Baum <- R6::R6Class("Baum",
       # increment labels from $label, left to right
       Node1$label <- label+1
       Node2$label <- label+2
-      self$nodes[[label+1]] <- Node1
-      self$nodes[[label+2]] <- Node2
 
       # set bi-directional edges with Node::setChildren
       parentNode$setChildren(Node1, Node2)
+
+      # append nodes to tree
+      self$nodes[[label+1]] <- Node1
+      self$nodes[[label+2]] <- Node2
     },
 
     dfs = function() {
-      # TODO
-    }
+      stop("function not implemented") # TODO
+    },
 
     print = function(...) {
       # TODO: traverse tree (DFS)
