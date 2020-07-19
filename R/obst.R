@@ -1,10 +1,10 @@
 # TODO: packen in private() wo Zugriff ausserhalb der Klasse nicht notwendig ist
 Gabel <- R6::R6Class("Gabel",
   public = list(
-    # differentiate between unset (NA) and undefined (NULL)
-    childL = NA,
-    childR = NA,
-    parent = NA,
+    # TODO: differentiate between unset (NA) and undefined (NULL)
+    childL = NULL,
+    childR = NULL,
+    parent = NULL,
     label = NA_integer_, # unique node labeling through integers 1...N
     depth = 0L,
     partition = list(), # induced partition of space X (CART algorithm)
@@ -36,16 +36,18 @@ Gabel <- R6::R6Class("Gabel",
     },
 
     is_obst = function() {
-      all(is.na(self$childL), is.na(self$childR))
+      all(is.null(self$childL), is.null(self$childR))
     },
 
+    # TODO: print partition
     print = function(...) {
       cat("Knoten: \n")
+      cat("  Label: ", self$label, "\n", sep = "")
       cat("  s: ", self$s, "\n", sep = "")
       cat("  j: ", self$j, "\n", sep = "")
       cat("  y: ", self$y, "\n", sep = "")
-      cat("  Teilbaumtiefe:  ", self$depth, "\n", sep = "")
-      cat("  Blatt:  ", self$is_obst(), "\n", sep = "")
+      cat("  Teilbaumtiefe: ", self$depth, "\n", sep = "")
+      cat("  Blatt: ", self$is_obst(), "\n", sep = "")
 
       invisible(self)
     }
@@ -78,8 +80,8 @@ Baum <- R6::R6Class("Baum",
     append = function(label, Node1, Node2) { # Parent, Child1, Child2
       # disallow appending if parent node is not a leaf
       parentNode <- self$nodes[[label]] # range check with [[
-      stopifnot(is.na(parentNode$childL))
-      stopifnot(is.na(parentNode$childR))
+      stopifnot(is.null(parentNode$childL))
+      stopifnot(is.null(parentNode$childR))
 
       # increment labels from $label, left to right
       Node1$label <- label+1
