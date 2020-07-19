@@ -33,7 +33,7 @@ Gabel <- R6::R6Class("Gabel",
       Node2$depth  <- self$depth + 1
     },
 
-    is_obst = function() {
+    isObst = function() {
       all(is.null(self$childL), is.null(self$childR))
     },
 
@@ -52,7 +52,7 @@ Gabel <- R6::R6Class("Gabel",
       cat("  j: ", self$j, "\n", sep = "")
       cat("  y: ", self$y, "\n", sep = "")
       cat("  Teilbaumtiefe: ", self$depth, "\n", sep = "")
-      cat("  Blatt: ", self$is_obst(), "\n", sep = "")
+      cat("  Blatt: ", self$isObst(), "\n", sep = "")
 
       invisible(self)
     }
