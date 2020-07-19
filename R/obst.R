@@ -5,7 +5,8 @@ Gabel <- R6::R6Class("Gabel",
     parent = NULL,
     label = NA_integer_, # unique node labeling through integers 1...N
     depth = 0L,
-    partition = list(), # induced partition of space X (CART algorithm)
+    partition = list(), # part in the induced partition of X (1 vector for each dimension)
+    dataPoints = list(),
 
     # attributes (CART)
     s = NA_real_,
@@ -37,7 +38,6 @@ Gabel <- R6::R6Class("Gabel",
       all(is.null(self$childL), is.null(self$childR))
     },
 
-    # get set
     # TODO: print partition
     print = function(...) {
       cat("Knoten: \n")
