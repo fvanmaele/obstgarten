@@ -4,19 +4,17 @@ source("R/data.R")
 #' ATTENTION!! method cart YET TO BE IMPLEMENTED.
 #'
 #' @description
-#' Performs bagging on a dataset x and returns predictions.
+#' Performs bagging on a dataset and returns predictions.
 #'
 #' @param B integer: number of bootstrap samples
 #' @param x_train data.frame: training data of dimensions Number of Samples x Features
 #' @param x_test data.frame: test data of dimensions Number of Samples x Features
-#' @param regression logical specify whether tree is a classification or a
+#' @param regression logical: specify whether tree is a classification or a
 #' regression tree. default=TRUE, TRUE for regression, FALSE for classification
-#' @param return_full developer option: specifies whether fitted trees and bootstrap
-#' samples should be returned as well.
 #'
 #' @return vector: of size Number of Samples containing bagged predictions to dataset
 #' character vector for classification case and double vector for regression case
-bagging <- function(B, x_train, x_test, regression=TRUE, return_full=FALSE) {
+bagging <- function(B, x_train, x_test, regression=TRUE) {
   nb_samples <- dim(x_train)[1]
   nb_test_samples <- dim(x_test)[1]
   predictions <- matrix(rep(0., nb_test_samples * B), nrow=nb_test_samples, ncol=B)
