@@ -5,8 +5,7 @@ Gabel <- R6::R6Class("Gabel",
     parent = NULL,
     label = NA_integer_, # unique node labeling through integers 1...N
     depth = 0L,
-    partition = list(), # part in the induced partition of X (1 vector for each dimension)
-    dataPoints = list(),
+    partition = NULL, # partition A(v) of the training data X for node v
 
     # attributes (CART)
     s = NA_real_,
@@ -53,6 +52,9 @@ Gabel <- R6::R6Class("Gabel",
       cat("  y: ", self$y, "\n", sep = "")
       cat("  Teilbaumtiefe: ", self$depth, "\n", sep = "")
       cat("  Blatt: ", self$isObst(), "\n", sep = "")
+      if(!is.null(self$partition))
+        cat("  Partition: ", "\n")
+        print(partition)
 
       invisible(self)
     }
