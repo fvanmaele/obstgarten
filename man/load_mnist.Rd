@@ -2,17 +2,24 @@
 % Please edit documentation in R/data.R
 \name{load_mnist}
 \alias{load_mnist}
-\title{Loads and returns mnist dataset}
+\title{mnist data set}
 \usage{
 load_mnist()
 }
 \value{
-list containing: 1) 60000 x 784 matrix of training images,
-each row one image, 2) atomic vector of integer labels of training images,
-3) 10000 x 784 matrix of test images, each row ine image, 4) atomic vecotr of integer
-labels of test images.
+list containing:
+\enumerate{
+\item 60000 x 784 matrix of training images, each row one image,
+\item atomic vector of integer labels of training images,
+\item 10000 x 784 matrix of test images, each row ine image,
+\item atomic vector of integer labels of test images.
+}
+
 See names() of returned list.
 }
 \description{
+Loads and returns mnist data set
+}
+\details{
 MIT License Copyright 2008, Brendan O'Connor
 }

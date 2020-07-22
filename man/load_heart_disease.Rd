@@ -7,7 +7,7 @@
 load_heart_disease()
 }
 \value{
-303 x 14 data.frame with named columnDs
+303 x 14 data.frame with named columns
 }
 \description{
 For reference see https://archive.ics.uci.edu/ml/datasets/Heart+Disease

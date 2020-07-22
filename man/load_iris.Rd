@@ -2,7 +2,7 @@
 % Please edit documentation in R/data.R
 \name{load_iris}
 \alias{load_iris}
-\title{Loads and returns Iris dataset for classification testing}
+\title{Iris data set}
 \usage{
 load_iris()
 }
@@ -10,5 +10,5 @@ load_iris()
 150 x 5 data.frame
 }
 \description{
-Loads and returns Iris dataset for classification testing
+Loads and returns Iris data set for classification testing
 }
