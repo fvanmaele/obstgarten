@@ -1,4 +1,3 @@
-# TODO: keep reference to tree Gabel is located in?
 Gabel <- R6::R6Class("Gabel",
   public = list(
     childL = NULL,
@@ -7,6 +6,7 @@ Gabel <- R6::R6Class("Gabel",
     label = NA_integer_, # unique node labeling through integers 1...N
     depth = 0L,
     partition = NULL, # partition A(v) of the training data X for node v
+    # XXX: Dimension d von A(v) als getrenntes Attribut?
 
     # attributes (CART)
     s = NA_real_,
@@ -122,8 +122,7 @@ Baum <- R6::R6Class("Baum",
     },
 
     plot = function() {
-      # TODO: add some sanity checks
-
+      # TODO
     }
   )
 )
