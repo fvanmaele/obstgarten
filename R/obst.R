@@ -1,3 +1,4 @@
+# TODO: keep reference to tree Gabel is located in?
 Gabel <- R6::R6Class("Gabel",
   public = list(
     childL = NULL,
@@ -52,9 +53,6 @@ Gabel <- R6::R6Class("Gabel",
       cat("  y: ", self$y, "\n", sep = "")
       cat("  Teilbaumtiefe: ", self$depth, "\n", sep = "")
       cat("  Blatt: ", self$isObst(), "\n", sep = "")
-      if(!is.null(self$partition))
-        cat("  Partition: ", "\n")
-        print(partition)
 
       invisible(self)
     }
@@ -65,13 +63,17 @@ Baum <- R6::R6Class("Baum",
   public = list(
     nodes = list(), # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
     leaves = list(),
+    root = NULL,
 
-    initialize = function(Root) {
-      stopifnot("the root node must have label 1" = Root$label == 1L)
-      stopifnot("the root node must have depth 0" = Root$depth == 0L)
+    initialize = function() {
+      # define new root node
+      self$root <- Gabel$new()
+      self$root$label <- 1L
+      self$root$depth <- 0L
 
-      self$nodes[[1]] <- Root
-      self$leaves[[1]] <- 1L
+      # update node vector
+      self$nodes[[1]] <- self$root
+      self$leaves[[1]] <- self$root
     },
 
     obstkorb = function() {
@@ -82,7 +84,7 @@ Baum <- R6::R6Class("Baum",
     #' Add a pair of nodes to the binary tree. Bi-directional edges are set
     #' from a specified (unique) label.
     #'
-    #' If this method is used exclusively for creating the tree, no cycles
+    #' If this method is used exclusively for creating a tree, no cycles
     #' are possible: the labels of child nodes are incremented from the label
     #' of the parent node  by +1 and +2 for the left and right node, respectively)
     #' @param label
@@ -110,9 +112,18 @@ Baum <- R6::R6Class("Baum",
       self$leaves[c(label, label+1, label+2)] <- c(NA, label+1, label+2)
     },
 
+    predict = function(x) { # list or vector
+      #TODO
+    },
+
     print = function(...) {
       # TODO: traverse tree (DFS)
       invisible(self)
+    },
+
+    plot = function() {
+      # TODO: add some sanity checks
+
     }
   )
 )
