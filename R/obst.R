@@ -122,7 +122,19 @@ Baum <- R6::R6Class("Baum",
     },
 
     plot = function() {
-      # TODO
+      # 1. draw data points
+      df <- self$root$partition
+      if (is.null(df)) {
+        stop("no data available in root node")
+      }
+      if (ncol(df) > 2) {
+        # TODO: support contour plots for 2-dimensional data
+        stop("only 1-dimensional plots are supported")
+      }
+      plot(df[, 1], df[, 2])
+
+      # 2. draw decision rule: \sum{leaves}[y_m*I_{A_m}]
+      ok <- self$obstkorb() # y_m
     }
   )
 )
