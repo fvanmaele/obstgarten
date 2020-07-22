@@ -54,7 +54,7 @@ R_hat_min <- function(A, n, d) { # todo: 1:d as parameter for random forests
     }
   }
 
-  # XXX: reduce number of samples to 1? (optim() over 2 parameters)
+  # XXX: reduce number of samples to 1? (optim() over 2 parameters -> sample on $par)
   j_min <- seq_along(s_min)[s_min == min(s_min)]
   if (length(j_min) > 1L) {
     j_hat <- sample(j_min, 1L)

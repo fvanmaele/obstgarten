@@ -1,10 +1,11 @@
-#' Generate dataset like in Example 6.3 in Richter19.pdf
+#' Generate data set like in Example 6.3 in Richter19.pdf
 #'
 #' @param n number of generated data pairs
-#' @param sigma sd of irreducible error in y
+#' @param sigma standard deviation of irreducible error in y
 #' @param reg logical TRUE for regression data FALSE for classification data
-#' @return if reg TRUE: n x 2 matrix [x_i, y_i] of generated dataset
-#' @return if reg FALSE: n x 3 matrix [x_1i, x_2i, y_i] of generated dataset
+#' @return if reg TRUE: n x 2 matrix [x_i, y_i] of generated data set
+#' @return if reg FALSE: n x 3 matrix [x_1i, x_2i, y_i] of generated data set
+#' @export
 generate_sin_data <- function(n, sigma=0.2, reg=TRUE) {
   if (sigma <= 0.) {
     stop("Error: sigma has to be > 0")
@@ -29,31 +30,35 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE) {
     colnames(ret) <- c("x1", "x2", "y")
     return(ret)
   }
-
 }
 
 
-
-
-#' Loads and returns Iris dataset for classification testing
+#' Iris data set
+#'
+#' Loads and returns Iris data set for classification testing
 #'
 #' @return 150 x 5 data.frame
+#' @export
 load_iris <- function() {
   data("iris")
   return(iris)
 }
 
 
-
-#' Loads and returns mnist dataset
+#' mnist data set
+#'
+#' Loads and returns mnist data set
 #'
 #' MIT License Copyright 2008, Brendan O'Connor
 #'
-#' @return list containing: 1) 60000 x 784 matrix of training images,
-#' each row one image, 2) atomic vector of integer labels of training images,
-#' 3) 10000 x 784 matrix of test images, each row ine image, 4) atomic vecotr of integer
-#' labels of test images.
+#' @return list containing:
+#' 1) 60000 x 784 matrix of training images, each row one image,
+#' 2) atomic vector of integer labels of training images,
+#' 3) 10000 x 784 matrix of test images, each row ine image,
+#' 4) atomic vector of integer labels of test images.
+#'
 #' See names() of returned list.
+#' @export
 load_mnist <- function() {
   load_image_file <- function(filename) {
     ret = list()
@@ -86,8 +91,6 @@ load_mnist <- function() {
 }
 
 
-
-
 #' Heart Disease Data Set
 #'
 # 'Loads heart disease dataset of the cleveland dataset and returns it as a dataframe with named columns.
@@ -100,6 +103,7 @@ load_mnist <- function() {
 #' this can be used for testing and training
 #'
 #' @return 303 x 14 data.frame with named columns
+#' @export
 load_heart_disease <- function() {
   heart_disease_dataset <- read.csv(file="data/heart_disease_data/processed.cleveland.data", header = F)
   # names <- read.csv(file="data/heart_disease_data/heart-disease.names", header = F)
@@ -120,4 +124,3 @@ load_heart_disease <- function() {
   colnames(heart_disease_dataset) <- names
   return(heart_disease_dataset)
 }
-
