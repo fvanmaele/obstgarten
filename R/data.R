@@ -88,8 +88,10 @@ load_mnist <- function() {
 
 
 
-#' Loads heart disease dataset of the cleveland dataset and returns it as a dataframe with named columns
-#' for reference see https://archive.ics.uci.edu/ml/datasets/Heart+Disease
+#' Heart Disease Data Set
+#'
+# 'Loads heart disease dataset of the cleveland dataset and returns it as a dataframe with named columns.
+#' For reference see https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 #'
 #' The labels are given by the last column "Diagnosis_Heart_Disease" 0 indicates no heart disease
 #' while 1, 2, 3, 4 indicate a heart disease
