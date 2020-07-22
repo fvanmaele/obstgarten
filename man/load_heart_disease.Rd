@@ -2,19 +2,20 @@
 % Please edit documentation in R/data.R
 \name{load_heart_disease}
 \alias{load_heart_disease}
-\title{Loads heart disease dataset of the cleveland dataset and returns it as a dataframe with named columns
-for reference see https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
+\title{Heart Disease Data Set}
 \usage{
 load_heart_disease()
 }
 \value{
-303 x 14 data.frame with named columns
+303 x 14 data.frame with named columnDs
 }
 \description{
-The labels are given by the last column "Diagnosis_Heart_Disease" 0 indicates no heart disease
-while 1, 2, 3, 4 indicate a heart disease
+For reference see https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 }
 \details{
+The labels are given by the last column "Diagnosis_Heart_Disease" 0 indicates no heart disease
+while 1, 2, 3, 4 indicate a heart disease
+
 data.frame still contains NA and ? values which need to be cleaned before
 this can be used for testing and training
 }
