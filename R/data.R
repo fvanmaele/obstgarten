@@ -14,8 +14,8 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE) {
   eps <- rnorm(n, mean=0, sd=sigma)
 
   if (reg) {
-    x <-  runif(n, min=0, max=1)
-    y <-  sin(2 * pi * x) + eps
+    x <- runif(n, min=0, max=1)
+    y <- sin(2 * pi * x) + eps
     ret <- matrix(x, y, nrow=n, ncol=2)
     colnames(ret) <- c("x", "y")
     return(ret)

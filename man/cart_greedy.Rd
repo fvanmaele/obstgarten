@@ -7,7 +7,8 @@
 cart_greedy(df, depth = 10, threshold = 1, mode = "regression")
 }
 \arguments{
-\item{df}{A data frame containing the training data (X_i1 ... X_id Y_i) as columns.}
+\item{df}{data frame with columns $1..$d (representing the indices of the
+training data X_i) and column $y (representing the corresponding values Y_i)}
 
 \item{steps}{The amount of iterations before halting the algorithm. If unspecified,}
 }

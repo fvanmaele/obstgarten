@@ -1,20 +1,30 @@
 #' R6 class representing a CART node
 Gabel <- R6::R6Class("Gabel",
   public = list(
+    #' @field childL
     childL = NULL,
+    #' @field childR
     childR = NULL,
+    #' @field parent
     parent = NULL,
-    label = NA_integer_, # unique node labeling through integers 1...N
+    #' @field label unique node label (integer, defaults to NA_integer_)
+    label = NA_integer_,
+    #' @field depth
     depth = 0L,
+    #' @field points
     points = NULL, # training data inside the set A(v)
+    #' @field s
+    s = NA_real_,
+    #' @field j
+    j = NA_integer_,
+    #' @field y
+    y = NA, # < NA_integer_, NA_real_
     # XXX: Dimension d von A(v) als getrenntes Attribut?
 
-    # attributes (CART)
-    s = NA_real_,
-    j = NA_integer_,
-    y = NA, # < NA_integer_, NA_real_
-
-    # create edges between tree nodes (bi-directional)
+    #' @description
+    #' create edges between tree nodes (bi-directional)
+    #' @param Node1
+    #' @param Node2
     setChildren = function(Node1, Node2) { # &Node1, &Node2
       # set child pointers
       self$childL <- Node1 # *Gabel childL = Node1
@@ -29,11 +39,14 @@ Gabel <- R6::R6Class("Gabel",
       Node2$depth <- self$depth + 1
     },
 
+    #' @description
+    #' @return list of all leaves
     isObst = function() {
       all(is.null(self$childL), is.null(self$childR))
     },
 
-    # TODO: print partition
+    #' @description
+    #' Print a summary of node attributes
     print = function(...) {
       cat("Knoten: \n")
       cat("  Label: ", self$label, "\n", sep = "")
@@ -55,6 +68,7 @@ Gabel <- R6::R6Class("Gabel",
   )
 )
 
+#' R6 class representing a CART
 Baum <- R6::R6Class("Baum",
   public = list(
     #' @field nodes
@@ -127,11 +141,14 @@ Baum <- R6::R6Class("Baum",
         P[, node$j] <- node$s
 
         # descend recursively
-        return(rbind(partition(node$childL, d), P, partition(node$childR, d)))
-      } else if (is.null(node$childL) && is.null(node$childR)) {
+        return(rbind(partition(node$childL, d), P,
+                     partition(node$childR, d)))
+      }
+      else if (is.null(node$childL) && is.null(node$childR)) {
         # leaf node (node$y set)
         return() # NULL (noop for rbind)
-      } else {
+      }
+      else {
         stop("none or both of node$childL and node$childR must be set")
       }
     },
@@ -139,18 +156,31 @@ Baum <- R6::R6Class("Baum",
     #' @description
     #' @param x vector representing a data point
     #' @return the expected value by evaluating the tree
-    predict = function(x) { # list or vector
-      #TODO
+    predict = function(x, node = self$root) { # list or vector
+      # check if vector x matches tree dimension
+      # TODO: implement dim/d (length x) as separate (Gabel?) attribute
+      stopifnot(length(x) == (ncol(node$points)-1))
+
+      if (is.null(node$childR) && is.null(node$childL)) {
+        # leaf node found -> return value
+        return(node$y)
+      } else if (x[[node$j]] < node$s) {
+        return(self$predict(x, node$childL))
+      } else {
+        return(self$predict(x, node$childR))
+      }
     },
 
     #' @description
     #' Print the CART to standard output
     print = function(...) {
-      #TODO: traverse tree (DFS)
+      # TODO: traverse tree (DFS)
       invisible(self)
     },
 
     #' @description
+    #' Plot a CART with 1 or 2-dimensional data
+    #' @param df
     plot = function(df) {
       df <- self$root$points
       if (is.null(df)) {
@@ -158,18 +188,20 @@ Baum <- R6::R6Class("Baum",
       }
       if (ncol(df) > 2) {
         # TODO: support contour plots for 2-dimensional data
-        stop("only 1-dimensional plots are supported")
+        stop("only 1-dimensional plots are supported for now")
       }
 
       # TODO: cache for subsequent plots (or set in arguments)
       a <- min(df[, 1])
       b <- max(df[, 1])
-      # TODO: check size of x and y
-      x <- rbind(a, self$getPartition(self$root, 1), b)[, 1]
-      y <- sapply(self$obstkorb(), function(s) `$`(s, "y"))
 
-      plot(df[, 1], df[, 2]) # data points
-      plot(x, y, type = "l") # decision rule
+      # TODO: check size of x and y
+      o <- self$obstkorb()
+      x <- rbind(a, self$getPartition(self$root, 1), b)[, 1]
+      y <- sapply(o, function(s) `$`(s, "y"))
+
+      # Combined plot
+      ggplot() + geom_point(data=df) + geom_step(data=data.frame(x1 = x, y = y))
     }
   )
 )

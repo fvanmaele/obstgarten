@@ -41,11 +41,11 @@ R_hat <- function(s, j, A, n) {
 #' @param A partition of training data (X_i, Y_i) (data.frame)
 #' @param n size of the set of training data (integer)
 #' @param d dimension of the training data X_i1..X_id
-R_hat_min <- function(A, n, d) { # todo: 1:d as parameter for random forests
+R_hat_min <- function(A, n, d) { # to_process: 1:d as parameter for random forests
   s_min <- list(rep(NULL, d))
 
   for (j in 1:d) {
-    sj_min <- optim(par=A[j,], fn=R_hat, j, A, n) # optimize by s \in (X_1j, .., X_nj)
+    sj_min <- optim(par=A[j, ], fn=R_hat, j, A, n) # optimize by s \in (X_1j, .., X_nj)
 
     if (length(sj_min$par) > 1) {
       s_min[[j]] <- sample(sj_min$par, 1L)
@@ -67,7 +67,8 @@ R_hat_min <- function(A, n, d) { # todo: 1:d as parameter for random forests
 }
 
 #' Create a regression tree greedily based on training data.
-#' @param df A data frame containing the training data (X_i1 ... X_id Y_i) as columns.
+#' @param df data frame with columns $1..$d (representing the indices of the
+#' training data X_i) and column $y (representing the corresponding values Y_i)
 #' @param steps The amount of iterations before halting the algorithm. If unspecified,
 #' @param threshold
 #' @param mode
@@ -75,28 +76,23 @@ R_hat_min <- function(A, n, d) { # todo: 1:d as parameter for random forests
 #' @export
 cart_greedy <- function(df, depth = 10, threshold = 1, mode = "regression") {
   n <- nrow(df)
-  d <- ncol(df) - 1
+  d <- ncol(df)-1
 
   # Initialize tree
-  Cart <- Tree$new()
+  Cart <- Baum$new()
   Root <- Cart$root # $label 1L
   Root$points <- df
 
-  # Compute optimal subdivision
-  params <- R_hat_min(df, n, d)
-  Root$j <- params$j
-  Root$s <- params$s
-
   # step k = 1, ...
-  to_process <- list(Root) # stack for nodes to process
+  to_process <- list(Root)
   iter = 0
 
-  while (length(leaves) > 0) {
+  while (length(to_process) > 0) {
     if (iter > depth)
       break
 
-    for (node in leaves) {
-      to_process <- tail(leaves, -1)
+    for (node in to_process) {
+      to_process <- tail(to_process, -1)
 
       if(length(node$points > threshold)) {
         params <- R_hat_min(node$points, n, d) # optimal subdivision
@@ -107,12 +103,12 @@ cart_greedy <- function(df, depth = 10, threshold = 1, mode = "regression") {
         # update attributes of left child
         childL <- Gabel$new()
         childL$points <- dplyr::filter(node$points, get(node$j) < node$s) # FIXME: memoise
-        childL$y <- sum(childL$points$Y) / n # FIXME: memoise
+        childL$y <- sum(childL$points$y) / n # FIXME: memoise
 
         # update attributes of right child
         childR <- Gabel$new()
         childR$points <- dplyr::filter(node$points, get(node$j) >= node$s) # FIXME: memoise
-        childR$y <- sum(childR$points$Y) / n # FIXME: memoise
+        childR$y <- sum(childR$points$y) / n # FIXME: memoise
 
         # update tree and stack
         Cart$append(node$label, childL, childR)
