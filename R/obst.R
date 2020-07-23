@@ -5,7 +5,7 @@ Gabel <- R6::R6Class("Gabel",
     parent = NULL,
     label = NA_integer_, # unique node labeling through integers 1...N
     depth = 0L,
-    partition = NULL, # partition A(v) of the training data X for node v
+    points = NULL, # training data inside the set A(v)
     # XXX: Dimension d von A(v) als getrenntes Attribut?
 
     # attributes (CART)
@@ -16,22 +16,22 @@ Gabel <- R6::R6Class("Gabel",
     # create edges between tree nodes (bi-directional)
     setChildren = function(Node1, Node2) { # &Node1, &Node2
       # check labels for uniqueness
-      stopifnot("each node must be identified by a label"
-                = !anyNA(c(self$label, Node1$label, Node2$label)))
-      stopifnot("a node cannot be a child of itself"
-                = self$label != Node1$label)
-      stopifnot("a node cannot be a child of itself"
-                = self$label != Node2$label)
+      # TODO: move to Baum$validate()
+      #stopifnot("each node must be identified by a label" = !anyNA(c(self$label, Node1$label, Node2$label)))
+      #stopifnot("a node cannot be a child of itself" = self$label != Node1$label)
+      #stopifnot("a node cannot be a child of itself" = self$label != Node2$label)
 
       # set child pointers
       self$childL <- Node1 # *Gabel childL = Node1
       self$childR <- Node2 # *Gabel childR = Node2
 
-      # set parent pointers and increment depth
+      # set parent pointers
       Node1$parent <- self
       Node2$parent <- self
-      Node1$depth  <- self$depth + 1
-      Node2$depth  <- self$depth + 1
+
+      # increment depth
+      Node1$depth <- self$depth + 1
+      Node2$depth <- self$depth + 1
     },
 
     isObst = function() {
@@ -48,6 +48,7 @@ Gabel <- R6::R6Class("Gabel",
         cat("  Kind (L): ", self$childL$label, "\n", sep = "")
       if(!is.null(self$childR))
         cat("  Kind (R): ", self$childR$label, "\n", sep = "")
+
       cat("  s: ", self$s, "\n", sep = "")
       cat("  j: ", self$j, "\n", sep = "")
       cat("  y: ", self$y, "\n", sep = "")
@@ -64,15 +65,14 @@ Baum <- R6::R6Class("Baum",
     nodes = list(), # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
     leaves = list(),
     root = NULL,
+    partition = NULL,
+    # dim = NA,
 
     initialize = function() {
-      # define new root node
       self$root <- Gabel$new()
-      self$root$label <- 1L
-      self$root$depth <- 0L
-
-      # update node vector
-      self$nodes[[1]] <- self$root
+      self$root$label  <- 1L
+      self$root$depth  <- 0L
+      self$nodes[[1]]  <- self$root
       self$leaves[[1]] <- self$root
     },
 
@@ -101,7 +101,7 @@ Baum <- R6::R6Class("Baum",
       Node1$label <- label+1
       Node2$label <- label+2
 
-      # set bi-directional edges with Node::setChildren
+      # set bi-directional edges
       parentNode$setChildren(Node1, Node2)
 
       # append nodes to tree
@@ -112,18 +112,22 @@ Baum <- R6::R6Class("Baum",
       self$leaves[c(label, label+1, label+2)] <- c(NA, label+1, label+2)
     },
 
+    partition = function() {
+      #TODO
+    },
+
     predict = function(x) { # list or vector
       #TODO
     },
 
     print = function(...) {
-      # TODO: traverse tree (DFS)
+      #TODO: traverse tree (DFS)
       invisible(self)
     },
 
     plot = function() {
       # 1. draw data points
-      df <- self$root$partition
+      df <- self$root$points
       if (is.null(df)) {
         stop("no data available in root node")
       }
@@ -134,7 +138,11 @@ Baum <- R6::R6Class("Baum",
       plot(df[, 1], df[, 2])
 
       # 2. draw decision rule: \sum{leaves}[y_m*I_{A_m}]
-      ok <- self$obstkorb() # y_m
+      korb <- self$obstkorb() # y_m
+    },
+
+    validate = function() {
+      #TODO
     }
   )
 )

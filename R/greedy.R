@@ -80,7 +80,7 @@ cart_greedy <- function(df, depth = 10, threshold = 1, mode = "regression") {
   # Initialize tree
   Cart <- Tree$new()
   Root <- Cart$root # $label 1L
-  Root$partition <- df
+  Root$points <- df
 
   # Compute optimal subdivision
   params <- R_hat_min(df, n, d)
@@ -98,19 +98,19 @@ cart_greedy <- function(df, depth = 10, threshold = 1, mode = "regression") {
     for (node in leaves) {
       to_process <- tail(leaves, -1)
 
-      if(length(node$partition > threshold)) {
-        params <- R_hat_min(node$partition, n, d) # optimal subdivision
+      if(length(node$points > threshold)) {
+        params <- R_hat_min(node$points, n, d) # optimal subdivision
         node$j <- params$j
-        node$s <- params$s # node$partition (of data) set in previous iteration
+        node$s <- params$s # node$points (of data) set in previous iteration
         node$y <- NA
 
         childL <- Gabel$new()
-        childL$partition <- dplyr::filter(node$partition, get(node$j) < node$s) # FIXME: memoise
-        childL$y <- sum(childL$partition$Y) / n # FIXME: memoise
+        childL$points <- dplyr::filter(node$points, get(node$j) < node$s) # FIXME: memoise
+        childL$y <- sum(childL$points$Y) / n # FIXME: memoise
 
         childR <- Gabel$new()
-        childR$partition <- dplyr::filter(node$partition, get(node$j) >= node$s) # FIXME: memoise
-        childR$y <- sum(childR$partition$Y) / n # FIXME: memoise
+        childR$points <- dplyr::filter(node$points, get(node$j) >= node$s) # FIXME: memoise
+        childR$y <- sum(childR$points$Y) / n # FIXME: memoise
 
         # Update tree and stack
         Cart$append(node$label, childL, childR)
