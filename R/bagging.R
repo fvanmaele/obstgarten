@@ -1,5 +1,3 @@
-source("R/data.R")
-
 #' ATTENTION!! method predict YET TO BE IMPLEMENTED.
 #' ATTENTION!! method cart YET TO BE IMPLEMENTED.
 #'
@@ -40,3 +38,4 @@ bagging <- function(B, x_train, x_test, regression=TRUE) {
   else return(apply(predictions, MARGIN=1, majorityVote))
 
 }
+
