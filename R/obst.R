@@ -1,3 +1,4 @@
+#' R6 class representing a CART node
 Gabel <- R6::R6Class("Gabel",
   public = list(
     childL = NULL,
@@ -15,12 +16,6 @@ Gabel <- R6::R6Class("Gabel",
 
     # create edges between tree nodes (bi-directional)
     setChildren = function(Node1, Node2) { # &Node1, &Node2
-      # check labels for uniqueness
-      # TODO: move to Baum$validate()
-      #stopifnot("each node must be identified by a label" = !anyNA(c(self$label, Node1$label, Node2$label)))
-      #stopifnot("a node cannot be a child of itself" = self$label != Node1$label)
-      #stopifnot("a node cannot be a child of itself" = self$label != Node2$label)
-
       # set child pointers
       self$childL <- Node1 # *Gabel childL = Node1
       self$childR <- Node2 # *Gabel childR = Node2
@@ -62,12 +57,17 @@ Gabel <- R6::R6Class("Gabel",
 
 Baum <- R6::R6Class("Baum",
   public = list(
+    #' @field nodes
     nodes = list(), # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
+    #' @field leaves
     leaves = list(),
+    #' @field root
     root = NULL,
-    partition = NULL,
+    # partition = NULL,
     # dim = NA,
 
+    #' @description
+    #' Create a new Baum object.
     initialize = function() {
       self$root <- Gabel$new()
       self$root$label  <- 1L
@@ -76,6 +76,8 @@ Baum <- R6::R6Class("Baum",
       self$leaves[[1]] <- self$root
     },
 
+    #' @description
+    #' @return list of leaf nodes
     obstkorb = function() {
       return(self$nodes[which(!is.na(self$leaves))])
     },
@@ -84,6 +86,7 @@ Baum <- R6::R6Class("Baum",
     #' Add a pair of nodes to the binary tree. Bi-directional edges are set
     #' from a specified (unique) label.
     #'
+    #' @details
     #' If this method is used exclusively for creating a tree, no cycles
     #' are possible: the labels of child nodes are incremented from the label
     #' of the parent node  by +1 and +2 for the left and right node, respectively)
@@ -101,10 +104,8 @@ Baum <- R6::R6Class("Baum",
       Node1$label <- label+1
       Node2$label <- label+2
 
-      # set bi-directional edges
+      # set bi-directional edges and append nodes
       parentNode$setChildren(Node1, Node2)
-
-      # append nodes to tree
       self$nodes[[label+1]] <- Node1
       self$nodes[[label+2]] <- Node2
 
@@ -112,21 +113,45 @@ Baum <- R6::R6Class("Baum",
       self$leaves[c(label, label+1, label+2)] <- c(NA, label+1, label+2)
     },
 
-    partition = function() {
-      #TODO
+    #' @description
+    #' @param node entry point
+    #' @param d dimension
+    #' @return
+    partition = function(node, d) {
+      if (!is.null(node$childL) && !is.null(node$childR)) {
+        # check if partition attributes are set
+        stopifnot(!anyNA(node$j, node$s))
+
+        # parent node (node$j, $node$s set)
+        P <- matrix(ncol = d, dimnames = list(paste0("V"), node$label))
+        P[, node$j] <- node$s
+
+        # descend recursively
+        return(rbind(partition(node$childL, d), P, partition(node$childR, d)))
+      } else if (is.null(node$childL) && is.null(node$childR)) {
+        # leaf node (node$y set)
+        return() # NULL (noop for rbind)
+      } else {
+        stop("none or both of node$childL and node$childR must be set")
+      }
     },
 
+    #' @description
+    #' @param x vector representing a data point
+    #' @return the expected value by evaluating the tree
     predict = function(x) { # list or vector
       #TODO
     },
 
+    #' @description
+    #' Print the CART to standard output
     print = function(...) {
       #TODO: traverse tree (DFS)
       invisible(self)
     },
 
-    plot = function() {
-      # 1. draw data points
+    #' @description
+    plot = function(df) {
       df <- self$root$points
       if (is.null(df)) {
         stop("no data available in root node")
@@ -135,14 +160,16 @@ Baum <- R6::R6Class("Baum",
         # TODO: support contour plots for 2-dimensional data
         stop("only 1-dimensional plots are supported")
       }
-      plot(df[, 1], df[, 2])
 
-      # 2. draw decision rule: \sum{leaves}[y_m*I_{A_m}]
-      korb <- self$obstkorb() # y_m
-    },
+      # TODO: cache for subsequent plots (or set in arguments)
+      a <- min(df[, 1])
+      b <- max(df[, 1])
+      # TODO: check size of x and y
+      x <- rbind(a, self$getPartition(self$root, 1), b)[, 1]
+      y <- sapply(self$obstkorb(), function(s) `$`(s, "y"))
 
-    validate = function() {
-      #TODO
+      plot(df[, 1], df[, 2]) # data points
+      plot(x, y, type = "l") # decision rule
     }
   )
 )

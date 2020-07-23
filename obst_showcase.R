@@ -2,18 +2,18 @@ library(obstgarten)
 
 T1 <- Baum$new()
 G1 <- T1$root
-G1$partition <- list(c(1,5))
-G1$partition
+G1$points <- list(c(1,5))
+G1$points
 G1
 
 G2 <- Gabel$new()
-G2$partition <- list(c(1,3))
-G2$partition
+G2$points <- list(c(1,3))
+G2$points
 G2
 
 G3 <- Gabel$new()
-G3$partition <- list(c(3,5))
-G3$partition
+G3$points <- list(c(3,5))
+G3$points
 G3
 
 T1$append(1L, G2, G3) # append to "1"

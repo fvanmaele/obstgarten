@@ -104,15 +104,17 @@ cart_greedy <- function(df, depth = 10, threshold = 1, mode = "regression") {
         node$s <- params$s # node$points (of data) set in previous iteration
         node$y <- NA
 
+        # update attributes of left child
         childL <- Gabel$new()
         childL$points <- dplyr::filter(node$points, get(node$j) < node$s) # FIXME: memoise
         childL$y <- sum(childL$points$Y) / n # FIXME: memoise
 
+        # update attributes of right child
         childR <- Gabel$new()
         childR$points <- dplyr::filter(node$points, get(node$j) >= node$s) # FIXME: memoise
         childR$y <- sum(childR$points$Y) / n # FIXME: memoise
 
-        # Update tree and stack
+        # update tree and stack
         Cart$append(node$label, childL, childR)
         to_process <- append(to_process, c(childL, childR))
       } else {

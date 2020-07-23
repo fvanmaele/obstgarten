@@ -32,4 +32,5 @@ Suggests:
     testthat
 Imports: 
     R6 (>= 2.4.1),
-    memoise
+    memoise,
+    ggplot2
