@@ -47,7 +47,7 @@ R_hat <- function(s, j, A, n) {
 R_hat_min <- function(A, n, d) {
   j_names <- sapply(1:d, function(i) paste0("j = ", i))
   # argmin: s_j \in (X_1j, .., X_nj) \sub A, j \in (1, .., d)
-  G <- array(dim=c(n, 2, d), dimnames=list(NULL, c("s", "R"), j_names))
+  G <- array(dim=c(nrow(A), 2, d), dimnames=list(NULL, c("s", "R"), j_names))
   min_s <- rep(NA, j)
 
   for (j in 1:d) {
