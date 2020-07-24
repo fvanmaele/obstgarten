@@ -45,9 +45,11 @@ R_hat <- function(s, j, A, n) {
 #' @param n size of the set of training data (integer)
 #' @param d dimension of the training data X_i1..X_id
 R_hat_min <- function(A, n, d) {
+  j_names <- sapply(1:d, function(i) paste0("j = ", i))
   # argmin: s_j \in (X_1j, .., X_nj) \sub A, j \in (1, .., d)
-  G <- array(dim=c(n, 2, d), dimnames=list(NULL, c("s", "R", NULL)))
+  G <- array(dim=c(n, 2, d), dimnames=list(NULL, c("s", "R"), j_names))
   min_s <- rep(NA, j)
+
   for (j in 1:d) {
     for (i in seq_along(A[, j])) {
       s <- A[i, j]
@@ -56,7 +58,7 @@ R_hat_min <- function(A, n, d) {
     }
   }
   print(G)
-  stop() # todo
+  stop() # todo: find minimal j, s
 
 }
 
