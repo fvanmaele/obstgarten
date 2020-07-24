@@ -83,9 +83,12 @@ Baum <- R6::R6Class("Baum",
     #' @description
     #' Create a new Baum object.
     initialize = function() {
+      # create root node
       self$root <- Gabel$new()
       self$root$label <- 1L
       self$root$depth <- 0L
+
+      # update attributes
       self$nodes[[1]] <- self$root
       self$leaves[[1]] <- self$root
     },

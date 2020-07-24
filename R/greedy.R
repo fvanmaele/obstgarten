@@ -40,35 +40,20 @@ R_hat <- function(s, j, A, n) {
 #' partition of training data in an inner node v. (regression tree)
 #'
 #' Ties between found minima are broken at random.
+#' TODO: sample of dim for random forests
 #' @param A partition of training data (X_i, Y_i) (matrix)
 #' @param n size of the set of training data (integer)
 #' @param d dimension of the training data X_i1..X_id
 R_hat_min <- function(A, n, d) {
-  s_min <- list(rep(NULL, d))
+  s_min <- rep(NA, d)
 
   # TODO: sample of d (or argument) for random forests
-  for (j in 1:d) {
-    s <- A[, j] # argmin: s \in (X_1j, .., X_nj) \sub A
-    sj_min <- optim(par = s, fn = R_hat, j=j, A=A, n=n)
+  # for (j in 1:d) {
+  #   s <- A[, j] # argmin: s_j \in (X_1j, .., X_nj) \sub A
+  #   sj_min <- optim(par = s, fn = R_hat, j=j, A=A, n=n)
 
-    if (length(sj_min$par) > 1) {
-      s_min[[j]] <- sample(sj_min$par, 1L)
-    } else {
-      s_min[[j]] <- sj_min$par
-    }
-  }
+  stop() # broken
 
-  # XXX: reduce number of samples to 1?
-  # (optim() over 2 parameters -> sample on $par)
-  j_min <- seq_along(s_min)[s_min == min(s_min)]
-  if (length(j_min) > 1L) {
-    j_hat <- sample(j_min, 1L)
-  } else {
-    j_hat <- j_min
-  }
-
-  s_hat <- s_min[[j_hat]]
-  return(c(j = j_hat, s = s_hat))
 }
 
 #' Create a regression tree greedily based on training data.
