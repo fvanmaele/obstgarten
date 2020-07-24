@@ -45,14 +45,18 @@ R_hat <- function(s, j, A, n) {
 #' @param n size of the set of training data (integer)
 #' @param d dimension of the training data X_i1..X_id
 R_hat_min <- function(A, n, d) {
-  s_min <- rep(NA, d)
-
-  # TODO: sample of d (or argument) for random forests
-  # for (j in 1:d) {
-  #   s <- A[, j] # argmin: s_j \in (X_1j, .., X_nj) \sub A
-  #   sj_min <- optim(par = s, fn = R_hat, j=j, A=A, n=n)
-
-  stop() # broken
+  # argmin: s_j \in (X_1j, .., X_nj) \sub A, j \in (1, .., d)
+  G <- array(dim=c(n, 2, d), dimnames=list(NULL, c("s", "R", NULL)))
+  min_s <- rep(NA, j)
+  for (j in 1:d) {
+    for (i in seq_along(A[, j])) {
+      s <- A[i, j]
+      G[i, 1, j] <- s
+      G[i, 2, j] <- R_hat(s, j, A, n)
+    }
+  }
+  print(G)
+  stop() # todo
 
 }
 

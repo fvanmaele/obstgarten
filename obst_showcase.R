@@ -22,6 +22,6 @@ G1$childL
 G1$childR
 T1$obstkorb()
 
-M <- generate_sin_data(200)
+M <- generate_sin_data(2000)
 dimnames(M) <- list(NULL, c(1, "y"))
 T2 <- cart_greedy(M)
