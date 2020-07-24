@@ -11,7 +11,7 @@ R_hat(s, j, A, n)
 
 \item{j}{split index (integer)}
 
-\item{A}{partition of training data (data.frame)}
+\item{A}{partition of training data (matrix)}
 
 \item{n}{size of training data (integer)}
 }

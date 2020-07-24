@@ -4,13 +4,14 @@
 \alias{cart_greedy}
 \title{Create a regression tree greedily based on training data.}
 \usage{
-cart_greedy(df, depth = 10, threshold = 1, mode = "regression")
+cart_greedy(XY, depth = 10, threshold = 1, mode = "regression")
 }
 \arguments{
-\item{df}{data frame with columns $1..$d (representing the indices of the
-training data X_i) and column $y (representing the corresponding values Y_i)}
+\item{XY}{matrix with columns $1..$d (representing the
+training data X_i) and column $y (for the corresponding values Y_i)}
 
-\item{steps}{The amount of iterations before halting the algorithm. If unspecified,}
+\item{steps}{The amount of iterations before halting the algorithm
+(defaults to 10)}
 }
 \value{
 

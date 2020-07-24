@@ -8,7 +8,7 @@ partition of training data in an inner node v. (regression tree)}
 R_hat_min(A, n, d)
 }
 \arguments{
-\item{A}{partition of training data (X_i, Y_i) (data.frame)}
+\item{A}{partition of training data (X_i, Y_i) (matrix)}
 
 \item{n}{size of the set of training data (integer)}
 

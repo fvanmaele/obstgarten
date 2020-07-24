@@ -23,29 +23,33 @@ R_sum <- function(y1, y2, n) {
 #'
 #' @param s split point (numeric)
 #' @param j split index (integer)
-#' @param A partition of training data (data.frame)
+#' @param A partition of training data (matrix)
 #' @param n size of training data (integer)
 #' @return risk factor
 R_hat <- function(s, j, A, n) {
-  A1 <- dplyr::filter(A, get(j) <  s)
-  A2 <- dplyr::filter(A, get(j) >= s)
+  rows_lt <- which(A[, j] < s)
+  rows_gt <- setdiff(1:nrow(A), rows_lt)
 
-  # return(mem_R_sum(A1$y, A2$y, n))
-  return(R_sum(A1$y, A2$y, n))
+  A1 <- A[rows_lt, , drop=FALSE]
+  A2 <- A[rows_gt, , drop=FALSE]
+
+  return(R_sum(A1[, "y"], A2[, "y"], n)) # FIXME: memoise
 }
 
 #' Optimize split index and split node for leaf nodes v_1 and v_2, based on the
 #' partition of training data in an inner node v. (regression tree)
 #'
 #' Ties between found minima are broken at random.
-#' @param A partition of training data (X_i, Y_i) (data.frame)
+#' @param A partition of training data (X_i, Y_i) (matrix)
 #' @param n size of the set of training data (integer)
 #' @param d dimension of the training data X_i1..X_id
-R_hat_min <- function(A, n, d) { # to_process: 1:d as parameter for random forests
+R_hat_min <- function(A, n, d) {
   s_min <- list(rep(NULL, d))
 
+  # TODO: sample of d (or argument) for random forests
   for (j in 1:d) {
-    sj_min <- optim(par=A[j, ], fn=R_hat, j, A, n) # optimize by s \in (X_1j, .., X_nj)
+    s <- A[, j] # argmin: s \in (X_1j, .., X_nj) \sub A
+    sj_min <- optim(par = s, fn = R_hat, j=j, A=A, n=n)
 
     if (length(sj_min$par) > 1) {
       s_min[[j]] <- sample(sj_min$par, 1L)
@@ -54,7 +58,8 @@ R_hat_min <- function(A, n, d) { # to_process: 1:d as parameter for random fores
     }
   }
 
-  # XXX: reduce number of samples to 1? (optim() over 2 parameters -> sample on $par)
+  # XXX: reduce number of samples to 1?
+  # (optim() over 2 parameters -> sample on $par)
   j_min <- seq_along(s_min)[s_min == min(s_min)]
   if (length(j_min) > 1L) {
     j_hat <- sample(j_min, 1L)
@@ -67,21 +72,22 @@ R_hat_min <- function(A, n, d) { # to_process: 1:d as parameter for random fores
 }
 
 #' Create a regression tree greedily based on training data.
-#' @param df data frame with columns $1..$d (representing the indices of the
-#' training data X_i) and column $y (representing the corresponding values Y_i)
-#' @param steps The amount of iterations before halting the algorithm. If unspecified,
+#' @param XY matrix with columns $1..$d (representing the
+#' training data X_i) and column $y (for the corresponding values Y_i)
+#' @param steps The amount of iterations before halting the algorithm
+#' (defaults to 10)
 #' @param threshold
 #' @param mode
 #' @return
 #' @export
-cart_greedy <- function(df, depth = 10, threshold = 1, mode = "regression") {
-  n <- nrow(df)
-  d <- ncol(df)-1
+cart_greedy <- function(XY, depth = 10, threshold = 1, mode = "regression") {
+  n <- nrow(XY)
+  d <- ncol(XY)-1
 
   # Initialize tree
   Cart <- Baum$new()
   Root <- Cart$root # $label 1L
-  Root$points <- df
+  Root$points <- XY
 
   # step k = 1, ...
   to_process <- list(Root)
@@ -101,14 +107,16 @@ cart_greedy <- function(df, depth = 10, threshold = 1, mode = "regression") {
         node$y <- NA
 
         # update attributes of left child
+        rows_lt <- which(node$points[, j] < s) # FIXME: memoise
         childL <- Gabel$new()
-        childL$points <- dplyr::filter(node$points, get(node$j) < node$s) # FIXME: memoise
-        childL$y <- sum(childL$points$y) / n # FIXME: memoise
+        childL$points <- node$points[rows_lt, , drop=FALSE]
+        childL$y <- sum(childL$points[, "y"]) / n # FIXME: memoise
 
         # update attributes of right child
+        rows_gt <- setdiff(1:nrow(node$points), rows_lt) # FIXME: memoise
         childR <- Gabel$new()
-        childR$points <- dplyr::filter(node$points, get(node$j) >= node$s) # FIXME: memoise
-        childR$y <- sum(childR$points$y) / n # FIXME: memoise
+        childR$points <- node$points[rows_gt, , drop=FALSE]
+        childR$y <- sum(childR$points[, "y"]) / n # FIXME: memoise
 
         # update tree and stack
         Cart$append(node$label, childL, childR)

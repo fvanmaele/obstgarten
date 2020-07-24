@@ -1,21 +1,21 @@
 #' R6 class representing a CART node
 Gabel <- R6::R6Class("Gabel",
   public = list(
-    #' @field childL
+    #' @field childL (Gabel)
     childL = NULL,
-    #' @field childR
+    #' @field childR (Gabel)
     childR = NULL,
-    #' @field parent
+    #' @field parent (Gabel)
     parent = NULL,
-    #' @field label unique node label (integer, defaults to NA_integer_)
+    #' @field label unique label for node (integer, defaults to NA_integer_)
     label = NA_integer_,
-    #' @field depth
+    #' @field depth (integer)
     depth = 0L,
-    #' @field points
+    #' @field points (matrix)
     points = NULL, # training data inside the set A(v)
-    #' @field s
+    #' @field s (numeric)
     s = NA_real_,
-    #' @field j
+    #' @field j (integer)
     j = NA_integer_,
     #' @field y
     y = NA, # < NA_integer_, NA_real_
@@ -84,9 +84,9 @@ Baum <- R6::R6Class("Baum",
     #' Create a new Baum object.
     initialize = function() {
       self$root <- Gabel$new()
-      self$root$label  <- 1L
-      self$root$depth  <- 0L
-      self$nodes[[1]]  <- self$root
+      self$root$label <- 1L
+      self$root$depth <- 0L
+      self$nodes[[1]] <- self$root
       self$leaves[[1]] <- self$root
     },
 
@@ -137,7 +137,7 @@ Baum <- R6::R6Class("Baum",
         stopifnot(!anyNA(node$j, node$s))
 
         # parent node (node$j, $node$s set)
-        P <- matrix(ncol = d, dimnames = list(paste0("V"), node$label))
+        P <- matrix(node$label, ncol = d, dimnames = list(paste0("V")))
         P[, node$j] <- node$s
 
         # descend recursively
@@ -180,28 +180,29 @@ Baum <- R6::R6Class("Baum",
 
     #' @description
     #' Plot a CART with 1 or 2-dimensional data
-    #' @param df
-    plot = function(df) {
-      df <- self$root$points
-      if (is.null(df)) {
+    plot = function() {
+      XY <- self$root$points
+      if (is.null(XY)) {
         stop("no data available in root node")
       }
-      if (ncol(df) > 2) {
+      if (ncol(XY) > 2) {
         # TODO: support contour plots for 2-dimensional data
         stop("only 1-dimensional plots are supported for now")
       }
 
       # TODO: cache for subsequent plots (or set in arguments)
-      a <- min(df[, 1])
-      b <- max(df[, 1])
+      a <- min(XY[, 1])
+      b <- max(XY[, 1])
 
       # TODO: check size of x and y
       o <- self$obstkorb()
+      # FIXME: if taking df as argument, a <= partition or partition <= b
+      # may not necessarily hold
       x <- rbind(a, self$getPartition(self$root, 1), b)[, 1]
       y <- sapply(o, function(s) `$`(s, "y"))
 
       # Combined plot
-      ggplot() + geom_point(data=df) + geom_step(data=data.frame(x1 = x, y = y))
+      ggplot() + geom_point(data=X) + geom_step(data=data.frame(x1 = x, y = y))
     }
   )
 )
