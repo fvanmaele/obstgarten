@@ -27,8 +27,7 @@ R_hat <- function(s, j, A, n) {
 
   A1 <- A[rows_lt, , drop=FALSE]
   A2 <- A[rows_gt, , drop=FALSE]
-
-  return(R_sum(A1[, "y"], A2[, "y"], n)) # FIXME: memoise
+  return(R_sum(A1[, "y"], A2[, "y"], n))
 }
 
 #' Optimize split index and split node for leaf nodes v_1 and v_2, based on the
@@ -38,11 +37,12 @@ R_hat <- function(s, j, A, n) {
 #' @param A partition of training data (X_i, Y_i) (matrix)
 #' @param n size of the set of training data (integer)
 #' @param d dimension of the training data X_i1..X_id
+#' @return
 R_hat_min <- function(A, n, d) {
   # argmin: s_j \in (X_1j, .., X_nj) \sub A, j \in (1, .., d)
-  G <- array(dim=c(nrow(A), 2, d))
-  dimnames(G) <- list( NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
-  min_s <- rep(NA, j)
+  G <- array(dim=c(nrow(A), 2, d), dimnames=list(
+    NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i))))
+  min_s <- matrix(nrow=d, ncol=2, dimnames=list(NULL, c("s", "R")))
 
   for (j in 1:d) {
     for (i in seq_along(A[, j])) {
@@ -50,12 +50,13 @@ R_hat_min <- function(A, n, d) {
       G[i, "s", j] <- s
       G[i, "R", j] <- R_hat(s, j, A, n)
     }
-    min_s[[j]] <- G[which_is_min(G[, "R", j]), "s", j]
+    min_i <- which_is_min(G[, "R", j])
+    min_s[j, ] <- G[min_i, , j]
   }
-  print(G)
-  print(min_s)
-  stop() # todo: find minimal j, s
 
+  j_hat <- which_is_min(min_s[, "R"])
+  s_hat <- min_s[j_hat, "s"]
+  return(list(j = j_hat, s = s_hat))
 }
 
 #' Create a regression tree greedily based on training data.
