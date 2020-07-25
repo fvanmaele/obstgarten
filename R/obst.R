@@ -68,10 +68,9 @@ Baum <- R6::R6Class("Baum",
     },
 
     #' @description
-    #' @return list of leaf nodes
+    #' @return logical vector with TRUE for leaf nodes and FALSE otherwise
     obstkorb = function() {
-      idx <- sapply(self$nodes, function(node) node$isObst())
-      return(self$nodes[idx])
+      sapply(self$nodes, function(node) node$isObst())
     },
 
     #' @description
@@ -121,8 +120,8 @@ Baum <- R6::R6Class("Baum",
         P[, node$j] <- node$s
 
         # descend recursively
-        return(rbind(partition(node$childL, d), P,
-                     partition(node$childR, d)))
+        return(rbind(self$partition(node$childL, d), P,
+                     self$partition(node$childR, d)))
       }
       else if (is.null(node$childL) && is.null(node$childR)) {
         # leaf node (node$y set)
@@ -151,11 +150,22 @@ Baum <- R6::R6Class("Baum",
       }
     },
 
-    #' @description
-    #' Print the CART to standard output
-    print = function(...) {
-      # TODO: traverse tree (DFS)
-      invisible(self)
+    validate = function() {
+      # ensure all node labels are unique
+      v1 <- sapply(self$nodes, function(node) node$label)
+      v2 <- seq_along(self$nodes)
+      stopifnot(identical(v1, v2))
+
+      # ensure all leaves have $j, $s unset (NA)
+      idx <- self$obstkorb()
+      a1 <- sapply(self$nodes[idx], function(node) {
+        all(is.na(node$j), is.na(node$s))
+      })
+      stopifnot(all(a1))
+
+      # ensure all inner nodes have $y unset (NA)
+      a2 <- sapply(self$nodes[!idx], function(node) is.na(node$y))
+      stopifnot(all(a2))
     },
 
     #' @description
