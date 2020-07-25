@@ -19,25 +19,6 @@ Gabel <- R6::R6Class("Gabel",
     j = NA_integer_,
     #' @field y
     y = NA, # < NA_integer_, NA_real_
-    # XXX: Dimension d von A(v) als getrenntes Attribut?
-
-    #' @description
-    #' create edges between tree nodes (bi-directional)
-    #' @param Node1
-    #' @param Node2
-    setChildren = function(Node1, Node2) { # &Node1, &Node2
-      # set child pointers
-      self$childL <- Node1 # *Gabel childL = Node1
-      self$childR <- Node2 # *Gabel childR = Node2
-
-      # set parent pointers
-      Node1$parent <- self
-      Node2$parent <- self
-
-      # increment depth
-      Node1$depth <- self$depth + 1
-      Node2$depth <- self$depth + 1
-    },
 
     #' @description
     #' @return list of all leaves
@@ -73,61 +54,57 @@ Baum <- R6::R6Class("Baum",
   public = list(
     #' @field nodes
     nodes = list(), # Assumption: (Node.$label == i) => (nodes[[i]] == Node)
-    #' @field leaves
-    leaves = list(),
     #' @field root
     root = NULL,
-    # partition = NULL,
-    # dim = NA,
+    # size = 0L,
 
     #' @description
     #' Create a new Baum object.
     initialize = function() {
-      # create root node
       self$root <- Gabel$new()
       self$root$label <- 1L
       self$root$depth <- 0L
-
-      # update attributes
       self$nodes[[1]] <- self$root
-      self$leaves[[1]] <- self$root
     },
 
     #' @description
     #' @return list of leaf nodes
     obstkorb = function() {
-      return(self$nodes[which(!is.na(self$leaves))])
+      idx <- sapply(self$nodes, function(node) node$isObst())
+      return(self$nodes[idx])
     },
 
     #' @description
-    #' Add a pair of nodes to the binary tree. Bi-directional edges are set
-    #' from a specified (unique) label.
-    #'
-    #' @details
-    #' If this method is used exclusively for creating a tree, no cycles
-    #' are possible: the labels of child nodes are incremented from the label
-    #' of the parent node  by +1 and +2 for the left and right node, respectively)
+    #' Add a pair of nodes to the binary tree.
     #' @param label
     #' @param Node
+    #'
     #' @return
-    append = function(label, Node1, Node2) { # Parent, Child1, Child2
-      parentNode <- self$nodes[[label]] # range check with [[
+    append = function(label, Child1, Child2) { # Parent, Child1, Child2
+      Parent <- self$nodes[[label]] # range check with [[
+      stopifnot(Parent$label == label)
 
       # disallow appending if parent node is not a leaf
-      stopifnot(is.null(parentNode$childL))
-      stopifnot(is.null(parentNode$childR))
+      stopifnot(is.null(Parent$childL))
+      stopifnot(is.null(Parent$childR))
 
-      # increment labels from $label, left to right
-      Node1$label <- label+1
-      Node2$label <- label+2
+      # update attributes for parent
+      Parent$childL <- Child1
+      Parent$childR <- Child2
 
-      # set bi-directional edges and append nodes
-      parentNode$setChildren(Node1, Node2)
-      self$nodes[[label+1]] <- Node1
-      self$nodes[[label+2]] <- Node2
+      # update attributes for left child
+      Child1$label  <- length(self$nodes) + 1
+      Child1$parent <- Parent
+      Child1$depth  <- Child1$depth + 1
 
-      # update labels of leaves
-      self$leaves[c(label, label+1, label+2)] <- c(NA, label+1, label+2)
+      # update attributes for right child
+      Child2$label  <- length(self$nodes) + 2
+      Child2$parent <- Parent
+      Child2$depth  <- Child2$depth + 1
+
+      # append nodes to list
+      self$nodes <- append(self$nodes, Child1)
+      self$nodes <- append(self$nodes, Child2)
     },
 
     #' @description
@@ -199,8 +176,6 @@ Baum <- R6::R6Class("Baum",
 
       # TODO: check size of x and y
       o <- self$obstkorb()
-      # FIXME: if taking df as argument, a <= partition or partition <= b
-      # may not necessarily hold
       x <- rbind(a, self$getPartition(self$root, 1), b)[, 1]
       y <- sapply(o, function(s) `$`(s, "y"))
 
