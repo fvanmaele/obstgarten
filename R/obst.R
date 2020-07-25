@@ -92,14 +92,14 @@ Baum <- R6::R6Class("Baum",
       Parent$childR <- Child2
 
       # update attributes for left child
-      Child1$label  <- length(self$nodes) + 1
+      Child1$label  <- length(self$nodes) + 1L
       Child1$parent <- Parent
-      Child1$depth  <- Child1$depth + 1
+      Child1$depth  <- Child1$depth + 1L
 
       # update attributes for right child
-      Child2$label  <- length(self$nodes) + 2
+      Child2$label  <- length(self$nodes) + 2L
       Child2$parent <- Parent
-      Child2$depth  <- Child2$depth + 1
+      Child2$depth  <- Child2$depth + 1L
 
       # append nodes to list
       self$nodes <- append(self$nodes, Child1)
@@ -156,16 +156,26 @@ Baum <- R6::R6Class("Baum",
       v2 <- seq_along(self$nodes)
       stopifnot(identical(v1, v2))
 
-      # ensure all leaves have $j, $s unset (NA)
+      # ensure all leaves have $j, $s unset (NA) and $y set
       idx <- self$obstkorb()
       a1 <- sapply(self$nodes[idx], function(node) {
-        all(is.na(node$j), is.na(node$s))
+        all(is.na(node$j), is.na(node$s), !is.na(node$y))
       })
       stopifnot(all(a1))
 
-      # ensure all inner nodes have $y unset (NA)
-      a2 <- sapply(self$nodes[!idx], function(node) is.na(node$y))
+      # ensure all inner nodes have $y unset (NA) and $j, $s set
+      a2 <- sapply(self$nodes[!idx], function(node) {
+        all(!is.na(node$j), !is.na(node$s), is.na(node$y))
+      })
       stopifnot(all(a2))
+
+      # ensure all leaves have at least 1 data point
+      a3 <- sapply(self$nodes[idx], function(node) {
+        length(node$points) >= 1
+      })
+      stopifnot(all(a3))
+
+      # TODO: cycles
     },
 
     #' @description
@@ -185,7 +195,7 @@ Baum <- R6::R6Class("Baum",
       b <- max(XY[, 1])
 
       # TODO: check size of x and y
-      o <- self$obstkorb()
+      o <- self$nodes[self$obstkorb()]
       x <- rbind(a, self$getPartition(self$root, 1), b)[, 1]
       y <- sapply(o, function(s) `$`(s, "y"))
 
