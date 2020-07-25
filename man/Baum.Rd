@@ -47,18 +47,18 @@ list of leaf nodes
 \if{html}{\out{<a id="method-append"></a>}}
 \if{latex}{\out{\hypertarget{method-append}{}}}
 \subsection{Method \code{append()}}{
-Add a pair of nodes to the binary tree. Bi-directional edges are set
-from a specified (unique) label.
+Add a pair of nodes to the binary tree.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Baum$append(label, Node1, Node2)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Baum$append(label, Child1, Child2)}\if{html}{\out{</div>}}
 }
 
-\subsection{Details}{
-If this method is used exclusively for creating a tree, no cycles
-are possible: the labels of child nodes are incremented from the label
-of the parent node  by +1 and +2 for the left and right node, respectively)
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{Node}}{}
 }
-
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 
 }

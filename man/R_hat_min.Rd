@@ -14,6 +14,9 @@ R_hat_min(A, n, d)
 
 \item{d}{dimension of the training data X_i1..X_id}
 }
+\value{
+
+}
 \description{
 Ties between found minima are broken at random.
 }

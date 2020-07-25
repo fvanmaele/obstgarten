@@ -10,8 +10,10 @@ cart_greedy(XY, depth = 10, threshold = 1, mode = "regression")
 \item{XY}{matrix with columns $1..$d (representing the
 training data X_i) and column $y (for the corresponding values Y_i)}
 
-\item{steps}{The amount of iterations before halting the algorithm
+\item{depth}{The amount of steps before halting the algorithm
 (defaults to 10)}
+
+\item{mode}{}
 }
 \value{
 

@@ -32,21 +32,10 @@ R6 class representing a CART node
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-setChildren}{\code{Gabel$setChildren()}}
 \item \href{#method-isObst}{\code{Gabel$isObst()}}
 \item \href{#method-print}{\code{Gabel$print()}}
 \item \href{#method-clone}{\code{Gabel$clone()}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setChildren"></a>}}
-\if{latex}{\out{\hypertarget{method-setChildren}{}}}
-\subsection{Method \code{setChildren()}}{
-create edges between tree nodes (bi-directional)
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Gabel$setChildren(Node1, Node2)}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-isObst"></a>}}
