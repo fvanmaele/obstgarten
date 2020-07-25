@@ -21,7 +21,7 @@ Gabel <- R6::R6Class("Gabel",
     y = NA, # < NA_integer_, NA_real_
 
     #' @description
-    #' @return list of all leaves
+    #' @return logical TRUE if a node is a leaf, FALSE otherwise.
     isObst = function() {
       all(is.null(self$childL), is.null(self$childR))
     },
