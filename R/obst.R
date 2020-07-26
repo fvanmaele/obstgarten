@@ -187,22 +187,25 @@ Baum <- R6::R6Class("Baum",
       if (is.null(XY)) {
         stop("no data available in root node")
       }
-      if (ncol(XY) > 2) {
-        # TODO: support contour plots for 2-dimensional data
-        stop("only 1-dimensional plots are supported for now")
+      if (ncol(XY) > 3) {
+        stop("data must be 1 or 2-dimensional")
       }
+      else if (ncol(XY) == 3) {
+        stop("function not implemented")
+      }
+      else {
+        # TODO: cache partition (e.g for subsequent plots)
+        x <- rbind(min(XY[, 1]), self$partition(self$root, 1))[, 1]
+        stopifnot(x[[1]] <= x[[2]])
 
-      # TODO: cache for subsequent plots (or set in arguments)
-      a <- min(XY[, 1])
-      b <- max(XY[, 1])
+        y <- sapply(self$nodes[self$obstkorb()], function(s) `$`(s, "y"))
+        stopifnot(!anyNA(y))
+        stopifnot(length(x) == length(y))
 
-      # TODO: check size of x and y
-      o <- self$nodes[self$obstkorb()]
-      x <- rbind(a, self$getPartition(self$root, 1), b)[, 1]
-      y <- sapply(o, function(s) `$`(s, "y"))
-
-      # Combined plot
-      ggplot() + geom_point(data=X) + geom_step(data=data.frame(x1 = x, y = y))
+        # Combined plot
+        plot(XY)
+        plot(x, y, type="l")
+      }
     }
   )
 )

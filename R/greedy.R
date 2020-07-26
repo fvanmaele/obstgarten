@@ -98,6 +98,7 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
       print(node$parent)
       print(node)
       cat("\n")
+
       if(nrow(node$points) > threshold) {
         # optimal subdivision
         params <- R_min(node$points, n, d)
