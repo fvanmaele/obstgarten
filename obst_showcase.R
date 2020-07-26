@@ -33,5 +33,14 @@ stopifnot(G2$childR$label == 5L) # 5L
 # ----
 M <- generate_sin_data(1000, sigma=0.2)
 dimnames(M) <- list(NULL, c(1, "y"))
-T2 <- cart_greedy(M, depth=10)
+T2 <- cart_greedy(M, depth=15)
 T2$validate()
+
+P <- T2$partition(T2$root, 1)
+x <- unname(P$part[, 1])
+x <- c(min(M[, 1]), x)
+y <- P$y
+ggplot() +
+  geom_step(data=data.frame(x = x, y = y), mapping=aes(x=x, y=y)) +
+  geom_point(data=data.frame(x= M[, 1], y=M[, 2]), mapping=aes(x=x, y=y))
+

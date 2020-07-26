@@ -69,7 +69,8 @@ Baum <- R6::R6Class("Baum",
     },
 
     #' @description
-    #' @return logical vector with TRUE for leaf nodes and FALSE otherwise
+    #' @return logical vector with TRUE for leaf nodes and FALSE otherwise. Note
+    #'   that leaves are in BFS order.
     obstkorb = function() {
       sapply(self$nodes, function(node) node$isObst())
     },
@@ -113,25 +114,26 @@ Baum <- R6::R6Class("Baum",
     #' @return
     partition = function(node, d) {
       stopifnot(d == (ncol(node$points) - 1L))
+      y_val <- numeric(0)
 
-      if (!is.null(node$childL) && !is.null(node$childR)) {
-        # parent node (node$j, $node$s set)
-        stopifnot(!anyNA(node$j, node$s))
-        P <- matrix(node$label, ncol = d,
-                    dimnames = list(paste0("V", node$label)))
-        P[, node$j] <- node$s
+      recurse <- function(node, d) {
+        if (!is.null(node$childL) && !is.null(node$childR)) {
+          row_s <- rep(NA, d)
+          row_s[[node$j]] <- node$s
 
-        # descend recursively
-        return(rbind(self$partition(node$childL, d), P,
-                     self$partition(node$childR, d)))
+          return(rbind(recurse(node$childL, d), row_s,
+                       recurse(node$childR, d)))
+        }
+        else if (is.null(node$childL) && is.null(node$childR)) {
+          y_val <<- c(y_val, node$y) # DFS for y values
+          return(NULL)
+        }
+        else {
+          stop("none or both of node$childL and node$childR must be set")
+        }
       }
-      else if (is.null(node$childL) && is.null(node$childR)) {
-        # leaf node (node$y set)
-        return() # NULL (noop for rbind)
-      }
-      else {
-        stop("none or both of node$childL and node$childR must be set")
-      }
+      part <- recurse(node, d)
+      return(list(part = part, y = y_val))
     },
 
     #' @description
@@ -176,8 +178,6 @@ Baum <- R6::R6Class("Baum",
         length(node$points) >= 1
       })
       stopifnot(all(a3))
-
-      # TODO: cycles
     },
 
     #' @description
@@ -195,13 +195,7 @@ Baum <- R6::R6Class("Baum",
       }
       else {
         # TODO: cache partition (e.g for subsequent plots)
-        x <- rbind(min(XY[, 1]), self$partition(self$root, 1))[, 1]
-        stopifnot(x[[1]] <= x[[2]])
-
-        y <- sapply(self$nodes[self$obstkorb()], function(s) `$`(s, "y"))
-        stopifnot(!anyNA(y))
-        stopifnot(length(x) == length(y))
-
+        stop() # TODO
         # Combined plot
         plot(XY)
         plot(x, y, type="l")
