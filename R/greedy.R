@@ -5,9 +5,9 @@
 #'
 #' @return
 #' @export
-which_is_min <- function(x, ...) {
+which_is_min <- function(x) {
   y <- tryCatch({
-    seq_along(x)[x == min(x, ...)]
+    seq_along(x)[x == min(x, na.rm=TRUE)]
   }, warning = function(w) {
     stop(conditionMessage(w))
   })
@@ -27,7 +27,7 @@ R_sum <- function(y1, y2, n) {
 
 R_part <- function(s, j, A) {
   rows_lt <- A[, j] < s
-  rows_gt <- setdiff(1:nrow(A), rows_lt)
+  rows_gt <- !rows_lt
 
   return(list(A1 = A[rows_lt, , drop=FALSE],
               A2 = A[rows_gt, , drop=FALSE]))
@@ -58,30 +58,31 @@ R_min <- function(A, n, d) {
         risk <- R_sum(P$A1[, "y"], P$A2[, "y"], n)
       } else {
         message("no data points for partition j = ", j, ", s = ", s)
-        risk <- Inf # no data points in new partition, skip
+        print(A)
+        risk <- NA_real_ # no data points in new partition, skip
       }
       G[i, "s", j] <- s
       G[i, "R", j] <- risk
     }
   }
   min_s <- apply(G, MARGIN=3, function(M) {
-    idx <- which_is_min(M[, "R"])
+    idx <- which.min(M[, "R"]) # TODO: which_is_min
     M[idx, "s"]
   })
 
-  j_hat <- which_is_min(min_s)
-  s_hat <-min_s[[j_hat]]
-  print(G)
-  print(list(j = j_hat, s = s_hat))
+  #print(G[order(G[, "R", 1]), , ])
+  j_hat <- which.min(min_s) # TODO: which_is_min
+  s_hat <- min_s[[j_hat]]
   return(list(j = j_hat, s = s_hat))
 }
 
 #' Create a regression tree greedily based on training data.
 #'
-#' @param XY matrix with columns $1..d$ (representing the training data $X_i$)
-#'   and column $y$ (for the values $Y_i$). Unless sample is set to TRUE, it is
-#'   required that there are no observations $(X_{i_1}, Y_{i_1})$ and $(X_{i_2},
-#'   Y_{i_2})$ with $X_{i_1} = X_{i_2}$, but $Y_{i_1} \neq Y_{i_2}$.
+#' @param XY matrix with columns \eqn{1..d} (representing the training data
+#'   \eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}). Unless sample
+#'   is set to TRUE, it is required that there are no observations
+#'   \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1}
+#'   = X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
 #' @param depth The amount of steps before halting the algorithm (defaults to
 #'   10)
 #' @param threshold (integer)
@@ -131,16 +132,16 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
         node$y <- NA
 
         # update attributes of left child
-        rows_lt <- node$points[, node$j] < node$s # FIXME: memoise?
+        rows_lt <- node$points[, node$j] < node$s
         childL <- Gabel$new()
         childL$points <- node$points[rows_lt, , drop=FALSE]
-        childL$y <- sum(childL$points[, "y"]) / n # FIXME: memoise?
+        childL$y <- sum(childL$points[, "y"]) / n
 
         # update attributes of right child
-        rows_gt <- setdiff(1:nrow(node$points), rows_lt) # FIXME: memoise?
+        rows_gt <- !rows_lt
         childR <- Gabel$new()
         childR$points <- node$points[rows_gt, , drop=FALSE]
-        childR$y <- sum(childR$points[, "y"]) / n # FIXME: memoise?
+        childR$y <- sum(childR$points[, "y"]) / n
 
         # append leaves to tree
         Cart$append(node$label, childL, childR)
