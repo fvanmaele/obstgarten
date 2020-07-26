@@ -5,6 +5,13 @@
 #' @param reg logical TRUE for regression data FALSE for classification data
 #' @return if reg TRUE: n x 2 matrix [x_i, y_i] of generated data set
 #' @return if reg FALSE: n x 3 matrix [x_1i, x_2i, y_i] of generated data set
+#' @example
+#' #' regression:
+#' dat <- generate_sin_data(100, sigma=0.2)
+#' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(-1, 1))
+#' classification:
+#' dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
+#' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(0, 1), col=dat[, 3])
 #' @export
 generate_sin_data <- function(n, sigma=0.2, reg=TRUE) {
   if (sigma <= 0.) {
@@ -12,11 +19,12 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE) {
   }
 
   eps <- rnorm(n, mean=0, sd=sigma)
+  print(eps)
 
   if (reg) {
     x <- runif(n, min=0, max=1)
     y <- sin(2 * pi * x) + eps
-    ret <- matrix(x, y, nrow=n, ncol=2)
+    ret <- matrix(c(x, y), nrow=n, ncol=2)
     colnames(ret) <- c("x", "y")
     return(ret)
   }
