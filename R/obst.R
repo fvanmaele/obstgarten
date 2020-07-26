@@ -112,12 +112,13 @@ Baum <- R6::R6Class("Baum",
     #' @param d dimension
     #' @return
     partition = function(node, d) {
-      if (!is.null(node$childL) && !is.null(node$childR)) {
-        # check if partition attributes are set
-        stopifnot(!anyNA(node$j, node$s))
+      stopifnot(d == (ncol(node$points) - 1L))
 
+      if (!is.null(node$childL) && !is.null(node$childR)) {
         # parent node (node$j, $node$s set)
-        P <- matrix(node$label, ncol = d, dimnames = list(paste0("V")))
+        stopifnot(!anyNA(node$j, node$s))
+        P <- matrix(node$label, ncol = d,
+                    dimnames = list(paste0("V", node$label)))
         P[, node$j] <- node$s
 
         # descend recursively
