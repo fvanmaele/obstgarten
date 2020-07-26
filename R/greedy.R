@@ -1,23 +1,3 @@
-#' Title
-#'
-#' @param x
-#' @param ...
-#'
-#' @return
-#' @export
-which_is_min <- function(x) {
-  y <- tryCatch({
-    seq_along(x)[x == min(x, na.rm=TRUE)]
-  }, warning = function(w) {
-    stop(conditionMessage(w))
-  })
-  if (length(y) > 1L) {
-    sample(y, 1L)
-  } else {
-    y
-  }
-}
-
 R_sum <- function(y1, y2, n) {
   c1_hat <- sum(y1) / n
   c2_hat <- sum(y2) / n
@@ -36,8 +16,6 @@ R_part <- function(s, j, A) {
 #' Find optimal split index $j$ and split point $s$ for a given partition A
 #' (regression tree)
 #'
-#' Ties between found minima are broken at random.
-#'
 #' @param A subset of training data $(X_i, Y_i)$ (matrix)
 #' @param n length of the full training data (integer)
 #' @param d dimension of the training data $X_{i_1}..X_{i_d}$
@@ -52,26 +30,25 @@ R_min <- function(A, n, d) {
   for (j in 1:d) {
     for (i in seq_along(A[, j])) {
       s <- A[i, j]
-      P <- R_part(s, j, A) # new partition A1, A2
+      part <- R_part(s, j, A) # new partition A1, A2
 
-      if (length(P$A1) > 0 && length(P$A2) > 0) {
-        risk <- R_sum(P$A1[, "y"], P$A2[, "y"], n)
+      if (length(part$A1) > 0) {
+        R <- R_sum(part$A1[, "y"], part$A2[, "y"], n)
       } else {
         message("no data points for partition j = ", j, ", s = ", s)
-        print(A)
-        risk <- NA_real_ # no data points in new partition, skip
+        R <- NA_real_ # no data points in new partition, skip
       }
       G[i, "s", j] <- s
-      G[i, "R", j] <- risk
+      G[i, "R", j] <- R
     }
   }
   min_s <- apply(G, MARGIN=3, function(M) {
-    idx <- which.min(M[, "R"]) # TODO: which_is_min
+    idx <- which.min(M[, "R"]) # TODO: break ties at random
     M[idx, "s"]
   })
 
   #print(G[order(G[, "R", 1]), , ])
-  j_hat <- which.min(min_s) # TODO: which_is_min
+  j_hat <- which.min(min_s) # TODO: break ties at random
   s_hat <- min_s[[j_hat]]
   return(list(j = j_hat, s = s_hat))
 }
@@ -91,10 +68,10 @@ R_min <- function(A, n, d) {
 #' @return
 #' @export
 cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
-  stopifnot(depth > 0)
-  stopifnot(threshold > 0)
+  stopifnot(depth > 0L)
+  stopifnot(threshold > 0L)
   n <- nrow(XY)
-  d <- ncol(XY) - 1
+  d <- ncol(XY) - 1L
 
   # Check data for duplicates (cf. [Richter 1.2, p.9])
   # TODO: add test for this case
@@ -116,13 +93,14 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
 
   for (i in 1:depth) {
     k <- length(leaves)
-
     for (node in leaves) {
+      cat("8<--------\n")
       print(node$parent)
       print(node)
-      if(length(node$points > threshold)) {
-        params <- R_min(node$points, n, d) # optimal subdivision
-        # sanity check return values
+      cat("\n")
+      if(nrow(node$points) > threshold) {
+        # optimal subdivision
+        params <- R_min(node$points, n, d)
         stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
         stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
 

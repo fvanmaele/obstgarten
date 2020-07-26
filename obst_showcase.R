@@ -33,5 +33,5 @@ stopifnot(G2$childR$label == 5L) # 5L
 # ----
 M <- generate_sin_data(100, sigma=0.2)
 dimnames(M) <- list(NULL, c(1, "y"))
-T2 <- cart_greedy(M)
+T2 <- cart_greedy(M, depth=5)
 T2$validate()

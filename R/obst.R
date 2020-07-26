@@ -88,19 +88,19 @@ Baum <- R6::R6Class("Baum",
       stopifnot(is.null(Parent$childL))
       stopifnot(is.null(Parent$childR))
 
-      # update attributes for parent
-      Parent$childL <- Child1
-      Parent$childR <- Child2
-
       # update attributes for left child
       Child1$label  <- length(self$nodes) + 1L
       Child1$parent <- Parent
-      Child1$depth  <- Child1$depth + 1L
+      Child1$depth  <- Parent$depth + 1L
 
       # update attributes for right child
       Child2$label  <- length(self$nodes) + 2L
       Child2$parent <- Parent
-      Child2$depth  <- Child2$depth + 1L
+      Child2$depth  <- Parent$depth + 1L
+
+      # update attributes for parent
+      Parent$childL <- Child1
+      Parent$childR <- Child2
 
       # append nodes to list
       self$nodes <- append(self$nodes, Child1)
