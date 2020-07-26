@@ -68,7 +68,7 @@ Add a pair of nodes to the binary tree.
 \if{latex}{\out{\hypertarget{method-partition}{}}}
 \subsection{Method \code{partition()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Baum$partition(node, d)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Baum$partition(node, d = nrow(node) - 1L)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

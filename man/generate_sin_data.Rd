@@ -2,7 +2,7 @@
 % Please edit documentation in R/data.R
 \name{generate_sin_data}
 \alias{generate_sin_data}
-\title{Generate data set like in Example 6.3 in Richter19.pdf}
+\title{Generate data set like in Example 6.3 of Richter19.pdf}
 \usage{
 generate_sin_data(n, sigma = 0.2, reg = TRUE)
 }
@@ -19,7 +19,7 @@ if reg TRUE: n x 2 matrix \link{x_i, y_i} of generated data set
 if reg FALSE: n x 3 matrix \link{x_1i, x_2i, y_i} of generated data set
 }
 \description{
-Generate data set like in Example 6.3 in Richter19.pdf
+Generate data set like in Example 6.3 of Richter19.pdf
 }
 \examples{
 # regression:

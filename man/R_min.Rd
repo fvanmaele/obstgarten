@@ -18,5 +18,6 @@ R_min(A, n, d)
 list containing optimal parameters $j$, $s$
 }
 \description{
-Ties between found minima are broken at random.
+Find optimal split index $j$ and split point $s$ for a given partition A
+(regression tree)
 }
