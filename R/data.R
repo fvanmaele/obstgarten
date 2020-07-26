@@ -19,7 +19,6 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE) {
   }
 
   eps <- rnorm(n, mean=0, sd=sigma)
-  print(eps)
 
   if (reg) {
     x <- runif(n, min=0, max=1)
