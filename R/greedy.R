@@ -6,23 +6,14 @@ R_part <- function(s, j, A) {
               A2 = A[rows_gt, , drop=FALSE]))
 }
 
-R_sum <- function(y1, y2) {
+R_hat <- function(y1, y2) {
   c1_hat <- sum(y1) / length(y1)
   c2_hat <- sum(y2) / length(y2)
 
   return(sum((y1 - c1_hat)^2) + sum((y2 - c2_hat)^2))
 }
 
-#' Find optimal split index $j$ and split point $s$ for a given partition A
-#' (regression tree)
-#'
-#' @param A subset of training data $(X_i, Y_i)$ (matrix)
-#' @param n length of the full training data (integer)
-#' @param d dimension of the training data $X_{i_1}..X_{i_d}$
-#'
-#' @return list containing optimal parameters $j$, $s$
-#' @export
-R_min <- function(A, d) {
+R_grid <- function(A, d) {
   G_dn <- list(NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
   G <- array(dim=c(nrow(A), 2, d), dimnames=G_dn)
 
@@ -30,10 +21,10 @@ R_min <- function(A, d) {
   for (j in 1:d) {
     for (i in seq_along(A[, j])) {
       s <- A[i, j]
-      part <- R_part(s, j, A) # new partition A1, A2
+      P <- R_part(s, j, A) # new partition A1, A2
 
-      if (length(part$A1) > 0) {
-        R <- R_sum(part$A1[, "y"], part$A2[, "y"])
+      if (length(P$A1) > 0) {
+        R <- R_hat(P$A1[, "y"], P$A2[, "y"])
       } else {
         message("no data points for partition j = ", j, ", s = ", s)
         R <- NA_real_ # no data points in new partition, skip
@@ -42,12 +33,24 @@ R_min <- function(A, d) {
       G[i, "R", j] <- R
     }
   }
+  return(G)
+}
+
+#' Find optimal split index \eqn{j} and split point \eqn{s} for a given
+#' partition A (regression tree)
+#'
+#' @param A subset of training data \eqn{(X_i, Y_i)} (matrix)
+#' @param d dimension of the training data \eqn{X_{i_1}..X_{i_d}}
+#'
+#' @return list containing optimal parameters \eqn{j}, \eqn{s}
+#' @export
+R_min <- function(A, d) {
+  G <- R_grid(A, d)
   min_s <- apply(G, MARGIN=3, function(M) {
     idx <- which.min(M[, "R"]) # TODO: break ties at random
     M[idx, "s"]
   })
 
-  #print(G[order(G[, "R", 1]), , ])
   j_hat <- which.min(min_s) # TODO: break ties at random
   s_hat <- min_s[[j_hat]]
   return(list(j = j_hat, s = s_hat))

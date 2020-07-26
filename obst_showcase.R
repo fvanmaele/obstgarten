@@ -31,9 +31,9 @@ stopifnot(G2$childL$label == 4L) # 4L
 stopifnot(G2$childR$label == 5L) # 5L
 
 # ----
-M <- generate_sin_data(1000, sigma=0.2)
+M <- generate_sin_data(100, sigma=0.2)
 dimnames(M) <- list(NULL, c(1, "y"))
-T2 <- cart_greedy(M, depth=15)
+T2 <- cart_greedy(M, depth=3)
 T2$validate()
 
 P <- T2$partition(T2$root, 1)

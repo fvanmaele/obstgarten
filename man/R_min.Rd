@@ -5,12 +5,10 @@
 \title{Find optimal split index $j$ and split point $s$ for a given partition A
 (regression tree)}
 \usage{
-R_min(A, n, d)
+R_min(A, d)
 }
 \arguments{
 \item{A}{subset of training data $(X_i, Y_i)$ (matrix)}
-
-\item{n}{length of the full training data (integer)}
 
 \item{d}{dimension of the training data $X_{i_1}..X_{i_d}$}
 }
