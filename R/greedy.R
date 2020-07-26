@@ -1,16 +1,16 @@
-R_sum <- function(y1, y2, n) {
-  c1_hat <- sum(y1) / n
-  c2_hat <- sum(y2) / n
-
-  return(sum((y1 - c1_hat)^2) + sum((y2 - c2_hat)^2))
-}
-
 R_part <- function(s, j, A) {
   rows_lt <- A[, j] < s
   rows_gt <- !rows_lt
 
   return(list(A1 = A[rows_lt, , drop=FALSE],
               A2 = A[rows_gt, , drop=FALSE]))
+}
+
+R_sum <- function(y1, y2) {
+  c1_hat <- sum(y1) / length(y1)
+  c2_hat <- sum(y2) / length(y2)
+
+  return(sum((y1 - c1_hat)^2) + sum((y2 - c2_hat)^2))
 }
 
 #' Find optimal split index $j$ and split point $s$ for a given partition A
@@ -22,7 +22,7 @@ R_part <- function(s, j, A) {
 #'
 #' @return list containing optimal parameters $j$, $s$
 #' @export
-R_min <- function(A, n, d) {
+R_min <- function(A, d) {
   G_dn <- list(NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
   G <- array(dim=c(nrow(A), 2, d), dimnames=G_dn)
 
@@ -33,7 +33,7 @@ R_min <- function(A, n, d) {
       part <- R_part(s, j, A) # new partition A1, A2
 
       if (length(part$A1) > 0) {
-        R <- R_sum(part$A1[, "y"], part$A2[, "y"], n)
+        R <- R_sum(part$A1[, "y"], part$A2[, "y"])
       } else {
         message("no data points for partition j = ", j, ", s = ", s)
         R <- NA_real_ # no data points in new partition, skip
@@ -70,7 +70,6 @@ R_min <- function(A, n, d) {
 cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
   stopifnot(depth > 0L)
   stopifnot(threshold > 0L)
-  n <- nrow(XY)
   d <- ncol(XY) - 1L
 
   # Check data for duplicates (cf. [Richter 1.2, p.9])
@@ -101,7 +100,7 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
 
       if(nrow(node$points) > threshold) {
         # optimal subdivision
-        params <- R_min(node$points, n, d)
+        params <- R_min(node$points, d)
         stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
         stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
 
@@ -114,13 +113,13 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
         rows_lt <- node$points[, node$j] < node$s
         childL <- Gabel$new()
         childL$points <- node$points[rows_lt, , drop=FALSE]
-        childL$y <- sum(childL$points[, "y"]) / n
+        childL$y <- sum(childL$points[, "y"]) / length(childL$points[, "y"])
 
         # update attributes of right child
         rows_gt <- !rows_lt
         childR <- Gabel$new()
         childR$points <- node$points[rows_gt, , drop=FALSE]
-        childR$y <- sum(childR$points[, "y"]) / n
+        childR$y <- sum(childR$points[, "y"]) / length(childR$points[, "y"])
 
         # append leaves to tree
         Cart$append(node$label, childL, childR)
