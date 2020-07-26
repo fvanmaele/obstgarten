@@ -16,7 +16,7 @@ R6 class representing a CART
 \item \href{#method-append}{\code{Baum$append()}}
 \item \href{#method-partition}{\code{Baum$partition()}}
 \item \href{#method-predict}{\code{Baum$predict()}}
-\item \href{#method-print}{\code{Baum$print()}}
+\item \href{#method-validate}{\code{Baum$validate()}}
 \item \href{#method-plot}{\code{Baum$plot()}}
 \item \href{#method-clone}{\code{Baum$clone()}}
 }
@@ -40,7 +40,7 @@ Create a new Baum object.
 }
 
 \subsection{Returns}{
-list of leaf nodes
+logical vector with TRUE for leaf nodes and FALSE otherwise
 }
 }
 \if{html}{\out{<hr>}}
@@ -104,12 +104,11 @@ the expected value by evaluating the tree
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
-\subsection{Method \code{print()}}{
-Print the CART to standard output
+\if{html}{\out{<a id="method-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-validate}{}}}
+\subsection{Method \code{validate()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Baum$print(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Baum$validate()}\if{html}{\out{</div>}}
 }
 
 }

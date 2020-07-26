@@ -46,7 +46,8 @@ R6 class representing a CART node
 }
 
 \subsection{Returns}{
-list of all leaves
+logical TRUE if a node is a leaf (both childL and childR are
+NULL), FALSE otherwise.
 }
 }
 \if{html}{\out{<hr>}}

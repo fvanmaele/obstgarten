@@ -17,7 +17,6 @@ G3$points <- matrix(c(3, 6), ncol=2, dimnames=list(NULL, c(1, "y")))
 G3$points
 G3
 
-# ----
 T1$append(1L, G2, G3) # append to "1"
 G1
 G2

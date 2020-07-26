@@ -21,7 +21,8 @@ Gabel <- R6::R6Class("Gabel",
     y = NA, # < NA_integer_, NA_real_
 
     #' @description
-    #' @return logical TRUE if a node is a leaf, FALSE otherwise.
+    #' @return logical TRUE if a node is a leaf (both childL and childR are
+    #'   NULL), FALSE otherwise.
     isObst = function() {
       all(is.null(self$childL), is.null(self$childR))
     },

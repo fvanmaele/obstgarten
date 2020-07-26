@@ -4,10 +4,10 @@
 \alias{which_is_min}
 \title{Title}
 \usage{
-which_is_min(x)
+which_is_min(x, ...)
 }
 \arguments{
-\item{x}{}
+\item{...}{}
 }
 \value{
 
