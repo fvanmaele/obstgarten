@@ -1,15 +1,16 @@
-#' Generate data set like in Example 6.3 in Richter19.pdf
+#' Generate data set like in Example 6.3 of Richter19.pdf
 #'
 #' @param n number of generated data pairs
 #' @param sigma standard deviation of irreducible error in y
 #' @param reg logical TRUE for regression data FALSE for classification data
 #' @return if reg TRUE: n x 2 matrix [x_i, y_i] of generated data set
 #' @return if reg FALSE: n x 3 matrix [x_1i, x_2i, y_i] of generated data set
-#' @example
-#' #' regression:
+#' @examples
+#' # regression:
 #' dat <- generate_sin_data(100, sigma=0.2)
 #' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(-1, 1))
-#' classification:
+#'
+#' # classification:
 #' dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
 #' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(0, 1), col=dat[, 3])
 #' @export

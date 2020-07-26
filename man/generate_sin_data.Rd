@@ -21,3 +21,12 @@ if reg FALSE: n x 3 matrix \link{x_1i, x_2i, y_i} of generated data set
 \description{
 Generate data set like in Example 6.3 in Richter19.pdf
 }
+\examples{
+# regression:
+dat <- generate_sin_data(100, sigma=0.2)
+plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(-1, 1))
+
+# classification:
+dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
+plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(0, 1), col=dat[, 3])
+}

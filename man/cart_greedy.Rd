@@ -7,10 +7,11 @@
 cart_greedy(XY, depth = 10L, threshold = 1L, sample = FALSE)
 }
 \arguments{
-\item{XY}{matrix with columns $1..d$ (representing the training data $X_i$)
-and column $y$ (for the values $Y_i$). Unless sample is set to TRUE, it is
-required that there are no observations $(X_{i_1}, Y_{i_1})$ and $(X_{i_2},
-Y_{i_2})$ with $X_{i_1} = X_{i_2}$, but $Y_{i_1} \neq Y_{i_2}$.}
+\item{XY}{matrix with columns \eqn{1..d} (representing the training data
+\eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}). Unless sample
+is set to TRUE, it is required that there are no observations
+\eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1}
+  = X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.}
 
 \item{depth}{The amount of steps before halting the algorithm (defaults to
 10)}
