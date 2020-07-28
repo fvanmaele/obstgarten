@@ -50,6 +50,31 @@ Gabel <- R6::R6Class("Gabel",
   )
 )
 
+#' Coerce a Gabel object to a nested list
+#'
+#' @param node (Gabel)
+#'
+#' @return
+#' @export
+#'
+#' @examples
+as.list.Gabel <- function(node) {
+  if (is.null(node$childL) && is.null(node$childR)) {
+    return(structure(
+      list(), y = node$y, s = NA, j = NA, depth = node$depth,
+      label = node$label, parent = node$parent$label, leaf = node$isObst())
+    )
+  } else if (!is.null(node$childL) && !is.null(node$childR)) {
+    return(structure(
+      list(as.list.Gabel(node$childL), as.list.Gabel(node$childR)),
+      y = NA, s = node$s, j = node$j, depth = node$depth,
+      label = node$label, parent = node$parent$label, leaf = node$isObst())
+    )
+  } else {
+    stop("none or both of node$childL and node$childR must be set")
+  }
+}
+
 #' R6 class representing a CART
 Baum <- R6::R6Class("Baum",
   public = list(
