@@ -2,20 +2,20 @@
 % Please edit documentation in R/greedy.R
 \name{R_min}
 \alias{R_min}
-\title{Find optimal split index $j$ and split point $s$ for a given partition A
-(regression tree)}
+\title{Find optimal split index \eqn{j} and split point \eqn{s} for a given
+partition A (regression tree)}
 \usage{
 R_min(A, d)
 }
 \arguments{
-\item{A}{subset of training data $(X_i, Y_i)$ (matrix)}
+\item{A}{subset of training data \eqn{(X_i, Y_i)} (matrix)}
 
-\item{d}{dimension of the training data $X_{i_1}..X_{i_d}$}
+\item{d}{dimension of the training data \eqn{X_{i_1}..X_{i_d}}}
 }
 \value{
-list containing optimal parameters $j$, $s$
+list containing optimal parameters \eqn{j}, \eqn{s}
 }
 \description{
-Find optimal split index $j$ and split point $s$ for a given partition A
-(regression tree)
+Find optimal split index \eqn{j} and split point \eqn{s} for a given
+partition A (regression tree)
 }
