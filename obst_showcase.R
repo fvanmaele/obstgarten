@@ -31,12 +31,13 @@ stopifnot(G2$childL$label == 4L) # 4L
 stopifnot(G2$childR$label == 5L) # 5L
 
 # ----
-M <- generate_sin_data(150, sigma=0.2)
+n <- 150
+M <- generate_sin_data(n, sigma=0.2)
 dimnames(M) <- list(NULL, c(1, "y"))
-T2 <- cart_greedy(M, depth=5)
+T2 <- cart_greedy(M, depth=5, threshold=1)
 T2$validate()
 
-P <- T2$partition(T2$root, 1)
+P <- cart_partition(T2$root, 1)
 x <- unname(P$part[, 1])
 x <- c(min(M[, 1]), x)
 y <- P$y
@@ -54,4 +55,4 @@ ggplot() +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2, colour = "segment"),
                size=1, data=data.frame(x1 = x1, x2 = x2, y1 = y, y2 = y)) +
   geom_point(data=data.frame(x= M[, 1], y=M[, 2]), mapping=aes(x=x, y=y), size=1) +
-  geom_function(data=data.frame(x = runif(200, min=0, max=1)), fun = function(x) sin(2 * pi * x))
+  geom_function(data=data.frame(x = runif(n, min=0, max=1)), fun = function(x) sin(2 * pi * x))

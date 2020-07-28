@@ -133,52 +133,6 @@ Baum <- R6::R6Class("Baum",
       self$nodes <- append(self$nodes, Child2)
     },
 
-    #' @description
-    #' @param node entry point
-    #' @param d dimension
-    #' @return
-    partition = function(node, d) {
-      stopifnot(d == (ncol(node$points) - 1L))
-      y_val <- numeric(0)
-
-      recurse <- function(node, d) {
-        if (!is.null(node$childL) && !is.null(node$childR)) {
-          row_s <- rep(NA, d)
-          row_s[[node$j]] <- node$s
-
-          return(rbind(recurse(node$childL, d), row_s,
-                       recurse(node$childR, d)))
-        }
-        else if (is.null(node$childL) && is.null(node$childR)) {
-          y_val <<- c(y_val, node$y) # DFS for y values
-          return(NULL)
-        }
-        else {
-          stop("none or both of node$childL and node$childR must be set")
-        }
-      }
-      part <- recurse(node, d)
-      return(list(part = part, y = y_val))
-    },
-
-    #' @description
-    #' @param x vector representing a data point
-    #' @return the expected value by evaluating the tree
-    predict = function(x, node = self$root) { # list or vector
-      # check if vector x matches tree dimension
-      # TODO: implement dim/d (length x) as separate (Gabel?) attribute
-      stopifnot(length(x) == (ncol(node$points)-1))
-
-      if (is.null(node$childR) && is.null(node$childL)) {
-        # leaf node found -> return value
-        return(node$y)
-      } else if (x[[node$j]] < node$s) {
-        return(self$predict(x, node$childL))
-      } else {
-        return(self$predict(x, node$childR))
-      }
-    },
-
     validate = function() {
       # ensure all node labels are unique
       v1 <- sapply(self$nodes, function(node) node$label)
@@ -203,28 +157,6 @@ Baum <- R6::R6Class("Baum",
         length(node$points) >= 1
       })
       stopifnot(all(a3))
-    },
-
-    #' @description
-    #' Plot a CART with 1 or 2-dimensional data
-    plot = function() {
-      XY <- self$root$points
-      if (is.null(XY)) {
-        stop("no data available in root node")
-      }
-      if (ncol(XY) > 3) {
-        stop("data must be 1 or 2-dimensional")
-      }
-      else if (ncol(XY) == 3) {
-        stop("function not implemented")
-      }
-      else {
-        # TODO: cache partition (e.g for subsequent plots)
-        stop() # TODO
-        # Combined plot
-        plot(XY)
-        plot(x, y, type="l")
-      }
     }
   )
 )

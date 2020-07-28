@@ -14,10 +14,7 @@ R6 class representing a CART
 \item \href{#method-new}{\code{Baum$new()}}
 \item \href{#method-obstkorb}{\code{Baum$obstkorb()}}
 \item \href{#method-append}{\code{Baum$append()}}
-\item \href{#method-partition}{\code{Baum$partition()}}
-\item \href{#method-predict}{\code{Baum$predict()}}
 \item \href{#method-validate}{\code{Baum$validate()}}
-\item \href{#method-plot}{\code{Baum$plot()}}
 \item \href{#method-clone}{\code{Baum$clone()}}
 }
 }
@@ -65,61 +62,11 @@ Add a pair of nodes to the binary tree.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-partition"></a>}}
-\if{latex}{\out{\hypertarget{method-partition}{}}}
-\subsection{Method \code{partition()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Baum$partition(node, d)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{node}}{entry point}
-
-\item{\code{d}}{dimension}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-predict"></a>}}
-\if{latex}{\out{\hypertarget{method-predict}{}}}
-\subsection{Method \code{predict()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Baum$predict(x, node = self$root)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{vector representing a data point}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-the expected value by evaluating the tree
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-validate}{}}}
 \subsection{Method \code{validate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Baum$validate()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-plot"></a>}}
-\if{latex}{\out{\hypertarget{method-plot}{}}}
-\subsection{Method \code{plot()}}{
-Plot a CART with 1 or 2-dimensional data
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Baum$plot()}\if{html}{\out{</div>}}
 }
 
 }
