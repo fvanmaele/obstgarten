@@ -34,6 +34,7 @@ R6 class representing a CART node
 \itemize{
 \item \href{#method-isObst}{\code{Gabel$isObst()}}
 \item \href{#method-print}{\code{Gabel$print()}}
+\item \href{#method-append}{\code{Gabel$append()}}
 \item \href{#method-clone}{\code{Gabel$clone()}}
 }
 }
@@ -57,6 +58,15 @@ NULL), FALSE otherwise.
 Print a summary of node attributes
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Gabel$print(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-append"></a>}}
+\if{latex}{\out{\hypertarget{method-append}{}}}
+\subsection{Method \code{append()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Gabel$append(Child1, Child2)}\if{html}{\out{</div>}}
 }
 
 }

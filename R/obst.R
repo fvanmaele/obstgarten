@@ -46,6 +46,24 @@ Gabel <- R6::R6Class("Gabel",
       cat("  Blatt: ", self$isObst(), "\n", sep = "")
 
       invisible(self)
+    },
+
+    append = function(Child1, Child2) { # Parent (self), Child1, Child2
+      # disallow appending if parent node is not a leaf
+      stopifnot(is.null(self$childL))
+      stopifnot(is.null(self$childR))
+
+      # update attributes for left child
+      Child1$parent <- self
+      Child1$depth  <- self$depth + 1L
+
+      # update attributes for right child
+      Child2$parent <- self
+      Child2$depth  <- self$depth + 1L
+
+      # update attributes for parent
+      self$childL <- Child1
+      self$childR <- Child2
     }
   )
 )
@@ -110,23 +128,12 @@ Baum <- R6::R6Class("Baum",
       Parent <- self$nodes[[label]] # range check with [[
       stopifnot(Parent$label == label)
 
-      # disallow appending if parent node is not a leaf
-      stopifnot(is.null(Parent$childL))
-      stopifnot(is.null(Parent$childR))
+      # update labels
+      Child1$label <- length(self$nodes) + 1L
+      Child2$label <- length(self$nodes) + 2L
 
-      # update attributes for left child
-      Child1$label  <- length(self$nodes) + 1L
-      Child1$parent <- Parent
-      Child1$depth  <- Parent$depth + 1L
-
-      # update attributes for right child
-      Child2$label  <- length(self$nodes) + 2L
-      Child2$parent <- Parent
-      Child2$depth  <- Parent$depth + 1L
-
-      # update attributes for parent
-      Parent$childL <- Child1
-      Parent$childR <- Child2
+      # update edges
+      Parent$append(Child1, Child2)
 
       # append nodes to list
       self$nodes <- append(self$nodes, Child1)
