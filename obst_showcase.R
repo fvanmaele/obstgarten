@@ -17,16 +17,18 @@ G3$points <- matrix(c(3, 6), ncol=2, dimnames=list(NULL, c(1, "y")))
 G3$points
 G3
 
-T1$append(1L, G2, G3) # append to "1"
+T1$append(G1, G2, G3) # append to G1 ($label == 1L)
 G1
 G2
 G3
 stopifnot(identical(G1$childL, G2)) # 2L
+stopifnot(G2$label == 2L)
 stopifnot(identical(G1$childR, G3)) # 3L
+stopifnot(G3$label == 3L)
 T1$obstkorb()
 
 # ensure labels are not updated from argument label
-T1$append(2L, Gabel$new(), Gabel$new())
+T1$append(G2, Gabel$new(), Gabel$new())
 stopifnot(G2$childL$label == 4L) # 4L
 stopifnot(G2$childR$label == 5L) # 5L
 

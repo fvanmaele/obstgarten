@@ -125,7 +125,7 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
         childR$y <- sum(childR$points[, "y"]) / length(childR$points[, "y"])
 
         # append leaves to tree
-        Cart$append(node$label, childL, childR)
+        Cart$append(node, childL, childR)
         leaves <- append(leaves, c(childL, childR))
       } else {
         stopifnot(length(node$points) > 0)

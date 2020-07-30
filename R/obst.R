@@ -124,9 +124,8 @@ Baum <- R6::R6Class("Baum",
     #' @param Node
     #'
     #' @return
-    append = function(label, Child1, Child2) { # Parent, Child1, Child2
-      Parent <- self$nodes[[label]] # range check with [[
-      stopifnot(Parent$label == label)
+    append = function(Parent, Child1, Child2) { # Parent, Child1, Child2
+      stopifnot(identical(self$nodes[[Parent$label]], Parent))
 
       # update labels
       Child1$label <- length(self$nodes) + 1L
