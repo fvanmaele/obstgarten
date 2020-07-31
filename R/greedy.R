@@ -23,7 +23,7 @@ R_grid <- function(A, d) {
       s <- A[i, j]
       P <- R_part(s, j, A) # new partition A1, A2
 
-      if (length(P$A1) > 0) {
+      if (nrow(P$A1) > 0) {
         R <- R_hat(P$A1[, "y"], P$A2[, "y"])
       } else {
         message("no data points for partition j = ", j, ", s = ", s)
