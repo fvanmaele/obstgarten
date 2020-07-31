@@ -47,7 +47,7 @@ that leaves are in BFS order.
 \subsection{Method \code{append()}}{
 Add a pair of nodes to the binary tree.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Baum$append(label, Child1, Child2)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Baum$append(Parent, Child1, Child2)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

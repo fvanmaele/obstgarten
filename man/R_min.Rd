@@ -3,19 +3,21 @@
 \name{R_min}
 \alias{R_min}
 \title{Find optimal split index \eqn{j} and split point \eqn{s} for a given
-partition A (regression tree)}
+partition A (regression or classification tree)}
 \usage{
-R_min(A, d)
+R_min(A, d, mode = "regression")
 }
 \arguments{
 \item{A}{subset of training data \eqn{(X_i, Y_i)} (matrix)}
 
 \item{d}{dimension of the training data \eqn{X_{i_1}..X_{i_d}}}
+
+\item{mode}{}
 }
 \value{
 list containing optimal parameters \eqn{j}, \eqn{s}
 }
 \description{
 Find optimal split index \eqn{j} and split point \eqn{s} for a given
-partition A (regression tree)
+partition A (regression or classification tree)
 }

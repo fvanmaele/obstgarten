@@ -19,6 +19,8 @@ is set to TRUE, it is required that there are no observations
 \item{threshold}{(integer)}
 
 \item{sample}{(logical)}
+
+\item{mode}{}
 }
 \value{
 
