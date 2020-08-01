@@ -60,7 +60,7 @@ R_hat <- function(y1, y2) {
 
 C_hat <- function(y1, y2) {
   c1_p <- max(sapply(unique(y1), function(k) length(y1[y1 == k]) / length(y1)))
-  c1_p <- max(sapply(unique(y2), function(k) length(y2[y2 == k]) / length(y2)))
+  c2_p <- max(sapply(unique(y2), function(k) length(y2[y2 == k]) / length(y2)))
 
   return(length(y1) * (1 - c1_p) + length(y2) * (1 - c2_p))
 }
