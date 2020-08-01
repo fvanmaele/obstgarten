@@ -27,7 +27,7 @@ cart_part <- function(s, j, A) {
 #' @export
 #'
 #' @examples
-cart_grid <- function(A, d, f) {
+cart_grid <- function(A, d, f, ...) {
   stopifnot(length(formals(f)) == 2)
   G_dn <- list(NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
   G <- array(dim=c(nrow(A), 2, d), dimnames=G_dn)
@@ -39,7 +39,7 @@ cart_grid <- function(A, d, f) {
       P <- cart_part(s, j, A) # new partition A1, A2
 
       if (nrow(P$A1) > 0) {
-        R <- f(P$A1[, "y"], P$A2[, "y"])
+        R <- f(P$A1[, "y"], P$A2[, "y"], ...)
       } else {
         message("no data points for partition j = ", j, ", s = ", s)
         R <- NA_real_ # no data points in new partition, skip
@@ -59,10 +59,9 @@ R_hat <- function(y1, y2) {
 }
 
 C_hat <- function(y1, y2) {
-  c1_p <- length(y1[y1 == (sum(y1) / length(y1))]) / length(y1)
-  c2_p <- length(y2[y2 == (sum(y2) / length(y2))]) / length(y2)
+  c1_p <- max(sapply(unique(y1), function(k) length(y1[y1 == k]) / length(y1)))
+  c1_p <- max(sapply(unique(y2), function(k) length(y2[y2 == k]) / length(y2)))
 
-  # note that y1 may contain duplicate entries (if x_i, x_j -> y_i == y_j)
   return(length(y1) * (1 - c1_p) + length(y2) * (1 - c2_p))
 }
 
