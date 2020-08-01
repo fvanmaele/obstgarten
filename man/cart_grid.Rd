@@ -4,7 +4,7 @@
 \alias{cart_grid}
 \title{Title}
 \usage{
-cart_grid(A, d, f)
+cart_grid(A, d, f, ...)
 }
 \arguments{
 \item{...}{}

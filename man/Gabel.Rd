@@ -33,6 +33,7 @@ R6 class representing a CART node
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-isObst}{\code{Gabel$isObst()}}
+\item \href{#method-isRoot}{\code{Gabel$isRoot()}}
 \item \href{#method-print}{\code{Gabel$print()}}
 \item \href{#method-append}{\code{Gabel$append()}}
 \item \href{#method-clone}{\code{Gabel$clone()}}
@@ -49,6 +50,18 @@ R6 class representing a CART node
 \subsection{Returns}{
 logical TRUE if a node is a leaf (both childL and childR are
 NULL), FALSE otherwise.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isRoot"></a>}}
+\if{latex}{\out{\hypertarget{method-isRoot}{}}}
+\subsection{Method \code{isRoot()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Gabel$isRoot()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+
 }
 }
 \if{html}{\out{<hr>}}

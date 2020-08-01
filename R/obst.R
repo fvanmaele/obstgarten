@@ -1,4 +1,5 @@
 #' R6 class representing a CART node
+#' @export
 Gabel <- R6::R6Class("Gabel",
   public = list(
     #' @field childL (Gabel)
@@ -25,6 +26,12 @@ Gabel <- R6::R6Class("Gabel",
     #'   NULL), FALSE otherwise.
     isObst = function() {
       all(is.null(self$childL), is.null(self$childR))
+    },
+
+    #' @description
+    #' @return
+    isRoot = function() {
+      is.null(parent)
     },
 
     #' @description
@@ -94,6 +101,7 @@ as.list.Gabel <- function(node) {
 }
 
 #' R6 class representing a CART
+#' @export
 Baum <- R6::R6Class("Baum",
   public = list(
     #' @field nodes
