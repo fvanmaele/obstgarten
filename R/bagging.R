@@ -74,7 +74,7 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
 
   # returning predictions for test set via mean in regression case and via majority vote in classification case
   if (regression) return((1/B) * apply(predictions, MARGIN=1, sum))
-  else return(lapply(predictions, MARGIN=1, majorityVote))
+  else return(apply(predictions, MARGIN=1, majorityVote))
 
 }
 
