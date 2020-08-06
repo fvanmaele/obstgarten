@@ -4,7 +4,7 @@
 \alias{cart_greedy}
 \title{Create a regression tree greedily based on training data.}
 \usage{
-cart_greedy(XY, depth = 10L, threshold = 1L, sample = FALSE)
+cart_greedy(XY, depth = 10L, threshold = 1L, sample = FALSE, random = FALSE)
 }
 \arguments{
 \item{XY}{matrix with columns \eqn{1..d} (representing the training data
@@ -20,7 +20,7 @@ is set to TRUE, it is required that there are no observations
 
 \item{sample}{(logical)}
 
-\item{mode}{}
+\item{random}{generates CART for random forest (logical)}
 }
 \value{
 

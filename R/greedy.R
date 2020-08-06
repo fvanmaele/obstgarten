@@ -104,13 +104,22 @@ R_min <- function(A, d, mode = "regression") {
 #' @param threshold (integer)
 #' @param sample (logical)
 #' @param mode
+#' @param random generates CART for random forest (logical)
 #'
 #' @return
 #' @export
-cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
+cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE, random = FALSE) {
   stopifnot(depth > 0L)
   stopifnot(threshold > 0L)
   d <- ncol(XY) - 1L
+
+  if(random){
+    n <- nrow(XY)
+    # random number of leaves
+    stopifnot(n > 1)
+    t <- sample((n/2):n, 1) # TODO: not sure if t is defined correctly
+    print(t)
+  }
 
   # Check data for duplicates (cf. [Richter 1.2, p.9])
   # TODO: add test for this case
@@ -134,10 +143,24 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
     k <- length(leaves)
     for (node in leaves) {
       if(nrow(node$points) > threshold) {
-        # optimal subdivision
-        params <- R_min(node$points, d, mode = "regression")
-        stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
-        stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
+        if(random){
+          # random dimensions to minimise on
+          stopifnot(d > 1)
+          m <- sample(1:(d-1), 1) # m random dimensions
+          S <- c(sample(1:d, m, replace = FALSE), d+1)
+
+          # optimal subdivision
+          params <- R_min(node$points[,S], m, mode = "regression") # minimise with j out of S
+          stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
+          stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
+          params$j <- S[params$j]
+        }
+        else{
+          # optimal subdivision
+          params <- R_min(node$points, d, mode = "regression")
+          stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
+          stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
+        }
 
         # update attributes of parent
         node$j <- params$j
@@ -163,6 +186,12 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE) {
         stopifnot(length(node$points) > 0)
         message("threshold not reached for node ", node$label)
       }
+    }
+
+    # The tree must not have more than t leaves
+    if(random && length(leaves) >= t){
+      message("reached t leaves ", t)
+      break
     }
 
     # pop leaves from stack
