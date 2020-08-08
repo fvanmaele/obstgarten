@@ -109,14 +109,16 @@ R_min <- function(A, d, mode = "regression") {
 #' @return
 #' @export
 cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE, random = FALSE) {
-  stopifnot(depth > 0L)
-  stopifnot(threshold > 0L)
+  stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
+  stopifnot("depth is not numeric and greater than 0"= is.numeric(depth) & depth > 0L)
+  stopifnot("threshold is not numeric and greater than 0"= is.numeric(threshold) & threshold > 0L)
+  stopifnot("sample is not logical"= is.logical(sample))
+  stopifnot("random is not logical"= is.logical(random))
   d <- ncol(XY) - 1L
 
   if(random){
     n <- nrow(XY)
     # random number of leaves
-    stopifnot(n > 1)
     t <- sample((n/2):n, 1) # TODO: not sure if t is defined correctly
     print(t)
   }
@@ -126,7 +128,7 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE, random 
   XY <- unique(XY)
   if (sample == FALSE) {
     m <- min(apply(XY, MARGIN=2, function(c) length(unique(c))))
-    stopifnot(m == nrow(XY))
+    stopifnot("Data contains duplicates"= m == nrow(XY))
   } else {
     stop("function not implemented")
   }

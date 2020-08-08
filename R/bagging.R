@@ -1,4 +1,4 @@
-library(obstgarten)
+#library(obstgarten)
 library(parallel)
 
 #' ATTENTION!! method not finished for classification case.
