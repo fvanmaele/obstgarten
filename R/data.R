@@ -31,7 +31,7 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
     y <- sin(2 * pi * x) + eps
     ret <- matrix(c(x, y), nrow=n, ncol=2)
     colnames(ret) <- c("x", "y")
-    return(ret)
+    return(ret[order(ret[, NA])])
   }
   else {
     x1 <- runif(n, min=0, max=1)
