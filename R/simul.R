@@ -20,7 +20,6 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
     for (i in 1:reps) {
       x <- generate_sin_data(n, grid=grid)
       dimnames(x) <- list(NULL, c(1, "y"))
-      print(x)
       tree <- cart_greedy(x, depth=depth)
       pred[i, ] <- apply(x[, 1, drop=FALSE], MARGIN=1, predict) # predicting with current tree
     }
@@ -32,5 +31,6 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
   save("bv_data", file=str_c("data/simul/","bv_greedy_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
-# bv_greedy(list(5L, 10L, 15L), n=150, reps=2)
-
+# generate test date for different depths values of the CART algorithm with 400 reps
+# and 150 data points
+bv_greedy(list(5L, 10L, 15L), n=150, reps=400)
