@@ -14,8 +14,10 @@ test_that("cart_greedy: argument XY", {
   expect_error(cart_greedy(matrix(c(1,1,1,2,1,2), 2, 3)))
 
   XY <- generate_sin_data(10)
-  expect_s3_class(cart_greedy(XY), "Baum")
-  expect_s3_class(cart_greedy(XY), "R6")
+  depth_s <-  sample(2:5, 1)
+  res <- cart_greedy(XY, depth = depth_s)
+  expect_s3_class(res, "Baum")
+  expect_s3_class(res, "R6")
 })
 
 test_that("cart_part", {
