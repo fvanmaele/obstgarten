@@ -3,6 +3,7 @@
 #' @param n number of generated data pairs
 #' @param sigma standard deviation of irreducible error in y
 #' @param reg logical TRUE for regression data FALSE for classification data
+#' @param grid specify data points on x axis only works for reg == TRUE
 #' @return if reg TRUE: n x 2 matrix [x_i, y_i] of generated data set
 #' @return if reg FALSE: n x 3 matrix [x_1i, x_2i, y_i] of generated data set
 #' @examples
@@ -14,15 +15,19 @@
 #' dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
 #' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(0, 1), col=dat[, 3])
 #' @export
-generate_sin_data <- function(n, sigma=0.2, reg=TRUE) {
+generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
   if (sigma <= 0.) {
     stop("Error: sigma has to be > 0")
+  }
+  if (!is.null(grid) & n != length(grid)) {
+    stop("Error: The grid needs to be of the same length as n")
   }
 
   eps <- rnorm(n, mean=0, sd=sigma)
 
   if (reg) {
-    x <- runif(n, min=0, max=1)
+    if (!is.null(grid)) x <- grid
+    else x <- runif(n, min=0, max=1)
     y <- sin(2 * pi * x) + eps
     ret <- matrix(c(x, y), nrow=n, ncol=2)
     colnames(ret) <- c("x", "y")
