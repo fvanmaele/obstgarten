@@ -32,7 +32,7 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
     ret <- matrix(c(x, y), nrow=n, ncol=2)
     colnames(ret) <- c("x", "y")
     ret <- as.data.frame(ret)
-    return(ret[order(ret[, 1]), ])
+    return(data.matrix(ret[order(ret[, 1]), ]))
   }
   else {
     x1 <- runif(n, min=0, max=1)
