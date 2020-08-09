@@ -33,4 +33,4 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 
 # generate test date for different depths values of the CART algorithm with 400 reps
 # and 150 data points
-bv_greedy(list(5L, 10L, 15L), n=150, reps=400)
+# bv_greedy(list(5L, 10L, 15L), n=150, reps=400)
