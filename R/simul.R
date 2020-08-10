@@ -1,6 +1,5 @@
 library(obstgarten)
 library(tidyverse)
-library(patchwork)
 
 # bias variance data for 400 reps for CARTs of different depths
 bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
@@ -20,7 +19,39 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
     grid <- seq(0, 1, len=n)
 
     for (i in 1:reps) {
-      x <- generate_sin_data(n, grid=grid)
+      x <- generate_sin_data(n, grid=grid, sigma=sigma)
+      dimnames(x) <- list(NULL, c(1, "y"))
+      tree <- cart_greedy(x, depth=depth)
+      pred[i, ] <- apply(x[, 1, drop=FALSE], MARGIN=1, predict) # predicting with current tree
+    }
+
+    ret[[count]] <- apply(pred, MARGIN=2, function(x) c(mean(x), sd(x)))
+    count <- count + 1
+  }
+  bv_data <- list(params_list, ret)
+  save("bv_data", file=str_c("data/simul/","bv_greedy_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+}
+
+# bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
+bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
+  bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE)
+
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
+  }
+
+  params_list <- list()
+  ret <- list()
+  count <- 1
+
+  for (bs in bs_list) {
+    pred <- matrix(0., nrow=reps, ncol=n)
+
+    params_list[[count]] <- bs
+    grid <- seq(0, 1, len=n)
+
+    for (i in 1:reps) {
+      x <- generate_sin_data(n, grid=grid, sigma=sigma)
       dimnames(x) <- list(NULL, c(1, "y"))
       tree <- cart_greedy(x, depth=depth)
       pred[i, ] <- apply(x[, 1, drop=FALSE], MARGIN=1, predict) # predicting with current tree
