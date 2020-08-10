@@ -32,13 +32,13 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
   save("bv_data", file=str_c("data/simul/","bv_greedy_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
+# generate test date for different depths values of the CART algorithm with 400 reps
+# and 150 data points
+# bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
+
+
 # bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
 bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
-  bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE)
-
-  predict <- function(x) {
-    return(cart_predict(x, node=tree$root))
-  }
 
   params_list <- list()
   ret <- list()
@@ -52,21 +52,21 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
     for (i in 1:reps) {
       x <- generate_sin_data(n, grid=grid, sigma=sigma)
-      dimnames(x) <- list(NULL, c(1, "y"))
-      tree <- cart_greedy(x, depth=depth)
-      pred[i, ] <- apply(x[, 1, drop=FALSE], MARGIN=1, predict) # predicting with current tree
+      # predicting with current Bagging alg
+      pred[i, ] <- bagging(bs, x_train=x, x_test=x, regression=TRUE, use_parallel=FALSE)
     }
 
     ret[[count]] <- apply(pred, MARGIN=2, function(x) c(mean(x), sd(x)))
     count <- count + 1
   }
   bv_data <- list(params_list, ret)
-  save("bv_data", file=str_c("data/simul/","bv_greedy_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  save("bv_data", file=str_c("data/simul/","bv_bagging_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
 # generate test date for different depths values of the CART algorithm with 400 reps
 # and 150 data points
-# bv_greedy(list(5L, 10L, 15L), n=150, reps=400)
+# bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
+
 
 #bias variance plot for CARTs for different depths
 bv_plot <- function(data) {
