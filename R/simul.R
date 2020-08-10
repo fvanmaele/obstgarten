@@ -182,5 +182,5 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
   save("bv_data", file=str_c("data/simul/","bv_bagging_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
-#load("data/simul/bv_greedy_20200810-101102")
-#bv_plot(bv_data)
+# load("data/simul/bv_bagging_20200810-115904")
+# bv_plot(bv_data)
