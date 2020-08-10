@@ -1,7 +1,74 @@
 library(obstgarten)
 library(tidyverse)
 
-# bias variance data for 400 reps for CARTs of different depths
+# plots prediction of CART generated regression tree
+#'
+#' @param depth Integer depths of the CART generated regression tree
+#' @example pred_plot_greedy(5, sigma=0.25, n=150)
+pred_plot_greedy <- function(depth, sigma=0.25, n=150) {
+
+  grid <- seq(0, 1, len=n)
+
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
+  }
+
+  x <- generate_sin_data(n, grid=grid, sigma=sigma)
+
+  dimnames(x) <- list(NULL, c(1, "y"))
+  tree <- cart_greedy(x, depth=depth)
+  pred <- apply(x[, 1, drop=FALSE], MARGIN=1, predict) # predicting with current tree
+
+  df_plot <- data.frame(grid=grid, y=pred)
+
+  gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
+    scale_colour_manual("",
+                        breaks = c("Prediction", "True"),
+                        values = c("Prediction"="Blue", "True"="red")) +
+    geom_line(aes(colour="Prediction")) +
+    geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
+    geom_point(aes(x=grid, y=x[, 2])) +
+    ggtitle(str_c("Prediction of CART Regression Tree with Depth ", depth)) +
+    xlab("") +
+    ylab("")
+
+  print(gg)
+
+}
+
+#' plots prediction of Bagging generated regression tree with depth 5
+#' and specified number of bootstrap samples B
+#'
+#' @param B integer number of bootstrap samples
+#' @example pred_plot_bagging(100, sigma=0.25, n=150)
+pred_plot_bagging <- function(B, sigma=0.25, n=150) {
+
+  grid <- seq(0, 1, len=n)
+
+  x <- generate_sin_data(n, grid=grid, sigma=sigma)
+
+  pred <- bagging(B=B, x_train=x, x_test=x) # predicting with current tree
+
+  df_plot <- data.frame(grid=grid, y=pred)
+
+  gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
+    scale_colour_manual("",
+                        breaks = c("Prediction", "True"),
+                        values = c("Prediction"="Blue", "True"="red")) +
+    geom_line(aes(colour="Prediction")) +
+    geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
+    geom_point(aes(x=grid, y=x[, 2])) +
+    ggtitle(str_c("Prediction of CART Regression Tree with ", B, " Bootstrap Samples")) +
+    xlab("") +
+    ylab("")
+
+  print(gg)
+
+}
+
+#' bias variance data for 400 reps for CARTs of different depths
+#' @example generate test date for different depths values of the CART algorithm with 400 reps
+#' and 150 data points bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
 bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 
   predict <- function(x) {
@@ -31,10 +98,6 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
   bv_data <- list(params_list, ret)
   save("bv_data", file=str_c("data/simul/","bv_greedy_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
-
-# generate test date for different depths values of the CART algorithm with 400 reps
-# and 150 data points
-# bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
 
 
 # bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
