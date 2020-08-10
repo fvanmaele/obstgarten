@@ -4,7 +4,7 @@
 \alias{generate_sin_data}
 \title{Generate data set like in Example 6.3 of Richter19.pdf}
 \usage{
-generate_sin_data(n, sigma = 0.2, reg = TRUE)
+generate_sin_data(n, sigma = 0.2, reg = TRUE, grid = NULL)
 }
 \arguments{
 \item{n}{number of generated data pairs}
@@ -12,6 +12,8 @@ generate_sin_data(n, sigma = 0.2, reg = TRUE)
 \item{sigma}{standard deviation of irreducible error in y}
 
 \item{reg}{logical TRUE for regression data FALSE for classification data}
+
+\item{grid}{specify data points on x axis only works for reg == TRUE}
 }
 \value{
 if reg TRUE: n x 2 matrix \link{x_i, y_i} of generated data set

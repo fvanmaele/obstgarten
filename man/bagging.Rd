@@ -2,20 +2,21 @@
 % Please edit documentation in R/bagging.R
 \name{bagging}
 \alias{bagging}
-\title{ATTENTION!! method predict YET TO BE IMPLEMENTED.
-ATTENTION!! method cart YET TO BE IMPLEMENTED.}
+\title{ATTENTION!! method not finished for classification case.}
 \usage{
-bagging(B, x_train, x_test, regression = TRUE)
+bagging(B, x_train, x_test, regression = TRUE, use_parallel = FALSE)
 }
 \arguments{
 \item{B}{integer: number of bootstrap samples}
 
-\item{x_train}{data.frame: training data of dimensions Number of Samples x Features}
+\item{x_train}{data.frame: training data with labels of dimensions Number of Samples x Features + 1}
 
-\item{x_test}{data.frame: test data of dimensions Number of Samples x Features}
+\item{x_test}{data.frame: test data with labels of dimensions Number of Samples x Features + 1}
 
 \item{regression}{logical: specify whether tree is a classification or a
 regression tree. default=TRUE, TRUE for regression, FALSE for classification}
+
+\item{use_parallel:}{Whether to use parallel computation or not}
 }
 \value{
 vector: of size Number of Samples containing bagged predictions to dataset
