@@ -100,7 +100,13 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 }
 
 
-# bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
+#' bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
+#'
+#' @param bs_list List of different integer bagging parameters B to be tested
+#'
+#' @example generate test date for different depths values of the CART algorithm with 400 reps
+#' and 150 data points
+#' bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
 bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
   params_list <- list()
@@ -126,12 +132,13 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
   save("bv_data", file=str_c("data/simul/","bv_bagging_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
-# generate test date for different depths values of the CART algorithm with 400 reps
-# and 150 data points
-# bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
 
 
-#bias variance plot for CARTs for different depths
+
+#' bias variance plot for CARTs for different depths
+#'
+#' @example load("data/simul/bv_greedy_20200810-101102")
+#'          bv_plot(bv_data)
 bv_plot <- function(data) {
 
   grid <- seq(0, 1, len=150)
@@ -146,26 +153,27 @@ bv_plot <- function(data) {
   df2 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
   plt_data <- data[[3]]
   df3 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+  plt_data <- data[[4]]
+  df4 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
 
   gg <- ggplot(df1, aes(x=grid, y=mean)) +
     scale_colour_manual("",
-                        breaks = c("depth 5", "depth 10", "depth 15"),
-                        values = c("depth 5"="green", "depth 10"="red",
+                        breaks = c("depth 2", "depth 5", "depth 10", "depth 15"),
+                        values = c("depth 2"="grey", "depth 5"="green", "depth 10"="red",
                                    "depth 15"="blue")) +
-    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df3, alpha=0.75) +
-    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df2, alpha=0.75) +
-    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", alpha=0.75) +
-    geom_line(aes(x=grid, y=mean, colour="depth 15"), data=df3, alpha=1) +
-    geom_line(aes(x=grid, y=mean, colour="depth 10"), data=df2, alpha=1) +
-    geom_line(alpha=1, aes(colour="depth 5")) +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df4, alpha=0.5) +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df3, alpha=0.5) +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df2, alpha=0.5) +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", alpha=0.5) +
     geom_line(aes(x=grid, y=sin(2*pi*grid))) +
+    geom_line(aes(x=grid, y=mean, colour="depth 15"), data=df4, alpha=1) +
+    geom_line(aes(x=grid, y=mean, colour="depth 10"), data=df3, alpha=1) +
+    geom_line(aes(x=grid, y=mean, colour="depth 5"), data=df2, alpha=1) +
+    geom_line(alpha=1, aes(colour="depth 2")) +
     ggtitle("Prediction of different CART generated Trees") +
-    ylab("y") +
-    xlab("x")
+    ylab("") +
+    xlab("")
 
   print(gg)
 
 }
-
-# load("data/simul/bv_greedy_20200809-132632")
-# bv_plot(bv_data)
