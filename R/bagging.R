@@ -16,6 +16,11 @@ library(parallel)
 #' @return vector: of size Number of Samples containing bagged predictions to dataset
 #' character vector for classification case and double vector for regression case
 bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
+  stopifnot("B needs to be an integer." = is.integer(B))
+  stopifnot("regression needs to be logical" = is.logical(regression))
+  stopifnot("x_train and x_test need to be df with more than one col and row"=
+    ((is.data.frame(x_train) | is.matrix(x_train)) & ncol(x_train) > 1 & nrow(x_train) > 1
+    & (is.data.frame(x_test) | is.matrix(x_test)) & ncol(x_test) > 1 & nrow(x_test) > 1))
 
   dimnames(x_test) <- list(NULL, c(1, "y"))
   nb_samples <- dim(x_train)[1]
@@ -92,8 +97,8 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
 # n <- 150
 # M <- generate_sin_data(n, sigma=0.2)
 # dimnames(M) <- list(NULL, c(1, "y"))
-# y <- bagging(100, x_train = M, x_test = M, use_parallel = FALSE)
-#
+# y <- bagging(100L, x_train = M, x_test = M, use_parallel = FALSE)
+
 # plot(M[, 1], M[, 2])
 # plot(M[, 1], y)
 # proc.time() - ptm
