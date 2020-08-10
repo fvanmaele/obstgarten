@@ -1,4 +1,4 @@
-library(obstgarten)
+#library(obstgarten)
 library(tidyverse)
 
 # plots prediction of CART generated regression tree
@@ -39,7 +39,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random=FALSE) {
 
 }
 
-pred_plot_greedy(depth=3, random=TRUE)
+# pred_plot_greedy(depth=3, random=TRUE)
 
 
 #' plots prediction of Bagging generated regression tree with depth 5
