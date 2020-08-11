@@ -67,7 +67,7 @@ generate_mult_data <- function(n, d, mu=NULL, sigma=NULL) {
 
   mvg <- function(x) {
     return((2*pi)**(-d/2) * det(sigma)**(-1/2) *
-        exp(-1/2 * (t(x - mu) %*% inv(sigma) %*% (x - mu))))
+             exp(-1/2 * (t(x - mu) %*% inv(sigma) %*% (x - mu))))
   }
 
   y <- apply(data, mvg, MARGIN = 1)
