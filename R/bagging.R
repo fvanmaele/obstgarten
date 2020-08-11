@@ -1,4 +1,4 @@
-#library(obstgarten)
+library(obstgarten)
 library(parallel)
 
 #' ATTENTION!! method not finished for classification case.
@@ -22,7 +22,7 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
     ((is.data.frame(x_train) | is.matrix(x_train)) & ncol(x_train) > 1 & nrow(x_train) > 1
     & (is.data.frame(x_test) | is.matrix(x_test)) & ncol(x_test) > 1 & nrow(x_test) > 1))
 
-  dimnames(x_test) <- list(NULL, c(1, "y"))
+  # dimnames(x_test) <- list(NULL, c(1, "y"))
   nb_samples <- dim(x_train)[1]
   nb_test_samples <- dim(x_test)[1]
   predictions <- matrix(rep(0., nb_test_samples * B), nrow=nb_test_samples, ncol=B)
@@ -43,7 +43,7 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
   # train cart
   fit_tree <- function(x_b) {
     # (over-)fitting tree to bootstrap sample via CART algorithm
-    dimnames(x_b) <- list(NULL, c(1, "y"))
+    # dimnames(x_b) <- list(NULL, c(1, "y"))
     trees[[i]] <- cart_greedy(x_b, depth=5, threshold=1) # return cart for x_b
     trees[[i]]$validate()
 
@@ -51,7 +51,7 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
       return(cart_predict(x, node=trees[[i]]$root))
     }
 
-    return(apply(x_test[, 1, drop=FALSE], MARGIN=1, predict)) # predicting with current tree
+    return(apply(x_test[, -ncol(x_test), drop=FALSE], MARGIN=1, predict)) # predicting with current tree
   }
 
 
@@ -82,6 +82,7 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
   else return(apply(predictions, MARGIN=1, majorityVote))
 
 }
+
 
 # ptm <- proc.time()
 # n <- 150
