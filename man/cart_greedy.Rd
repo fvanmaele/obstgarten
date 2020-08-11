@@ -4,7 +4,14 @@
 \alias{cart_greedy}
 \title{Create a regression tree greedily based on training data.}
 \usage{
-cart_greedy(XY, depth = 10L, threshold = 1L, sample = FALSE, random = FALSE, m)
+cart_greedy(
+  XY,
+  depth = 10L,
+  threshold = 1L,
+  sample = FALSE,
+  random = FALSE,
+  m = 0L
+)
 }
 \arguments{
 \item{XY}{matrix with columns \eqn{1..d} (representing the training data
@@ -22,7 +29,7 @@ is set to TRUE, it is required that there are no observations
 
 \item{random}{generates CART for random forest (logical)}
 
-\item{m}{(numeric)}
+\item{m}{default: 0 so it only has to be set at random=TRUE (numeric)}
 }
 \value{
 
