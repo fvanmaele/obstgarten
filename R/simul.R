@@ -1,5 +1,6 @@
 #library(obstgarten)
 library(tidyverse)
+library(plot3D)
 
 # plots prediction of CART generated regression tree
 #'
@@ -20,7 +21,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random=FALSE) {
 
   dimnames(x) <- list(NULL, c(1, "y"))
   tree <- cart_greedy(x, depth=depth, random=random)
-  pred <- apply(x[, 1, drop=FALSE], MARGIN=1, predict) # predicting with current tree
+  pred <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
 
   df_plot <- data.frame(grid=grid, y=pred)
 
@@ -95,7 +96,7 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
       x <- generate_sin_data(n, grid=grid, sigma=sigma)
       dimnames(x) <- list(NULL, c(1, "y"))
       tree <- cart_greedy(x, depth=depth)
-      pred[i, ] <- apply(x[, 1, drop=FALSE], MARGIN=1, predict) # predicting with current tree
+      pred[i, ] <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
     }
 
     ret[[count]] <- apply(pred, MARGIN=2, function(x) c(mean(x), sd(x)))
@@ -184,3 +185,63 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
 # load("data/simul/bv_bagging_20200810-115904")
 # bv_plot(bv_data)
+
+#' Method to quantitavely compare Prediction
+#' Quality of the four different methods for
+#' high dimensional data.
+compare_methods_PE <- function(d, n, reps=400) {
+  ret_pe <- list()
+
+  pe_mat <- matrix(0., nrow=reps, ncol=4)
+
+  for (i in 1:reps) {
+
+    training_data <- generate_mult_data(n=n, d=d)
+    xy <- as.matrix(training_data[[1]])
+    mu <- training_data[[2]]
+    sigma <- training_data[[3]]
+
+    testing_data <- generate_mult_data(n=n, d=d, mu=mu, sigma=sigma)
+    xy_test <- as.matrix(testing_data[[1]])
+
+    # predicting with CART
+    tree <- cart_greedy(xy, depth=5, random=FALSE)
+    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                   function(x) cart_predict(x, node=tree$root))
+    # calculating prediction error#
+    print(sum((pred - xy_test[, ncol(xy_test)])**2))
+    pe_mat[i, 1] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+
+    # predicting with CART and pruning
+    # yet to implement
+    pe_mat[i, 2] <- 0.
+
+    # predicting with Bagging alg
+    pred <- bagging(B=10L, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
+    pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+
+    # predicting with Random Forest
+    print(as.integer(d/3))
+    tree <- cart_greedy(xy, depth=5, random=TRUE, m=max(as.integer(d/3), 1L))
+    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                  function(x) cart_predict(x, node=tree$root))
+    # calculating prediction error
+    pe_mat[i, 4] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+
+    print(str_c("Finished ", i, "th repetition!"))
+  }
+
+  print(pe_mat)
+  ret <- apply(pe_mat, MARGIN=2, mean)
+  print(ret)
+  save("ret", file=str_c("data/simul/","pe_compare_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+
+}
+
+# compare_methods_PE(d=2, n=1000, reps=1)
+
+plot_3D_scatter <- function(data) {
+  scatter3D(data[, 1], data[, 2], data[, 3], phi = 0, bty = "g",
+            pch = 20, cex = 2, ticktype = "detailed")
+}
+
