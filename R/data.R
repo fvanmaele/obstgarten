@@ -1,3 +1,6 @@
+library(MASS)
+library(matlib)
+
 #' Generate data set like in Example 6.3 of Richter19.pdf
 #'
 #' @param n number of generated data pairs
@@ -45,6 +48,34 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
     return(ret)
   }
 }
+
+#' Generate Data from a multivariate Gaussian
+#' @param n dimensional vector with feature means
+#' @param sigma positive definite square covariance matrix
+#' @return list(df of data, feature means vector, covariance matrix)
+#' @example generate_mult_data(n=1000, d=5)
+generate_mult_data <- function(n, d, mu=NULL, sigma=NULL) {
+  if (is.null(sigma)) {
+    A <- matrix(runif(d*d, min = 0, max = 1), nrow=d, ncol=d)
+    sigma <- t(A) %*% A
+    }
+  if (is.null(mu)) {
+    mu <- runif(d, min = -1, max = +1)
+  }
+
+  data <- mvrnorm(n = n, mu=mu, Sigma=sigma, tol = 1e-06, empirical = FALSE)
+
+  mvg <- function(x) {
+    return((2*pi)**(-d/2) * det(sigma)**(-1/2) *
+        exp(-1/2 * (t(x - mu) %*% inv(sigma) %*% (x - mu))))
+  }
+
+  y <- apply(data, mvg, MARGIN = 1)
+  data <- data.frame(x=data, y=y)
+
+  return(list(data, mu, sigma))
+}
+
 
 # test data for random forest with d = 3
 generate_sin_data2 <- function(n, sigma=0.2, reg=TRUE) {
