@@ -189,7 +189,7 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 #' Method to quantitavely compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
-compare_methods_PE <- function(d, n, reps=400) {
+compare_methods_PE <- function(d, n, B=100L, reps=400) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
 
   for (i in 1:reps) {
@@ -215,7 +215,7 @@ compare_methods_PE <- function(d, n, reps=400) {
     pe_mat[i, 2] <- 0.
 
     # predicting with Bagging alg
-    pred <- bagging(B=10L, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
+    pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
     pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
 
     # predicting with Random Forest
@@ -228,9 +228,7 @@ compare_methods_PE <- function(d, n, reps=400) {
     print(str_c("Finished ", i, "th repetition!"))
   }
 
-  print(pe_mat)
   ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat)
-  print(ret)
   save("ret", file=str_c("data/simul/","pe_compare_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
@@ -273,9 +271,7 @@ compare_m_PE <- function(m_list, d, n, reps=400) {
 
   }
 
-  print(pe_mat)
   ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat, params_list)
-  print(ret)
   save("ret", file=str_c("data/simul/","pe_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
