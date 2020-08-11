@@ -121,15 +121,15 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE, random 
     n <- nrow(XY)
     # random number of leaves
     t <- sample((n/2):n, 1) # TODO: not sure if t is defined correctly
-    print(t)
+    print(str_c("t ", t))
   }
 
   # Check data for duplicates (cf. [Richter 1.2, p.9])
   # TODO: add test for this case
   XY <- unique(XY)
   if (sample == FALSE) {
-    m <- min(apply(XY, MARGIN=2, function(c) length(unique(c))))
-    stopifnot("Data contains duplicates"= m == nrow(XY))
+    dup <- min(apply(XY, MARGIN=2, function(c) length(unique(c))))
+    stopifnot("Data contains duplicates"= dup == nrow(XY))
   } else {
     stop("function not implemented")
   }
