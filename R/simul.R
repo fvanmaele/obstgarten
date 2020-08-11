@@ -190,8 +190,6 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 #' Quality of the four different methods for
 #' high dimensional data.
 compare_methods_PE <- function(d, n, reps=400) {
-  ret_pe <- list()
-
   pe_mat <- matrix(0., nrow=reps, ncol=4)
 
   for (i in 1:reps) {
@@ -221,7 +219,6 @@ compare_methods_PE <- function(d, n, reps=400) {
     pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
 
     # predicting with Random Forest
-    print(as.integer(d/3))
     tree <- cart_greedy(xy, depth=5, random=TRUE, m=max(as.integer(d/3), 1L))
     pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                   function(x) cart_predict(x, node=tree$root))
@@ -232,13 +229,56 @@ compare_methods_PE <- function(d, n, reps=400) {
   }
 
   print(pe_mat)
-  ret <- apply(pe_mat, MARGIN=2, mean)
+  ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat)
   print(ret)
   save("ret", file=str_c("data/simul/","pe_compare_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
-# compare_methods_PE(d=2, n=1000, reps=1)
+#' Method to quantitavely compare Prediction
+#' Quality of the Random Forests for
+#' different parameters m.
+#' @example compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, reps=1)
+compare_m_PE <- function(m_list, d, n, reps=400) {
+  params_list <- list()
+  count <- 1
+
+  pe_mat <- matrix(0., nrow=reps, ncol=length(m_list))
+
+  for (m in m_list) {
+
+    params_list[[count]] <- m
+
+    for (i in 1:reps) {
+
+      training_data <- generate_mult_data(n=n, d=d)
+      xy <- as.matrix(training_data[[1]])
+      mu <- training_data[[2]]
+      sigma <- training_data[[3]]
+
+      testing_data <- generate_mult_data(n=n, d=d, mu=mu, sigma=sigma)
+      xy_test <- as.matrix(testing_data[[1]])
+
+      # predicting with Random Forest
+      tree <- cart_greedy(xy, depth=5, random=TRUE, m=m)
+      pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                    function(x) cart_predict(x, node=tree$root))
+      # calculating prediction error
+      pe_mat[i, count] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+
+      print(str_c("Finished ", i, "th repetition!"))
+    }
+
+    count <- count + 1
+
+  }
+
+  print(pe_mat)
+  ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat, params_list)
+  print(ret)
+  save("ret", file=str_c("data/simul/","pe_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+
+}
 
 plot_3D_scatter <- function(data) {
   scatter3D(data[, 1], data[, 2], data[, 3], phi = 0, bty = "g",
