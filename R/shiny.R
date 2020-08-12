@@ -20,6 +20,7 @@ start_shiny_app <- function(){
         numericInput('n_greedy', 'Number of obs', 200),
         sliderInput('depth', 'Depth', 1, 10, 3, 1),
         sliderInput('sigma_greedy', 'Sigma', 0, 0.5, 0.2, 0.05),
+        checkboxInput("random_greedy", "Random", value=FALSE),
         actionButton("simulate_greedy", "Simulate CART!")
       ),
       mainPanel(
@@ -33,6 +34,7 @@ start_shiny_app <- function(){
         numericInput('n_bagging', 'Number of obs', 200),
         sliderInput('B', 'Bootstrap samples', 100, 1000, 100, 100),
         sliderInput('sigma_bagging', 'Sigma', 0, 0.5, 0.2, 0.05),
+        checkboxInput("random_bagging", "Random", value=FALSE),
         actionButton("simulate_bagging", "Simulate Bagging!")
       ),
       mainPanel(
@@ -56,8 +58,11 @@ start_shiny_app <- function(){
     n_greedy <- eventReactive(input$simulate_greedy, {
       input$n_greedy
     })
+    random_greedy <- eventReactive(input$simulate_greedy, {
+      input$random_greedy
+    })
     output$plot_greedy <- renderPlot({
-      pred_plot_greedy(depth(), sigma = sigma_greedy(), n = n_greedy())
+      pred_plot_greedy(depth(), sigma = sigma_greedy(), n = n_greedy(), random = random_greedy())
     })
 
     # Bagging Regression
@@ -69,6 +74,9 @@ start_shiny_app <- function(){
     })
     n_bagging <- eventReactive(input$simulate_bagging, {
       input$n_bagging
+    })
+    random_bagging <- eventReactive(input$simulate_greedy, {
+      input$random_bagging
     })
     output$plot_bagging <- renderPlot({
       pred_plot_bagging(B(), sigma = sigma_bagging(), n = n_bagging())
