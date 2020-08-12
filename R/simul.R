@@ -197,6 +197,8 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 #' Method to quantitavely compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
+#' @example compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
+#' TAKES VERY LONG CPU EXPENSIVE
 compare_methods_PE <- function(d, n, B=100L, reps=400) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
 
@@ -214,7 +216,7 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
     tree <- cart_greedy(xy, depth=5, random=FALSE)
     pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                    function(x) cart_predict(x, node=tree$root))
-    # calculating prediction error#
+    # calculating prediction error
     print(sum((pred - xy_test[, ncol(xy_test)])**2))
     pe_mat[i, 1] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
 
@@ -224,14 +226,11 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
 
     # predicting with Bagging alg
     pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
-    pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2) # calculating prediction error
 
     # predicting with Random Forest
-    tree <- cart_greedy(xy, depth=5, random=TRUE, m=max(as.integer(d/3), 1L))
-    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
-                  function(x) cart_predict(x, node=tree$root))
-    # calculating prediction error
-    pe_mat[i, 4] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE)
+    pe_mat[i, 4] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2) # calculating prediction error
 
     print(str_c("Finished ", i, "th repetition!"))
   }
@@ -241,11 +240,18 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
 
 }
 
+
 #' Method to quantitavely compare Prediction
 #' Quality of the Random Forests for
 #' different parameters m.
-#' @example compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, reps=1)
-compare_m_PE <- function(m_list, d, n, reps=400) {
+#' @example compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
+#' CAUTION CPU EXPENSIVE TAKES LONG
+compare_m_PE <- function(m_list, d, n, B, reps=400) {
+  for (m in m_list) {
+    if (m >= d) {
+      stop("For all elements m of m_list it must hold that m < d!")
+    }
+  }
   params_list <- list()
   count <- 1
 
@@ -266,9 +272,7 @@ compare_m_PE <- function(m_list, d, n, reps=400) {
       xy_test <- as.matrix(testing_data[[1]])
 
       # predicting with Random Forest
-      tree <- cart_greedy(xy, depth=5, random=TRUE, m=m)
-      pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
-                    function(x) cart_predict(x, node=tree$root))
+      pred <- bagging(B=B, x_train=xy, x_test=xy_test, m=m, random_forest=TRUE, regression=TRUE, use_parallel=FALSE)
       # calculating prediction error
       pe_mat[i, count] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
 
@@ -288,8 +292,13 @@ compare_m_PE <- function(m_list, d, n, reps=400) {
 #' Method to qualitatively compare Prediction
 #' Quality of the Random Forests for
 #' different parameters m.
-#' @example compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100)
-compare_m <- function(m_list, d, n) {
+#' @example compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
+compare_m <- function(m_list, d, n, B) {
+  for (m in m_list) {
+    if (m >= d) {
+      stop("For all elements m of m_list it must hold that m < d!")
+    }
+  }
 
   training_data <- generate_mult_data(n=n, d=d)
   xy <- as.matrix(training_data[[1]])
@@ -307,9 +316,7 @@ compare_m <- function(m_list, d, n) {
   for (m in m_list) {
 
     # predicting with Random Forest
-    tree <- cart_greedy(xy, depth=5, random=TRUE, m=m)
-    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
-                  function(x) cart_predict(x, node=tree$root))
+    pred <- bagging(B=B, x_train=xy, x_test=xy_test, m=m, random_forest=TRUE, regression=TRUE, use_parallel=FALSE)
     pred_mat[, count] <- pred
     count <- count + 1
   }
@@ -355,17 +362,14 @@ compare_methods <- function(d, n, B=100L) {
   ret$bagging <- pred
 
   # predicting with Random Forest
-  tree <- cart_greedy(xy, depth=5, random=TRUE, m=max(as.integer(d/3), 1L))
-  pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
-                function(x) cart_predict(x, node=tree$root))
+  pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE)
   ret$rf <- pred
-  print(ret)
 
   save("ret", file=str_c("data/simul/","compare_plot_data_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
-# compare_methods(d=5, n=1000, B=10L)
+
 
 #' CPU Heavy!!!
 #' Method to 3D render Gaussian Multivariates estimates coming from
