@@ -10,7 +10,7 @@ library(ggpubr)
 #'
 #' @param depth Integer depths of the CART generated regression tree
 #' @example pred_plot_greedy(5, sigma=0.25, n=150)
-pred_plot_greedy <- function(depth, sigma=0.25, n=150, random=FALSE) {
+pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
   if (random == TRUE & depth <= 2) {
     stop("Random Forest require depth > 1!")
   }
@@ -25,7 +25,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random=FALSE) {
   #TODO data cannot be used for random_forest
 
   dimnames(x) <- list(NULL, c(1, "y"))
-  tree <- cart_greedy(x, depth=depth, random=random)
+  tree <- cart_greedy(x, depth=depth, random=random_forest)
   pred <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
 
   df_plot <- data.frame(grid=grid, y=pred)
