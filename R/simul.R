@@ -276,6 +276,56 @@ compare_m_PE <- function(m_list, d, n, reps=400) {
 
 }
 
+
+#' Method to qualitatively compare Prediction
+#' Quality of the four different methods for
+#' high dimensional data.
+#' @example compare_methods(d=3, n=100, B=10L)
+compare_methods <- function(d, n, B=100L) {
+
+  training_data <- generate_mult_data(n=n, d=d)
+  xy <- as.matrix(training_data[[1]])
+  mu <- training_data[[2]]
+  sigma <- training_data[[3]]
+
+  testing_data <- generate_mult_data(n=n, d=d, mu=mu, sigma=sigma)
+  xy_test <- as.matrix(testing_data[[1]])
+
+  ret <- data.frame("x1"=xy_test[, 1])
+  for (i in 2:ncol(xy_test-1)) {
+    name_id <- str_c("x", i)
+    ret$name_id <- xy_test[, i]
+  }
+
+  ret$y_true <- xy_test[, ncol(xy_test)]
+
+  # predicting with CART
+  tree <- cart_greedy(xy, depth=5, random=FALSE)
+  pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                function(x) cart_predict(x, node=tree$root))
+
+  ret$CART <- pred
+
+  # predicting with CART and pruning
+  # yet to implement
+  pred_pruning <- 0.
+  ret$pruning <- pred_pruning
+
+  # predicting with Bagging alg
+  pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
+  ret$bagging <- pred
+
+  # predicting with Random Forest
+  tree <- cart_greedy(xy, depth=5, random=TRUE, m=max(as.integer(d/3), 1L))
+  pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                function(x) cart_predict(x, node=tree$root))
+  ret$rf <- pred
+  print(ret)
+
+  save("ret", file=str_c("data/simul/","compare_plot_data_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+
+}
+
 plot_3D_scatter <- function(data) {
   scatter3D(data[, 1], data[, 2], data[, 3], phi = 0, bty = "g",
             pch = 20, cex = 2, ticktype = "detailed")
