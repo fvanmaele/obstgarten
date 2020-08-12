@@ -1,6 +1,10 @@
 #library(obstgarten)
 library(tidyverse)
 library(plot3D)
+library(rayshader)
+library(RColorBrewer)
+library(ggplot2)
+library(ggpubr)
 
 # plots prediction of CART generated regression tree
 #'
@@ -282,6 +286,43 @@ compare_m_PE <- function(m_list, d, n, reps=400) {
 
 
 #' Method to qualitatively compare Prediction
+#' Quality of the Random Forests for
+#' different parameters m.
+#' @example compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100)
+compare_m <- function(m_list, d, n) {
+
+  training_data <- generate_mult_data(n=n, d=d)
+  xy <- as.matrix(training_data[[1]])
+  mu <- training_data[[2]]
+  sigma <- training_data[[3]]
+
+  testing_data <- generate_mult_data(n=n, d=d, mu=mu, sigma=sigma)
+  xy_test <- as.matrix(testing_data[[1]])
+
+  ret <- data.frame(xy_test)
+  pred_mat <- matrix(0., nrow=n, ncol=length(m_list))
+
+  count <- 1
+
+  for (m in m_list) {
+
+    # predicting with Random Forest
+    tree <- cart_greedy(xy, depth=5, random=TRUE, m=m)
+    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                  function(x) cart_predict(x, node=tree$root))
+    pred_mat[, count] <- pred
+    count <- count + 1
+  }
+
+  ret[(ncol(ret)+1):(ncol(ret)+length(m_list))] <- pred_mat
+
+  names(ret)[(length(names(ret))-3):length(names(ret))] <- str_c("m", 1:4)
+  save("ret", file=str_c("data/simul/","compare_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+
+}
+
+
+#' Method to qualitatively compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
 #' @example compare_methods(d=3, n=100, B=10L)
@@ -295,13 +336,7 @@ compare_methods <- function(d, n, B=100L) {
   testing_data <- generate_mult_data(n=n, d=d, mu=mu, sigma=sigma)
   xy_test <- as.matrix(testing_data[[1]])
 
-  ret <- data.frame("x1"=xy_test[, 1])
-  for (i in 2:ncol(xy_test-1)) {
-    name_id <- str_c("x", i)
-    ret$name_id <- xy_test[, i]
-  }
-
-  ret$y_true <- xy_test[, ncol(xy_test)]
+  ret <- data.frame(xy_test)
 
   # predicting with CART
   tree <- cart_greedy(xy, depth=5, random=FALSE)
@@ -330,8 +365,197 @@ compare_methods <- function(d, n, B=100L) {
 
 }
 
-plot_3D_scatter <- function(data) {
-  scatter3D(data[, 1], data[, 2], data[, 3], phi = 0, bty = "g",
-            pch = 20, cex = 2, ticktype = "detailed")
+# compare_methods(d=5, n=1000, B=10L)
+
+#' CPU Heavy!!!
+#' Method to 3D render Gaussian Multivariates estimates coming from
+#' generated samples or predicted values
+#' @param df data.frame with columns x, y and z. samples are in the rows
+plot_3D <- function(df) {
+  myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+  gg <- ggplot(df, aes(x=x, y=y, z=z)) +
+    geom_point(aes(x=x, y=y, color=z),size=1) +
+    sc
+
+  plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250,windowsize=c(1400,866),
+          zoom = 0.55, phi = 30)
+  render_snapshot()
+}
+
+
+#' Method to plot 3D comparisons of predictions
+#' for different methods
+#' @param path character specifying path to compare_plot_data file
+#' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#' if FALSE only 2D plots are returned
+#'
+#' @example plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
+plot_3D_compare <- function(path, render=FALSE) {
+  stopifnot("Path should be a character specifying path to compare_plot_data file!" =
+              is.character(path))
+  load(path)
+
+  ret %>%
+    rename("True"=y, "CART"=CART, "Pruning"=pruning, "Bagging"=bagging, "Random Forest" = rf) %>%
+    pivot_longer(cols = c(True, CART, Pruning, Bagging, "Random Forest"), names_to = c("pred")) -> df
+
+  myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
+
+    gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
+      geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
+      xlab(str_c("x", i)) +
+      ylab(str_c("x", i+1)) +
+      sc +
+      facet_wrap(~pred)
+
+    print(gg)
+
+    if (render) {
+      plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250,windowsize=c(1400,866),
+              zoom = 0.55, phi = 30)
+      render_snapshot()
+    }
+  }
+}
+
+
+#' Method to plot 3D comparisons of prediction DIFFERENCES
+#' between ground truth and model for different methods
+#' @param path character specifying path to compare_RF_m file
+#' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#'  if FALSE only 2D plots are returned
+#'
+#' @example plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
+plot_3D_compare_DIFF <- function(path, render=FALSE) {
+  stopifnot("Path should be a character specifying path to compare_RF_m file!" =
+              is.character(path))
+  load(path)
+
+  ret %>%
+    rename("True"=y, "CART"=CART, "Pruning"=pruning, "Bagging"=bagging, "RandomForest" = rf) %>%
+    mutate("Squared Diff. CART"=(True - CART)**2, "Squared Diff. Pruning"=(True - Pruning)**2,
+           "Squared Diff. Bagging"=(True - Bagging)**2, "Squared Diff. Random Forest"=(True - RandomForest)**2) %>%
+    select(-True, -CART, -Pruning, -Bagging, -RandomForest) %>%
+    pivot_longer(cols = c("Squared Diff. CART", "Squared Diff. Pruning", "Squared Diff. Bagging"
+                          , "Squared Diff. Random Forest"), names_to = c("diff")) -> df
+
+  myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
+
+    gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
+      geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
+      xlab(str_c("x", i)) +
+      ylab(str_c("x", i+1)) +
+      sc +
+      facet_wrap(~diff)
+
+    print(gg)
+
+    if (render) {
+      plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250,windowsize=c(1400,866),
+              zoom = 0.55, phi = 30)
+      render_snapshot()
+    }
+  }
+}
+
+
+
+
+
+#' Method to plot 3D comparisons of prediction SQUARED DIFFERENCES
+#' between ground truth and Random Forest Predictions for
+#' different m
+#' @param path character specifying path to compare_RF_m file
+#' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#' if FALSE only 2D plots are returned
+#'
+#' @example plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
+plot_3D_compare_m <- function(path, render=FALSE) {
+  stopifnot("Path should be a character specifying path to compare_RF_m file!" =
+              is.character(path))
+  load(path)
+
+  ret %>%
+    rename("True"=y, "m=1"=m1, "m=3"=m2, "m=5"=m3, "m=10" = m4) %>%
+    pivot_longer(cols = c("True", "m=1", "m=3", "m=5", "m=10"), names_to = c("pred")) -> df
+
+  myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
+
+    gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
+      geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
+      xlab(str_c("x", i)) +
+      ylab(str_c("x", i+1)) +
+      sc +
+      facet_wrap(~pred)
+
+    print(gg)
+
+    if (render) {
+      plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250,windowsize=c(1400,866),
+              zoom = 0.55, phi = 30)
+      render_snapshot()
+    }
+  }
+}
+
+
+#' Method to plot 3D comparisons of prediction DIFFERENCES
+#' between ground truth and Random Forest for different m
+#' @param path character specifying path to compare_RF_m file
+#' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#'  if FALSE only 2D plots are returned
+#'
+#' @example plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
+plot_3D_compare_m_DIFF <- function(path, render=FALSE) {
+  stopifnot("Path should be a character specifying path to compare_RF_m file!" =
+              is.character(path))
+  load(path)
+
+  ret %>%
+    rename("True"=y, "m1"=m1, "m3"=m2, "m5"=m3, "m10" = m4) %>%
+    mutate("Squared Diff. m=1"=(True - m1)**2, "Squared Diff. m=3"=(True - m3)**2,
+           "Squared Diff. m=5"=(True - m5)**2, "Squared Diff. m=10"=(True - m10)**2) %>%
+    select(-True, -m1, -m3, -m5, -m10) %>%
+    pivot_longer(cols = c("Squared Diff. m=1", "Squared Diff. m=3", "Squared Diff. m=5"
+                          , "Squared Diff. m=10"), names_to = c("diff")) -> df
+
+  myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
+
+    gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
+      geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
+      xlab(str_c("x", i)) +
+      ylab(str_c("x", i+1)) +
+      sc +
+      facet_wrap(~diff)
+
+    print(gg)
+
+    if (render) {
+      plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250,windowsize=c(1400,866),
+              zoom = 0.55, phi = 30)
+      render_snapshot()
+    }
+  }
 }
 
