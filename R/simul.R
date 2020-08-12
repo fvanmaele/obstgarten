@@ -399,7 +399,9 @@ plot_3D_compare <- function(path, render=FALSE) {
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
   sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
 
-  for (i in seq(1, ncol(df)-3, by=2)) {
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
 
     gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
       geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
@@ -442,7 +444,9 @@ plot_3D_compare_DIFF <- function(path, render=FALSE) {
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
   sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
 
-  for (i in seq(1, ncol(df)-3, by=2)) {
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
 
     gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
       geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
@@ -465,7 +469,7 @@ plot_3D_compare_DIFF <- function(path, render=FALSE) {
 
 
 
-#' Method to plot 3D comparisons of prediction DIFFERENCES
+#' Method to plot 3D comparisons of prediction SQUARED DIFFERENCES
 #' between ground truth and Random Forest Predictions for
 #' different m
 #' @param path character specifying path to compare_RF_m file
@@ -485,7 +489,9 @@ plot_3D_compare_m <- function(path, render=FALSE) {
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
   sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
 
-  for (i in seq(1, ncol(df)-3, by=2)) {
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
 
     gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
       geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
@@ -493,6 +499,51 @@ plot_3D_compare_m <- function(path, render=FALSE) {
       ylab(str_c("x", i+1)) +
       sc +
       facet_wrap(~pred)
+
+    print(gg)
+
+    if (render) {
+      plot_gg(gg,multicore=TRUE,width=5,height=5,scale=250,windowsize=c(1400,866),
+              zoom = 0.55, phi = 30)
+      render_snapshot()
+    }
+  }
+}
+
+
+#' Method to plot 3D comparisons of prediction DIFFERENCES
+#' between ground truth and Random Forest for different m
+#' @param path character specifying path to compare_RF_m file
+#' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#'  if FALSE only 2D plots are returned
+#'
+#' @example plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
+plot_3D_compare_m_DIFF <- function(path, render=FALSE) {
+  stopifnot("Path should be a character specifying path to compare_RF_m file!" =
+              is.character(path))
+  load(path)
+
+  ret %>%
+    rename("True"=y, "m1"=m1, "m3"=m2, "m5"=m3, "m10" = m4) %>%
+    mutate("Squared Diff. m=1"=(True - m1)**2, "Squared Diff. m=3"=(True - m3)**2,
+           "Squared Diff. m=5"=(True - m5)**2, "Squared Diff. m=10"=(True - m10)**2) %>%
+    select(-True, -m1, -m3, -m5, -m10) %>%
+    pivot_longer(cols = c("Squared Diff. m=1", "Squared Diff. m=3", "Squared Diff. m=5"
+                          , "Squared Diff. m=10"), names_to = c("diff")) -> df
+
+  myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+
+  endp <- ncol(df) - ncol(df) %% 2 - 2
+
+  for (i in seq(1, endp, by=2)) {
+
+    gg <- ggplot(df, aes(x=df[[i]], y=df[[i+1]])) +
+      geom_point(aes(x=df[[i]], y=df[[i+1]], color=value),size=1) +
+      xlab(str_c("x", i)) +
+      ylab(str_c("x", i+1)) +
+      sc +
+      facet_wrap(~diff)
 
     print(gg)
 
