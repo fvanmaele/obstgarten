@@ -16,7 +16,7 @@ library(parallel)
 #'
 #' @return vector: of size Number of Samples containing bagged predictions to dataset
 #' character vector for classification case and double vector for regression case
-bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE, random_forest = FALSE) {
+bagging <- function(B, x_train, x_test, m=NULL, regression=TRUE, use_parallel=FALSE, random_forest = FALSE) {
   stopifnot("B needs to be an integer." = is.integer(B))
   stopifnot("regression needs to be logical" = is.logical(regression))
   stopifnot("random_forest needs to be logical" = is.logical(random_forest))
@@ -56,16 +56,21 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE, ran
     return(apply(x_test[, -ncol(x_test), drop=FALSE], MARGIN=1, predict)) # predicting with current tree
   }
 
-  m <- 0
-  if(random_forest){
-    if(regression){
-      m <- floor((ncol(x_train)-1)/3)
-      if(m < 1){
-        m <- 1
+  if (is.null(m)) {
+    m <- 0
+    if(random_forest){
+      if(regression){
+        m <- floor((ncol(x_train)-1)/3)
+        if(m < 1){
+          m <- 1
+        }
       }
-    }
-    else{
-      m <- floor(sqrt(ncol(x_train)-1))
+      else{
+        m <- floor(sqrt(ncol(x_train)-1))
+        if(m < 1){
+          m <- 1
+        }
+      }
     }
   }
 
