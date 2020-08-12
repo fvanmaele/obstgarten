@@ -5,10 +5,12 @@
 \title{plots prediction of Bagging generated regression tree with depth 5
 and specified number of bootstrap samples B}
 \usage{
-pred_plot_bagging(B, sigma = 0.25, n = 150)
+pred_plot_bagging(B, sigma = 0.25, n = 150, random_forest = FALSE)
 }
 \arguments{
 \item{B}{integer number of bootstrap samples}
+
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
 }
 \description{
 plots prediction of Bagging generated regression tree with depth 5

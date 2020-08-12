@@ -6,6 +6,7 @@ library(shiny)
 #'
 #' @param Number_of_obs number of generated data rows (numeric)
 #' @param Sigma standard deviation of irreducible error in y (numeric)
+#' @param Random_forest TRUE: random forest, FALSE: bagging (logical)
 #' @param Depth depths of the CART generated regression tree (numeric)
 #' @param Bootstrap_samples number of bootstrap samples (numeric)
 #' @param Simulate starts the calculation with the given parameters (button)
@@ -20,7 +21,7 @@ start_shiny_app <- function(){
         numericInput('n_greedy', 'Number of obs', 200),
         sliderInput('depth', 'Depth', 1, 10, 3, 1),
         sliderInput('sigma_greedy', 'Sigma', 0, 0.5, 0.2, 0.05),
-        checkboxInput("random_greedy", "Random", value=FALSE),
+        checkboxInput("random_greedy", "Random forest", value=FALSE),
         actionButton("simulate_greedy", "Simulate CART!")
       ),
       mainPanel(
@@ -34,7 +35,7 @@ start_shiny_app <- function(){
         numericInput('n_bagging', 'Number of obs', 200),
         sliderInput('B', 'Bootstrap samples', 100, 1000, 100, 100),
         sliderInput('sigma_bagging', 'Sigma', 0, 0.5, 0.2, 0.05),
-        checkboxInput("random_bagging", "Random", value=FALSE),
+        checkboxInput("random_bagging", "Random forest", value=FALSE),
         actionButton("simulate_bagging", "Simulate Bagging!")
       ),
       mainPanel(
@@ -79,7 +80,7 @@ start_shiny_app <- function(){
       input$random_bagging
     })
     output$plot_bagging <- renderPlot({
-      pred_plot_bagging(B(), sigma = sigma_bagging(), n = n_bagging())
+      pred_plot_bagging(B(), sigma = sigma_bagging(), n = n_bagging(), random_forest = random_bagging())
     })
   }
 

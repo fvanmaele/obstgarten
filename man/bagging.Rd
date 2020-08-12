@@ -4,7 +4,14 @@
 \alias{bagging}
 \title{ATTENTION!! method not finished for classification case.}
 \usage{
-bagging(B, x_train, x_test, regression = TRUE, use_parallel = FALSE)
+bagging(
+  B,
+  x_train,
+  x_test,
+  regression = TRUE,
+  use_parallel = FALSE,
+  random_forest = FALSE
+)
 }
 \arguments{
 \item{B}{integer: number of bootstrap samples}
@@ -15,6 +22,8 @@ bagging(B, x_train, x_test, regression = TRUE, use_parallel = FALSE)
 
 \item{regression}{logical: specify whether tree is a classification or a
 regression tree. default=TRUE, TRUE for regression, FALSE for classification}
+
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
 
 \item{use_parallel:}{Whether to use parallel computation or not}
 }

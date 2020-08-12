@@ -12,12 +12,14 @@ library(parallel)
 #' @param regression logical: specify whether tree is a classification or a
 #' regression tree. default=TRUE, TRUE for regression, FALSE for classification
 #' @param use_parallel: Whether to use parallel computation or not
+#' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
 #' @return vector: of size Number of Samples containing bagged predictions to dataset
 #' character vector for classification case and double vector for regression case
-bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
+bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE, random_forest = FALSE) {
   stopifnot("B needs to be an integer." = is.integer(B))
   stopifnot("regression needs to be logical" = is.logical(regression))
+  stopifnot("random_forest needs to be logical" = is.logical(random_forest))
   stopifnot("x_train and x_test need to be df with more than one col and row"=
     ((is.data.frame(x_train) | is.matrix(x_train)) & ncol(x_train) > 1 & nrow(x_train) > 1
     & (is.data.frame(x_test) | is.matrix(x_test)) & ncol(x_test) > 1 & nrow(x_test) > 1))
@@ -41,10 +43,10 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
   }
 
   # train cart
-  fit_tree <- function(x_b) {
+  fit_tree <- function(x_b, random, m) {
     # (over-)fitting tree to bootstrap sample via CART algorithm
     # dimnames(x_b) <- list(NULL, c(1, "y"))
-    trees[[i]] <- cart_greedy(x_b, depth=5, threshold=1) # return cart for x_b
+    trees[[i]] <- cart_greedy(x_b, depth=5, threshold=1, random = random, m = m) # return cart for x_b
     trees[[i]]$validate()
 
     predict <- function(x) {
@@ -54,6 +56,18 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
     return(apply(x_test[, -ncol(x_test), drop=FALSE], MARGIN=1, predict)) # predicting with current tree
   }
 
+  m <- 0
+  if(random_forest){
+    if(regression){
+      m <- floor((ncol(x_train)-1)/3)
+      if(m < 1){
+        m <- 1
+      }
+    }
+    else{
+      m <- floor(sqrt(ncol(x_train)-1))
+    }
+  }
 
   if (use_parallel) {
     # set up parallel
@@ -62,13 +76,13 @@ bagging <- function(B, x_train, x_test, regression=TRUE, use_parallel=FALSE) {
     clusterEvalQ(cluster_pred, {
       library(obstgarten)})
 
-    predictions <- matrix(unlist(parLapply(cluster_pred, X_B, fit_tree)), nrow=dim(x_test)[[1]], ncol=B)
+    predictions <- matrix(unlist(parLapply(cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
 
     stopCluster(cluster_pred) # close cluster
   }
 
   else {
-    predictions <- matrix(unlist(lapply(X_B, fit_tree)), nrow=dim(x_test)[[1]], ncol=B)
+    predictions <- matrix(unlist(lapply(X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
   }
 
   }
