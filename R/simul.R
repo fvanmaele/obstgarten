@@ -384,6 +384,7 @@ plot_3D <- function(df) {
 #' for different methods
 #' @param path character specifying path to compare_plot_data file
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#' if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 plot_3D_compare <- function(path, render=FALSE) {
@@ -422,6 +423,7 @@ plot_3D_compare <- function(path, render=FALSE) {
 #' between ground truth and model for different methods
 #' @param path character specifying path to compare_RF_m file
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#'  if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
 plot_3D_compare_DIFF <- function(path, render=FALSE) {
@@ -468,6 +470,7 @@ plot_3D_compare_DIFF <- function(path, render=FALSE) {
 #' different m
 #' @param path character specifying path to compare_RF_m file
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
+#' if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
 plot_3D_compare_m <- function(path, render=FALSE) {
