@@ -134,6 +134,7 @@ load_iris <- function() {
 load_iris()
 
 #' Method that prepares Iris dataset for classification with Tree-Methods.
+#' setosa == 1, versicolor == 2, virginica == 3
 #'
 #' @param training_set_ratio double between 0 and 1 specifies the training test
 #' set ratio
