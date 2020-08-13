@@ -21,8 +21,11 @@ bagging <- function(B, x_train, x_test, m=NULL, regression=TRUE, use_parallel=FA
   stopifnot("regression needs to be logical" = is.logical(regression))
   stopifnot("random_forest needs to be logical" = is.logical(random_forest))
   stopifnot("x_train and x_test need to be df with more than one col and row"=
-    ((is.data.frame(x_train) | is.matrix(x_train)) & ncol(x_train) > 1 & nrow(x_train) > 1
-    & (is.data.frame(x_test) | is.matrix(x_test)) & ncol(x_test) > 1 & nrow(x_test) > 1))
+              ((is.data.frame(x_train) | is.matrix(x_train)) & ncol(x_train) > 1 & nrow(x_train) > 1
+               & (is.data.frame(x_test) | is.matrix(x_test)) & ncol(x_test) > 1 & nrow(x_test) > 1))
+
+  if (regression == TRUE) mode <- "regression"
+  else mode <- "classification"
 
   # dimnames(x_test) <- list(NULL, c(1, "y"))
   nb_samples <- dim(x_train)[1]
@@ -34,26 +37,25 @@ bagging <- function(B, x_train, x_test, m=NULL, regression=TRUE, use_parallel=FA
     return (names(which.max(table(vector))))
   }
 
-  if (regression) {
-
-  # sample bootstraps
-  X_B <- list()
-  for (i in 1:B) {
-    X_B[[i]] <- x_train[sample(1:nb_samples, size=nb_samples, replace=TRUE), ]
-  }
-
   # train cart
   fit_tree <- function(x_b, random, m) {
     # (over-)fitting tree to bootstrap sample via CART algorithm
     # dimnames(x_b) <- list(NULL, c(1, "y"))
-    trees[[i]] <- cart_greedy(x_b, depth=5, threshold=1, random = random, m = m) # return cart for x_b
+    trees[[i]] <- cart_greedy(x_b, depth=5, mode = mode, threshold=1, random = random, m = m, allow_duplicates = FALSE) # return cart for x_b
     trees[[i]]$validate()
 
     predict <- function(x) {
       return(cart_predict(x, node=trees[[i]]$root))
     }
 
-    return(apply(x_test[, -ncol(x_test), drop=FALSE], MARGIN=1, predict)) # predicting with current tree
+    if (regression) return(apply(x_test[, -ncol(x_test), drop=FALSE], MARGIN=1, predict))
+    else return(round(apply(x_test[, -ncol(x_test), drop=FALSE], MARGIN=1, predict)))
+  }
+
+  # sample bootstraps
+  X_B <- list()
+  for (i in 1:B) {
+    X_B[[i]] <- x_train[sample(1:nb_samples, size=nb_samples, replace=TRUE), ]
   }
 
   if (is.null(m)) {
@@ -85,15 +87,8 @@ bagging <- function(B, x_train, x_test, m=NULL, regression=TRUE, use_parallel=FA
 
     stopCluster(cluster_pred) # close cluster
   }
-
   else {
     predictions <- matrix(unlist(lapply(X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
-  }
-
-  }
-
-  else {
-    stop("classification case not yet implemented!")
   }
 
   # returning predictions for test set via mean in regression case and via majority vote in classification case
