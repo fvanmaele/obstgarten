@@ -131,8 +131,6 @@ load_iris <- function() {
   return(iris)
 }
 
-load_iris()
-
 #' Method that prepares Iris dataset for classification with Tree-Methods.
 #' setosa == 1, versicolor == 2, virginica == 3
 #'
@@ -152,6 +150,8 @@ prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) 
   iris$Species[iris$Species == "setosa"] <- 1L
   iris$Species[iris$Species == "versicolor"] <- 2L
   iris$Species[iris$Species == "virginica"] <- 3L
+
+  iris %>% rename(y=Species) -> iris
 
   # split into training and test set
   if (is.null(training_split_indices)) {
