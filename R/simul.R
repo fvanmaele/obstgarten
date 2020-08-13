@@ -563,3 +563,12 @@ plot_3D_compare_m_DIFF <- function(path, render=FALSE) {
   }
 }
 
+# data <- prepare_iris()
+# xy_train <- data[[1]]
+# xy_test <- data[[2]]
+#
+# tree <- cart_greedy(xy_train, depth=5, random=FALSE, mode = "classification")
+# pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+#               function(x) cart_predict(x, node=tree$root)))
+
+
