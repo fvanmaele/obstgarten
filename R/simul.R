@@ -5,6 +5,8 @@ library(rayshader)
 library(RColorBrewer)
 library(ggplot2)
 library(ggpubr)
+library(gridExtra)
+library(grid)
 
 # plots prediction of CART generated regression tree
 #'
@@ -369,8 +371,6 @@ compare_methods <- function(d, n, B=100L) {
 
 }
 
-
-
 #' CPU Heavy!!!
 #' Method to 3D render Gaussian Multivariates estimates coming from
 #' generated samples or predicted values
@@ -562,6 +562,88 @@ plot_3D_compare_m_DIFF <- function(path, render=FALSE) {
     }
   }
 }
+
+#' Visualizing the Distribution of the Iris Dataset Features
+#' Adapted from Antonio Lopez
+visualize_iris_feature_distr <- function() {
+  iris <- load_iris()
+
+  petallength <-  ggplot(iris, aes(x=Petal.Length, colour=Species, fill=Species)) +
+    geom_density(alpha=.3) +
+    geom_vline(aes(xintercept=mean(Petal.Length),  colour=Species),linetype="dashed",color="grey", size=1)+
+    xlab("Petal Length (cm)") +
+    ylab("Density") +
+    theme(legend.position="none")
+
+  sepallength <- ggplot(iris, aes(x=Sepal.Length, colour=Species, fill=Species)) +
+    geom_density(alpha=.3) +
+    geom_vline(aes(xintercept=mean(Sepal.Length),  colour=Species),linetype="dashed", color="grey", size=1)+
+    xlab("Sepal Length (cm)") +
+    ylab("Density") +
+    theme(legend.position="none")
+
+  petalwidth <- ggplot(iris, aes(x=Petal.Width, colour=Species, fill=Species)) +
+    geom_density(alpha=.3) +
+    geom_vline(aes(xintercept=mean(Petal.Width),  colour=Species),linetype="dashed",color="grey", size=1)+
+    xlab("Petal Width (cm)") +
+    ylab("Density")
+
+  sepalwidth <- ggplot(iris, aes(x=Sepal.Width, colour=Species, fill=Species)) +
+    geom_density(alpha=.3) +
+    geom_vline(aes(xintercept=mean(Sepal.Width),  colour=Species), linetype="dashed",color="grey", size=1)+
+    xlab("Sepal Width (cm)") +
+    ylab("Density") +
+    theme(legend.position="none")
+
+  grid.arrange(sepallength + ggtitle(""),
+               sepalwidth + ggtitle(""),
+               petallength + ggtitle(""),
+               petalwidth  + ggtitle(""),
+               nrow = 2,
+               top = textGrob("Iris Dataset Feature Densities",
+                              gp=gpar(fontsize=14))
+  )
+
+}
+
+#' Function that performs classification with all 4 methods on
+compare_classify_iris <- function(depth=5L, B=100L) {
+  data <- prepare_iris()
+  xy_train <- data[[1]]
+  xy_test <- data[[2]]
+
+  ret <- data.frame(xy_test)
+
+  # predicting with CART
+  tree <- cart_greedy(xy_train, depth=depth, random=FALSE, mode = "classification")
+  pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                function(x) cart_predict(x, node=tree$root)))
+
+  ret$CART <- pred
+
+  # predicting with CART and pruning
+  # yet to implement
+  pred_pruning <- 0.
+  ret$pruning <- pred_pruning
+
+  # predicting with Bagging alg
+  pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
+                  random_forest = FALSE)
+  ret$bagging <- pred
+
+  # predicting with Random Forest
+  pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
+                  random_forest = TRUE)
+  ret$rf <- pred
+
+  save("ret", file=str_c("data/simul/","compare_iris_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+
+}
+
+compare_methods(d=5, n=100, B=10L)
+
+#compare_classify_iris(B=3L)
+# load("data/simul/compare_iris_20200813-134956")
 
 # data <- prepare_iris()
 # xy_train <- data[[1]]
