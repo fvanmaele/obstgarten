@@ -13,7 +13,7 @@ library(grid)
 #' @param depth Integer depths of the CART generated regression tree
 #' @example pred_plot_greedy(5, sigma=0.25, n=150)
 pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
-  if (random == TRUE & depth <= 2) {
+  if (random_forest == TRUE & depth <= 2) {
     stop("Random Forest require depth > 1!")
   }
 
@@ -47,7 +47,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
 
 }
 
-# pred_plot_greedy(depth=3, random=TRUE)
+# pred_plot_greedy(depth=3, random_forest=FALSE)
 
 
 #' plots prediction of Bagging generated regression tree with depth 5
@@ -82,6 +82,7 @@ pred_plot_bagging <- function(B, sigma=0.25, n=150, random_forest = FALSE) {
   print(gg)
 
 }
+
 
 #' bias variance data for 400 reps for CARTs of different depths
 #' @example generate test date for different depths values of the CART algorithm with 400 reps
@@ -642,8 +643,8 @@ compare_classify_iris <- function(depth=5L, B=100L) {
 
 # compare_methods(d=5, n=100, B=10L)
 
-#compare_classify_iris(B=3L)
-# load("data/simul/compare_iris_20200813-134956")
+# compare_classify_iris(B=10L)
+# load("data/simul/compare_iris_20200813-194215")
 
 # data <- prepare_iris()
 # xy_train <- data[[1]]
