@@ -45,7 +45,8 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
     y[(k - eps) > 0.] <- 2
     ret <- matrix(c(x1, x2, y), nrow=n, ncol=3)
     colnames(ret) <- c("x1", "x2", "y")
-    return(ret)
+    ret <- as.data.frame(ret)
+    return(data.matrix(ret[order(ret[, 1]), ]))
   }
 }
 
