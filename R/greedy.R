@@ -82,12 +82,14 @@ R_min <- function(A, d, mode = "regression") {
   } else {
     stop("invalid mode: must be regression or classification")
   }
+
   min_s <- apply(G, MARGIN=3, function(M) {
     idx <- which.min(M[, "R"]) # TODO: break ties at random
     M[idx, "s"]
   })
 
   j_hat <- which.min(min_s) # TODO: break ties at random
+
   s_hat <- min_s[[j_hat]]
   return(list(j = j_hat, s = s_hat))
 }
@@ -110,7 +112,7 @@ R_min <- function(A, d, mode = "regression") {
 #'
 #' @return
 #' @export
-cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, sample = FALSE, random = FALSE, m = 0L) {
+cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, sample = FALSE, random = FALSE, m = 0L, allow_duplicates=FALSE) {
   stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
   stopifnot("depth is not numeric and greater than 0"= is.numeric(depth) & depth > 0L)
   stopifnot("threshold is not numeric and greater than 0"= is.numeric(threshold) & threshold > 0L)
@@ -125,20 +127,25 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
     print(str_c("t ", t))
   }
 
-  # Check data for duplicates (cf. [Richter 1.2, p.9])
-  # TODO: add test for this case
-  if (sample == FALSE) {
-    # only duplicate if all features are the same
-    if (any(duplicated(XY))) {
-      warning(str_c("Data contains ",  sum(as.integer(duplicated(XY))), " duplicates. ",
-                    "\n Removing Duplicates! Next time remove them before training!"))
-      XY <- unique(XY)
+  if (!allow_duplicates) {
+    # Check data for duplicates (cf. [Richter 1.2, p.9])
+    # TODO: add test for this case
+    if (sample == FALSE) {
+      # only duplicate if all features are the same
       if (any(duplicated(XY))) {
-        stop(str_c("Data still contains ",  sum(as.integer(duplicated(XY))), " duplicates. "))
+        warning(str_c("Data contains ",  sum(as.integer(duplicated(XY))), " duplicates. ",
+                      "\n Removing Duplicates! Next time remove them before training!"))
+        XY <- unique(XY)
+        if (any(duplicated(XY))) {
+          stop(str_c("Data still contains ",  sum(as.integer(duplicated(XY))), " duplicates. "))
+        }
+        if (nrow(XY) < 1) {
+          stop("Data is empty!")
+        }
       }
+    } else {
+      stop("function not implemented")
     }
-  } else {
-    stop("function not implemented")
   }
 
   # Initialize regression tree
