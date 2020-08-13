@@ -153,6 +153,8 @@ prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) 
   iris$Species[iris$Species == "versicolor"] <- 2L
   iris$Species[iris$Species == "virginica"] <- 3L
 
+  iris %>% rename(y=Species) -> iris
+
   # split into training and test set
   if (is.null(training_split_indices)) {
   rand_subset <- sample(1:nrow(iris), training_set_ratio*nrow(iris))
