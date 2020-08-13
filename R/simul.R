@@ -49,8 +49,8 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
 
 # plots prediction of CART generated decision tree
 #'
-#' @param depth Integer depths of the CART generated regression tree
-#' @example pred_plot_greedy(5, sigma=0.25, n=150)
+#' @param depth Integer depths of the CART generated decision tree
+#' @example pred_plot_greedy_class(5, sigma=0.25, n=150)
 pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
   if (random_forest == TRUE & depth <= 2) {
     stop("Random Forest require depth > 1!")
@@ -86,7 +86,7 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 
 }
 
-# pred_plot_greedy_class(10)
+# pred_plot_greedy_class(15, n=500)
 
 
 #' plots prediction of Bagging generated regression tree with depth 5
