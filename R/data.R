@@ -131,8 +131,6 @@ load_iris <- function() {
   return(iris)
 }
 
-load_iris()
-
 #' Method that prepares Iris dataset for classification with Tree-Methods.
 #' setosa == 1, versicolor == 2, virginica == 3
 #'
