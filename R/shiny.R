@@ -1,4 +1,134 @@
 library(shiny)
+library(tidyverse)
+library(plot3D)
+library(rayshader)
+library(RColorBrewer)
+library(ggplot2)
+library(ggpubr)
+
+# plots prediction of CART generated regression tree
+#'
+#' @param depth Integer depths of the CART generated regression tree
+#' @example pred_plot_greedy(5, sigma=0.25, n=150)
+pred_plot_greedy2 <- function(depth, x = NULL, random_forest=FALSE) {
+  if (random_forest == TRUE & depth <= 2) {
+    stop("Random Forest require depth > 1!")
+  }
+
+  if(is.null(x)){
+    n <- 150
+    grid <- seq(0, 1, len=n)
+    x <- generate_sin_data(n, grid=grid, sigma=0.25)
+  }
+  else{
+    n <- nrow(x)
+    grid <- seq(0, 1, len=n)
+  }
+
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
+  }
+
+  tree <- cart_greedy(x, depth=depth, random=random_forest)
+  pred <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
+
+  df_plot <- data.frame(grid=grid, y=pred)
+
+  gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
+    scale_colour_manual("",
+                        breaks = c("Prediction", "True"),
+                        values = c("Prediction"="Blue", "True"="red")) +
+    geom_line(aes(colour="Prediction")) +
+    geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
+    geom_point(aes(x=grid, y=x[, 2])) +
+    ggtitle(str_c("Prediction of CART Regression Tree with Depth ", depth)) +
+    xlab("") +
+    ylab("")
+
+  print(gg)
+
+}
+
+
+# plots prediction of CART generated regression tree
+#'
+#' @param depth Integer depths of the CART generated regression tree
+#' @example pred_plot_greedy(5, sigma=0.25, n=150)
+pred_plot_greedy3 <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
+  if (random_forest == TRUE & depth <= 2) {
+    stop("Random Forest require depth > 1!")
+  }
+
+  grid <- seq(0, 1, len=n)
+
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
+  }
+
+  if(random_forest){
+    stop("not implemented")
+  }
+  else{
+    x <- generate_sin_data(n, grid=grid, sigma=sigma)
+  }
+
+  tree <- cart_greedy(x, depth=depth, random=random_forest, m = 1)
+  pred <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
+
+  df_plot <- data.frame(grid=grid, y=pred)
+
+  gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
+    scale_colour_manual("",
+                        breaks = c("Prediction", "True"),
+                        values = c("Prediction"="Blue", "True"="red")) +
+    geom_line(aes(colour="Prediction")) +
+    geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
+    geom_point(aes(x=grid, y=x[, 2])) +
+    ggtitle(str_c("Prediction of CART Regression Tree with Depth ", depth)) +
+    xlab("") +
+    ylab("")
+
+  print(gg)
+
+}
+
+
+# pred_plot_greedy(depth=3, random=TRUE)
+
+
+#' plots prediction of Bagging generated regression tree with depth 5
+#' and specified number of bootstrap samples B
+#'
+#' @param B integer number of bootstrap samples
+#' @param random_forest logical: TRUE: random forest, FALSE: bagging
+#'
+#' @example pred_plot_bagging(100, sigma=0.25, n=150)
+pred_plot_bagging <- function(B, sigma=0.25, n=150, random_forest = FALSE) {
+
+  grid <- seq(0, 1, len=n)
+
+  x <- generate_sin_data(n, grid=grid, sigma=sigma)
+  #TODO data cannot be used for random_forest
+
+  pred <- bagging(B=B, x_train=x, x_test=x, random_forest = random_forest) # predicting with current tree
+
+  df_plot <- data.frame(grid=grid, y=pred)
+
+  gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
+    scale_colour_manual("",
+                        breaks = c("Prediction", "True"),
+                        values = c("Prediction"="Blue", "True"="red")) +
+    geom_line(aes(colour="Prediction")) +
+    geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
+    geom_point(aes(x=grid, y=x[, 2])) +
+    ggtitle(str_c("Prediction of CART Regression Tree with ", B, " Bootstrap Samples")) +
+    xlab("") +
+    ylab("")
+
+  print(gg)
+
+}
+
 
 #' Starts the Shiny App
 #'
@@ -25,7 +155,8 @@ start_shiny_app <- function(){
         actionButton("simulate_greedy", "Simulate CART!")
       ),
       mainPanel(
-        plotOutput('plot_greedy')
+        plotOutput('plot_greedy'),
+        verbatimTextOutput("static_table_greedy")
       )
     ),
 
@@ -45,9 +176,9 @@ start_shiny_app <- function(){
   )
 
   server <- function(input, output) {
-    #data <- reactive({
-    #  cart_greedy(generate_sin_data(input$n))
-    #})
+    data_greedy <- reactive({
+      generate_sin_data(n_greedy(), sigma = sigma_greedy())
+    })
 
     # CART Regression
     depth <- eventReactive(input$simulate_greedy, {
@@ -63,7 +194,10 @@ start_shiny_app <- function(){
       input$random_greedy
     })
     output$plot_greedy <- renderPlot({
-      pred_plot_greedy(depth(), sigma = sigma_greedy(), n = n_greedy(), random = random_greedy())
+      pred_plot_greedy2(depth(), x = data_greedy(), random = random_greedy())
+    })
+    output$static_table_greedy <- renderPrint({
+      summary(data_greedy())
     })
 
     # Bagging Regression
