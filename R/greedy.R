@@ -33,6 +33,7 @@ cart_grid <- function(A, d, f, ...) {
   G <- array(dim=c(nrow(A), 2, d), dimnames=G_dn)
 
   # argmin: s_j \in (X_1j, .., X_nj) \sub A, j \in (1, .., d)
+  # TODO: cache computations of R (for duplicate data points/s values)
   for (j in 1:d) {
     for (i in seq_along(A[, j])) {
       s <- A[i, j]
@@ -41,7 +42,7 @@ cart_grid <- function(A, d, f, ...) {
       if (nrow(P$A1) > 0) {
         R <- f(P$A1[, "y"], P$A2[, "y"], ...)
       } else {
-        message("no data points for partition j = ", j, ", s = ", s)
+        #message("no data points for partition j = ", j, ", s = ", s)
         R <- NA_real_ # no data points in new partition, skip
       }
       G[i, "s", j] <- s
@@ -127,25 +128,10 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
     print(str_c("t ", t))
   }
 
-  if (!allow_duplicates) {
-    # Check data for duplicates (cf. [Richter 1.2, p.9])
-    # TODO: add test for this case
-    if (sample == FALSE) {
-      # only duplicate if all features are the same
-      if (any(duplicated(XY))) {
-        warning(str_c("Data contains ",  sum(as.integer(duplicated(XY))), " duplicates. ",
-                      "\n Removing Duplicates! Next time remove them before training!"))
-        XY <- unique(XY)
-        if (any(duplicated(XY))) {
-          stop(str_c("Data still contains ",  sum(as.integer(duplicated(XY))), " duplicates. "))
-        }
-        if (nrow(XY) < 1) {
-          stop("Data is empty!")
-        }
-      }
-    } else {
-      stop("function not implemented")
-    }
+  # Check data for duplicates (cf. [Richter 1.2, p.9])
+  # TODO: add test for this case
+  if (sample == TRUE) {
+    stop("function not implemented")
   }
 
   # Initialize regression tree
@@ -159,27 +145,26 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
   for (i in 1:depth) {
     k <- length(leaves)
     for (node in leaves) {
-      if(nrow(node$points) > threshold) {
-        if(random){
-          # random dimensions to minimise on
-          stopifnot(d > 1)
-          S <- c(sample(1:d, m, replace = FALSE), d+1)
-
-          # optimal subdivision
-          params <- R_min(node$points[,S], m, mode = mode) # minimise with j out of S
-          stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
-          stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
-          params$j <- S[params$j]
-        }
-        else{
-          # optimal subdivision
-          params <- R_min(node$points, d, mode = mode)
-          stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
-          stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
-        }
+      if(random) {
+        # random dimensions to minimize on
+        stopifnot("dimension must be greater 1"= d > 1)
+        stopifnot("parameter m must be smaller than dimension d"= m < d)
+        S <- c(sample(1:d, m, replace = FALSE), d+1) # [X_i1 .. X_im] .. Y_i
+      } else {
+        S <- 1:(d+1)
+        m <- d
+      }
+      if(nrow(unique(node$points[, S, drop=FALSE])) > threshold) {
+        # optimal subdivision
+        # TODO: pass correct range to R_min (instead of d -> 1:d)
+        params <- R_min(node$points[, S, drop=FALSE], m, mode = mode) # minimize with j out of S
+        stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
+        stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
+        #params$j <- S[params$j]
 
         # update attributes of parent
-        node$j <- params$j
+        # TODO: pass correct range to R_min (instead of S[params$j])
+        node$j <- S[params$j]
         node$s <- params$s # node$points (of data) set in previous iteration
         node$y <- NA
 
