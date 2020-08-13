@@ -103,13 +103,14 @@ R_min <- function(A, d, mode = "regression") {
 #'   10)
 #' @param threshold (integer)
 #' @param sample (logical)
-#' @param mode
+#' @param mode "regression" or "classification" specifies whether to train
+#' decision or regression tree. Default is "regression"
 #' @param random generates CART for random forest (logical)
 #' @param m default: 0 so it only has to be set at random=TRUE (numeric)
 #'
 #' @return
 #' @export
-cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE, random = FALSE, m = 0L) {
+cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, sample = FALSE, random = FALSE, m = 0L) {
   stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
   stopifnot("depth is not numeric and greater than 0"= is.numeric(depth) & depth > 0L)
   stopifnot("threshold is not numeric and greater than 0"= is.numeric(threshold) & threshold > 0L)
@@ -152,14 +153,14 @@ cart_greedy <- function(XY, depth = 10L, threshold = 1L, sample = FALSE, random 
           S <- c(sample(1:d, m, replace = FALSE), d+1)
 
           # optimal subdivision
-          params <- R_min(node$points[,S], m, mode = "regression") # minimise with j out of S
+          params <- R_min(node$points[,S], m, mode = mode) # minimise with j out of S
           stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
           stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
           params$j <- S[params$j]
         }
         else{
           # optimal subdivision
-          params <- R_min(node$points, d, mode = "regression")
+          params <- R_min(node$points, d, mode = mode)
           stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
           stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
         }
