@@ -41,7 +41,7 @@ bagging <- function(B, x_train, x_test, m=NULL, regression=TRUE, use_parallel=FA
   fit_tree <- function(x_b, random, m) {
     # (over-)fitting tree to bootstrap sample via CART algorithm
     # dimnames(x_b) <- list(NULL, c(1, "y"))
-    trees[[i]] <- cart_greedy(x_b, depth=5, mode = mode, threshold=1, random = random, m = m, allow_duplicates = FALSE) # return cart for x_b
+    trees[[i]] <- cart_greedy(x_b, depth=5, mode = mode, threshold=1, random = random, m = m, allow_duplicates = TRUE) # return cart for x_b
     trees[[i]]$validate()
 
     predict <- function(x) {
