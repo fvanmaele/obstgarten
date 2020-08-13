@@ -47,7 +47,46 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
 
 }
 
-# pred_plot_greedy(depth=3, random_forest=FALSE)
+# plots prediction of CART generated decision tree
+#'
+#' @param depth Integer depths of the CART generated regression tree
+#' @example pred_plot_greedy(5, sigma=0.25, n=150)
+pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
+  if (random_forest == TRUE & depth <= 2) {
+    stop("Random Forest require depth > 1!")
+  }
+
+  grid <- seq(0, 1, len=n)
+
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
+  }
+
+  x <- generate_sin_data(n, sigma=sigma, reg = FALSE)
+  #TODO data cannot be used for random_forest
+
+  tree <- cart_greedy(x, depth=depth, random=random_forest, mode = "classification")
+  pred <- round(apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict)) # predicting with current tree
+
+  print(x)
+
+  df_plot <- rename(data.frame(x), x=x1, y=x2, z=y)
+
+  grid <- seq(0, 1, len=n)
+  print(length(grid))
+
+  gg <- ggplot(data=df_plot) +
+    geom_point(aes(x=x, y=y, colour=pred)) +
+    ggtitle(str_c("Prediction of CART Decision Tree with Depth ", depth)) +
+    geom_line(aes(x=grid, y=(0.5*sin(2*pi*grid)) + 0.5)) +
+    xlab("") +
+    ylab("")
+
+  print(gg)
+
+}
+
+# pred_plot_greedy_class(10)
 
 
 #' plots prediction of Bagging generated regression tree with depth 5
