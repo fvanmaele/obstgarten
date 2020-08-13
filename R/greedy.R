@@ -127,10 +127,16 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
 
   # Check data for duplicates (cf. [Richter 1.2, p.9])
   # TODO: add test for this case
-  XY <- unique(XY)
   if (sample == FALSE) {
-    dup <- min(apply(XY, MARGIN=2, function(c) length(unique(c))))
-    stopifnot("Data contains duplicates"= dup == nrow(XY))
+    # only duplicate if all features are the same
+    if (any(duplicated(XY))) {
+      warning(str_c("Data contains ",  sum(as.integer(duplicated(XY))), " duplicates. ",
+                    "\n Removing Duplicates! Next time remove them before training!"))
+      XY <- unique(XY)
+      if (any(duplicated(XY))) {
+        stop(str_c("Data still contains ",  sum(as.integer(duplicated(XY))), " duplicates. "))
+      }
+    }
   } else {
     stop("function not implemented")
   }
@@ -207,3 +213,4 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
   }
   return(Cart)
 }
+
