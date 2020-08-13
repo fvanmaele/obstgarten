@@ -131,6 +131,37 @@ load_iris <- function() {
   return(iris)
 }
 
+load_iris()
+
+#' Method that prepares Iris dataset for classification with Tree-Methods.
+#'
+#' @param training_set_ratio double between 0 and 1 specifies the training test
+#' set ratio
+#' @param training_split_indices Vector of Integers specifying which rows of the
+#' full set should be taken to be in the training set. Default is NULL. If default
+#' rows are chosen randomly
+#'
+#' @return Classification Training and Classification Test Set
+prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) {
+  iris <- load_iris()
+
+  iris$Species <- as.integer(iris$Species)
+
+  # Convert Species into Integers
+  iris$Species[iris$Species == "setosa"] <- 1L
+  iris$Species[iris$Species == "versicolor"] <- 2L
+  iris$Species[iris$Species == "virginica"] <- 3L
+
+  # split into training and test set
+  if (is.null(training_split_indices)) {
+  rand_subset <- sample(1:nrow(iris), training_set_ratio*nrow(iris))
+  }
+  else rand_subset <- training_split_indices
+  training_set <- iris[rand_subset, ]
+  test_set <- iris[-rand_subset, ]
+
+  return(list(training_set, test_set))
+}
 
 #' mnist data set
 #'
