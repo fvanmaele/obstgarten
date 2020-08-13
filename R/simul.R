@@ -640,7 +640,7 @@ compare_classify_iris <- function(depth=5L, B=100L) {
 
 }
 
-compare_methods(d=5, n=100, B=10L)
+# compare_methods(d=5, n=100, B=10L)
 
 #compare_classify_iris(B=3L)
 # load("data/simul/compare_iris_20200813-134956")
