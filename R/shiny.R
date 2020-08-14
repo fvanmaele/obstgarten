@@ -5,6 +5,20 @@ library(rayshader)
 library(RColorBrewer)
 library(ggplot2)
 library(ggpubr)
+library(bbplot)
+
+rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, grid=NULL) {
+  if (datatype == "gaussian") {
+    pred_plot_rf(n=n, d=d, m=m, B=B, depth=depth, display_d=display_d, sd=sd)
+  }
+  else if (datatype == "sine") {
+    pred_plot_bagging(depth=depth, B=B, sigma=sd, n=n, random_forest = FALSE, grid=grid)
+  }
+
+}
+
+rf_plot(datatype="sine", n=100, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.5)
+
 
 # plots prediction of CART generated regression tree
 #'
