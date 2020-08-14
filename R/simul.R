@@ -146,8 +146,9 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10) {
 
   gg <- ggplot(plot_df, aes(x=x, y=y, z = pred)) +
     geom_contour_filled() +
-    geom_contour(aes(x=x, y=y, z = true), color = "white", size = 0.2) +
+    geom_contour(aes(x=x, y=y, z = true, colour=after_stat(level)), bins=20, size = 0.5) +
     ggtitle("Predicted Density and True Density") +
+    # geom_point() +
     xlab("") +
     ylab("")
 
@@ -169,6 +170,8 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10) {
   print(gg)
 
 }
+
+# pred_plot_sine2D(n=1000, B=5L, depth=5, sd=0.1, k=10)
 
 
 pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
