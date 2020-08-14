@@ -1,5 +1,6 @@
 library(MASS)
 library(matlib)
+library(mvtnorm)
 
 #' Generate data set like in Example 6.3 of Richter19.pdf
 #'
@@ -55,7 +56,7 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
 #' @param sigma positive definite square covariance matrix
 #' @return list(df of data, feature means vector, covariance matrix)
 #' @example generate_mult_data(n=1000, d=5)
-generate_mult_data <- function(n, d, mu=NULL, sigma=NULL) {
+generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
   if (is.null(sigma)) {
     A <- matrix(runif(d*d, min = 0, max = 1), nrow=d, ncol=d)
     sigma <- t(A) %*% A
@@ -64,18 +65,24 @@ generate_mult_data <- function(n, d, mu=NULL, sigma=NULL) {
     mu <- runif(d, min = -1, max = +1)
   }
 
-  data <- mvrnorm(n = n, mu=mu, Sigma=sigma, tol = 1e-06, empirical = FALSE)
+  data <- rmvnorm(n, mean=mu, sigma=sigma)
 
-  mvg <- function(x) {
-    return((2*pi)**(-d/2) * det(sigma)**(-1/2) *
-             exp(-1/2 * (t(x - mu) %*% inv(sigma) %*% (x - mu))))
-  }
+  # print(data)
 
-  y <- apply(data, mvg, MARGIN = 1)
+  eps <- rnorm(n, mean=0, sd=sd)
+
+  y <- apply(data, dmvnorm, mu, sigma, MARGIN = 1) + eps
+
   data <- data.frame(x=data, y=y)
 
   return(list(data, mu, sigma))
 }
+
+# data <- generate_mult_data(n=1000, d=2, mu=NULL, sigma=NULL)
+# print(data)
+# gg <- ggplot(data[[1]], aes(x=x.1, y=y)) +
+#   geom_point()
+# print(gg)
 
 
 # test data for random forest with d = 3
