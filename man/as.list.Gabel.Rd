@@ -7,11 +7,27 @@
 \method{as.list}{Gabel}(node)
 }
 \arguments{
-\item{node}{(Gabel)}
+\item{node}{Entry point to follow recursively, usually the root node of
+the tree (\code{Gabel})}
 }
 \value{
-
+a list of lists representing the tree structure and attributes of
+\code{node} (see Details).
 }
 \description{
 Coerce a Gabel object to a nested list
+}
+\details{
+The following attributes are set:
+\itemize{
+\item \code{y} (\code{Gabel$y}) for leaf nodes;
+\item \code{s} (\code{Gabel$s}), \code{j} (\code{Gabel$j}) for inner nodes;
+\item \code{depth} (\code{Gabel$depth});
+\item \code{label} (\code{Gabel$label});
+\item \code{parent} (\code{Gabel$parent$label});
+\item \code{leaf} (the value from \code{Gabel$isObst()}).
+}
+
+It is assumed there are no cycles in the argument node. A node should either
+have none or both of \code{childL} and \code{childR} set.
 }

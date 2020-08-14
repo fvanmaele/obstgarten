@@ -2,30 +2,48 @@
 % Please edit documentation in R/obst.R
 \name{Gabel}
 \alias{Gabel}
-\title{R6 class representing a CART node}
+\title{R6 class representing a CART}
 \description{
-R6 class representing a CART node
+Data structure (recursive) representing regression and classification trees (CART).
+Edges are bi-directional (inspired from \code{data.tree::Node}). Data is stored in
+environments (\code{R6}, reference semantics).
+}
+\details{
+A CART is a binary tree with the following properties:
+\itemize{
+\item Every inner node (a node with two child nodes) is assigned a split index
+\eqn{j\in{1..d}} and a split point \eqn{s\in R}.
+\item Every leaf (a node with no child nodes) is assigned a value
+\eqn{y\in R} (for regression) or \eqn{y\in{1,..,K}} (for classification)
+}
 
-R6 class representing a CART node
+Except for the append method, populating the node attributes in a coherent
+manner is left to the user. For an automated way in doing this, see the
+\code{Baum} class.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{childL}}{(Gabel)}
+\item{\code{childL}}{Left child node (\code{Gabel}, defaults to \code{NULL})}
 
-\item{\code{childR}}{(Gabel)}
+\item{\code{childR}}{Right child node (\code{Gabel}, defaults to \code{NULL})}
 
-\item{\code{parent}}{(Gabel)}
+\item{\code{parent}}{Parent node. A node without parent is the root of the tree
+(\code{Gabel}, defaults to \code{NULL})}
 
-\item{\code{label}}{unique label for node (integer, defaults to NA_integer_)}
+\item{\code{label}}{node label (\code{integer}, defaults to \code{NA_integer_})}
 
-\item{\code{depth}}{(integer)}
+\item{\code{depth}}{depth of the node in the tree, that is the shortest path
+\eqn{v_{0} -> .. -> v_{n-1} -> v} from the tree root (\code{integer})}
 
-\item{\code{points}}{(matrix)}
+\item{\code{points}}{(matrix)
+TODO: redundant copies of data points in child nodes of CART}
 
-\item{\code{s}}{(numeric)}
+\item{\code{s}}{split point for CART inner node (\code{numeric})}
 
-\item{\code{j}}{(integer)}
+\item{\code{j}}{split index for CART inner node (\code{integer})}
+
+\item{\code{y}}{value for CART leafs}
 }
 \if{html}{\out{</div>}}
 }
@@ -48,8 +66,8 @@ R6 class representing a CART node
 }
 
 \subsection{Returns}{
-logical TRUE if a node is a leaf (both childL and childR are
-NULL), FALSE otherwise.
+\code{TRUE} if node is a leaf (both \code{childL} and \code{childR} are
+\code{NULL}), \code{FALSE} otherwise.
 }
 }
 \if{html}{\out{<hr>}}
@@ -61,14 +79,15 @@ NULL), FALSE otherwise.
 }
 
 \subsection{Returns}{
-
+\code{TRUE} if node is a root (parent is set to \code{NULL}), \code{FALSE} otherwise.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
 \if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
-Print a summary of node attributes
+Print a summary of node attributes. Attributes set to \code{NULL} (and the
+\verb{$points} attribute) are not printed.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Gabel$print(...)}\if{html}{\out{</div>}}
 }
@@ -78,10 +97,27 @@ Print a summary of node attributes
 \if{html}{\out{<a id="method-append"></a>}}
 \if{latex}{\out{\hypertarget{method-append}{}}}
 \subsection{Method \code{append()}}{
+Append a branch (two child nodes to a given node) to a leaf node. Appending
+to a node that is not a leaf is not allowed by this method.
+
+Appending nodes updates the following attributes:
+\itemize{
+\item The \verb{$parent} and \verb{$depth} attributes of the child nodes (\code{Child1}, \code{Child2});
+\item the \verb{$childL} and \verb{$childR} attributes of the parent node (self).
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Gabel$append(Child1, Child2)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{Child1}}{The left child node. (\code{Gabel})}
+
+\item{\code{Child2}}{The right child node. (\code{Gabel})}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

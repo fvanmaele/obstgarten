@@ -11,6 +11,8 @@ start_shiny_app()
 
 \item{Sigma}{standard deviation of irreducible error in y (numeric)}
 
+\item{Random_forest}{TRUE: random forest, FALSE: bagging (logical)}
+
 \item{Depth}{depths of the CART generated regression tree (numeric)}
 
 \item{Bootstrap_samples}{number of bootstrap samples (numeric)}

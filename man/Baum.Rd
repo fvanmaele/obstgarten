@@ -2,11 +2,36 @@
 % Please edit documentation in R/obst.R
 \name{Baum}
 \alias{Baum}
-\title{R6 class representing a CART}
+\title{R6 class to build a CART}
 \description{
-R6 class representing a CART
+A helper class to build a CART based on \code{Gabel} nodes. Nodes are accessible
+through a list, for easy introspection with \code{apply}. Nodes are labeled in BFS
+order.
 
-R6 class representing a CART
+As \code{Gabel}, data is stored in environments (\code{R6}, reference semantics).
+}
+\examples{
+
+## ------------------------------------------------
+## Method `Baum$new`
+## ------------------------------------------------
+
+T1 <- Baum$new()
+T1$root$label # 1L
+}
+\seealso{
+\link{Gabel$isObst()}
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{nodes}}{List of \code{Gabel} nodes in the tree, in BFS order. A node's
+label and its index in this list must match. In particular,
+\verb{(Node$label == i) => (identical(nodes[[i]], Node) == TRUE)} holds.}
+
+\item{\code{root}}{The root node of the tree. (\code{Gabel})}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -27,18 +52,33 @@ Create a new Baum object.
 \if{html}{\out{<div class="r">}}\preformatted{Baum$new()}\if{html}{\out{</div>}}
 }
 
+\subsection{Details}{
+The root node is initialized with label \code{1L}
+and depth \code{0L}.
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{T1 <- Baum$new()
+T1$root$label # 1L
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-obstkorb"></a>}}
 \if{latex}{\out{\hypertarget{method-obstkorb}{}}}
 \subsection{Method \code{obstkorb()}}{
+Return leaf nodes in the tree.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Baum$obstkorb()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-logical vector with TRUE for leaf nodes and FALSE otherwise. Note
-that leaves are in BFS order.
+logical vector with TRUE for leaf nodes, and FALSE otherwise. As
+\verb{$nodes}, this vector is in BFS order.
 }
 }
 \if{html}{\out{<hr>}}
@@ -50,21 +90,12 @@ Add a pair of nodes to the binary tree.
 \if{html}{\out{<div class="r">}}\preformatted{Baum$append(Parent, Child1, Child2)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{Node}}{}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-validate}{}}}
 \subsection{Method \code{validate()}}{
+
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Baum$validate()}\if{html}{\out{</div>}}
 }
