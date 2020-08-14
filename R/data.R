@@ -51,6 +51,23 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
   }
 }
 
+#' Generate 2D sine data set
+generate_sin_2D <- function(n, sigma=0.2, k=10) {
+
+  eps <- rnorm(n, mean=0, sd=sigma)
+
+  x <- runif(n, min=-k, max=k)
+  y <- runif(n, min=-k, max=k)
+  z <- (sin(sqrt(x**2+y**2)))/(sqrt(x**2+y**2)) + eps
+
+  ret <- data.frame(x1=x, x2=y, y=z)
+
+  return(ret)
+
+}
+
+
+
 #' Generate Data from a multivariate Gaussian
 #' @param n dimensional vector with feature means
 #' @param sigma positive definite square covariance matrix
