@@ -7,17 +7,20 @@ library(ggplot2)
 library(ggpubr)
 library(bbplot)
 
-rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, grid=NULL) {
+rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, grid=NULL) {
   if (datatype == "gaussian") {
     pred_plot_rf(n=n, d=d, m=m, B=B, depth=depth, display_d=display_d, sd=sd)
   }
   else if (datatype == "sine") {
     pred_plot_bagging(depth=depth, B=B, sigma=sd, n=n, random_forest = FALSE, grid=grid)
   }
+  else if (datatype == "sine2D") {
+    pred_plot_sine2D(n=n, B=B, depth=depth, sd=sd, k=k)
+  }
 
 }
 
-rf_plot(datatype="sine", n=100, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.5)
+# rf_plot(datatype="sine", n=100, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.5)
 
 
 # plots prediction of CART generated regression tree
