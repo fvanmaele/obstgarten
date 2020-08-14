@@ -47,6 +47,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
 
 }
 
+
 # plots prediction of CART generated decision tree
 #'
 #' @param depth Integer depths of the CART generated decision tree
@@ -96,31 +97,84 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
 #' @example pred_plot_bagging(100, sigma=0.25, n=150)
-pred_plot_bagging <- function(B, sigma=0.25, n=150, random_forest = FALSE) {
+pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest = FALSE, grid=NULL) {
 
-  grid <- seq(0, 1, len=n)
+  if (is.null(grid)) grid <- seq(0, 1, len=n)
 
   x <- generate_sin_data(n, grid=grid, sigma=sigma)
   #TODO data cannot be used for random_forest
 
-  pred <- bagging(B=B, x_train=x, x_test=x, random_forest = random_forest) # predicting with current tree
+  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x, random_forest = random_forest) # predicting with current tree
 
   df_plot <- data.frame(grid=grid, y=pred)
+
+  mse <- 1/n * sum((pred - sin(2*pi*grid)) ** 2)
 
   gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
     scale_colour_manual("",
                         breaks = c("Prediction", "True"),
                         values = c("Prediction"="Blue", "True"="red")) +
+    geom_point(aes(x=grid, y=x[, 2]), alpha=0.5) +
     geom_line(aes(colour="Prediction")) +
     geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
-    geom_point(aes(x=grid, y=x[, 2])) +
-    ggtitle(str_c("Prediction of CART Regression Tree with ", B, " Bootstrap Samples")) +
+    ggtitle(str_c("Prediction of Bagging Alg.")) +
+    annotate("text", x=1, y=1.5, label= str_c("MSE: ", round(mse, digits=5))) +
     xlab("") +
-    ylab("")
+    ylab("") +
+    bbc_style()
 
   print(gg)
 
 }
+
+pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
+  data <- generate_mult_data(n=n, d=d, sigma=diag(d), mu=rep(0., d))
+  x <- data[[1]]
+  sigma <- data[[3]]
+  mu <- data[[2]]
+
+  # data for true gaussian function
+  grid <- seq(mu[display_d] - 2*sigma[display_d, display_d], mu[display_d] + 2*sigma[display_d, display_d], len=n)
+  gridmat <- matrix(0., nrow=n, ncol=d)
+  gridmat[, display_d] <- grid
+  true_val <- apply(gridmat, MARGIN=1, dmvnorm, mu, sigma,)
+
+  # data for testing prediction
+  x_test <- x
+  x_test[, 1:d] <- gridmat
+  x_test[, ncol(x_test)] <- true_val
+
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
+  }
+
+  pred <- bagging(
+    B=B, x_train=x, x_test=x_test, depth=depth, m=m,
+    regression=TRUE, use_parallel=FALSE, random_forest = TRUE
+  )
+
+  mse <- 1/n * sum((pred - true_val) ** 2)
+
+  df_plot <- data.frame(grid=grid, y=pred)
+
+  gg <- ggplot(data=df_plot) +
+    scale_colour_manual("",
+                        breaks = c("Prediction", "True"),
+                        values = c("Prediction"="Blue", "True"="red")) +
+    geom_point(aes(x=x[, display_d], y=x[, ncol(x)]), alpha=0.25) +
+    geom_line(aes(x=grid, y=pred, colour="Prediction")) +
+    geom_line(aes(x=grid, y=true_val, colour="True")) +
+    xlab(str_c("Dimension ", display_d)) +
+    xlim(-2*sigma[display_d, display_d], +2*sigma[display_d, display_d]) +
+    ggtitle("Random Forest Prediction") +
+    annotate("text", x=1, y=max(true_val) + 0.025, label= str_c("MSE: ", round(mse, digits=5))) +
+    ylab("") +
+    bbc_style()
+
+  print(gg)
+
+}
+
 
 
 #' bias variance data for 400 reps for CARTs of different depths
