@@ -74,7 +74,6 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
   df_plot <- rename(data.frame(x), x=x1, y=x2, z=y)
 
   grid <- seq(0, 1, len=n)
-  print(length(grid))
 
   gg <- ggplot(data=df_plot) +
     geom_point(aes(x=x, y=y, colour=pred)) +
@@ -126,6 +125,51 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest = FALSE
   print(gg)
 
 }
+
+#' Method to Plot Predicted Density of a Random Forest
+#' for a two dimensional case for a sine generated dataset
+#' @example pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
+pred_plot_sine2D <- function(n, B, depth, sd, k=10) {
+  data <- generate_sin_2D(n=n, sigma=sd, k=k)
+
+  l <- round(sqrt(n))
+
+  #creating test data
+  coords <- matrix(c(rep(seq(-k,k,len=l), each=l), rep(seq(-k, k, len=l), times=l)), ncol=2)
+  test_data <- data.frame(x1=coords[, 1], x2=coords[, 2], y=(sin(sqrt(coords[, 1]**2+coords[, 2]**2))/(sqrt(coords[, 1]**2+coords[, 2]**2))))
+
+  #predicting
+  pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = TRUE) # predicting with current tree
+  mse <- 1/n * sum((pred - test_data[, -ncol(test_data)] ** 2))
+
+  plot_df <- data.frame(x=test_data[, 1], y=test_data[, 2], pred=pred, true=test_data[, ncol(test_data)])
+
+  gg <- ggplot(plot_df, aes(x=x, y=y, z = pred)) +
+    geom_contour_filled() +
+    geom_contour(aes(x=x, y=y, z = true), color = "white", size = 0.2) +
+    ggtitle("Predicted Density and True Density") +
+    xlab("") +
+    ylab("")
+
+  # gg <- ggplot(plot_df, aes(x=x, y=y, z = pred)) +
+  #     geom_contour_filled() +
+  #     xlab("") +
+  #     ylab("")
+  # gg2 <- ggplot(plot_df, aes(x=x, y=y, z = true)) +
+  #   geom_contour_filled() +
+  #   xlab("") +
+  #   ylab("")
+
+  # figure <- ggarrange(gg, gg2,
+  #                     labels = c("Predicted", "True"),
+  #                     ncol = 2, nrow = 1)
+  #
+  # figure
+
+  print(gg)
+
+}
+
 
 pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
   data <- generate_mult_data(n=n, d=d, sigma=diag(d), mu=rep(0., d))
