@@ -139,8 +139,6 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 
   pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest=random_forest) # predicting with current tree
 
-  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest = TRUE) # predicting with current tree
-
   acc <- sum(x_test[, ncol(x_test)] == pred)/nrow(x)
 
   df_plot <- rename(data.frame(x_test), x=x1, y=x2, z=y)
