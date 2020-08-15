@@ -7,7 +7,25 @@ library(ggplot2)
 library(ggpubr)
 library(bbplot)
 
+<<<<<<< HEAD
 rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
+=======
+#' Method for generating plots in the shiny app
+#' @param datatype choose either gaussian, sine, sine2D, sineclass, or iris
+#' for different datasets
+#' @param n integer number of samples in the dataset
+#' @param d integer number of dimension in the generated dataset
+#' @param m RF parameter
+#' @param B integer number of independent bootstrap samples
+#' @param depth integer depth of the CART generated tree
+#' @param display_d integer dimension displayed in multivariate case gaussian
+#' @param sd double > 0 inherent noise in the generated data
+#' @param k integer specifying field of view in sine2D case
+#' @param grid
+#'
+#' @return print(plot)
+rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, grid=NULL) {
+>>>>>>> 77142db86d811e03667fde094f7a7e9063fb2ac9
   if (datatype == "gaussian") {
     pred_plot_rf(n=n, d=d, m=m, B=B, depth=depth, display_d=display_d, sd=sd)
   }
@@ -26,9 +44,16 @@ rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=
   else if (datatype == "sineclass_CART") {
     pred_plot_greedy_class(depth=depth, n=n, sigma=sd,random=random_forest)
   }
+<<<<<<< HEAD
+=======
+  else if (datatype == "iris") {
+    pred_plot_iris_class(depth=depth, B=B)
+  }
+
+>>>>>>> 77142db86d811e03667fde094f7a7e9063fb2ac9
 }
 
-# rf_plot(datatype="sine2D", n=1000, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.05)
+# rf_plot(datatype="sineclass", n=1000, d=5, m=3, B=10L, depth=3, display_d = 1, sd=0.25)
 
 
 

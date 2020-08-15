@@ -114,7 +114,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
     geom_line(aes(colour="Prediction")) +
     geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
     ggtitle(str_c("1D Random Forest Regression")) +
-    annotate("text", x=1, y=1.5, label= str_c("MSE: ", round(mse, digits=5))) +
+    annotate("text", x=0.9, y=1.1, label= str_c("MSE: ", round(mse, digits=5))) +
     xlab("") +
     ylab("") +
     bbc_style()
@@ -126,6 +126,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
 
 # plots prediction of Bagging generated decision tree
 #'
+#' (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
 #' @param depth Integer depths of the bagging generated decision tree
 #' @example pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -135,7 +136,11 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
   x <- generate_sin_data(n, sigma=sigma, reg = FALSE)
   x_test <- generate_sin_data(n, sigma=sigma, reg = FALSE)
 
+<<<<<<< HEAD
   pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest=random_forest) # predicting with current tree
+=======
+  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest = TRUE) # predicting with current tree
+>>>>>>> 77142db86d811e03667fde094f7a7e9063fb2ac9
 
   acc <- sum(x_test[, ncol(x_test)] == pred)/nrow(x)
 
@@ -143,7 +148,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 
   gg <- ggplot(data=df_plot) +
     geom_point(aes(x=x, y=y, colour=pred)) +
-    ggtitle(str_c("Random Forest Classification")) +
+    ggtitle(str_c("2D Random Forest Classification")) +
     geom_line(aes(x=grid, y=(0.5*sin(2*pi*grid)) + 0.5)) +
     annotate("text", x=0.9, y=1.05, label= str_c("Accuracy: ", round(acc, digits=5))) +
     xlab("") +
@@ -781,6 +786,40 @@ visualize_iris_feature_distr <- function() {
   )
 
 }
+
+#' Method to Plot the classifcation of iris test dataset
+pred_plot_iris_class <- function(depth, B=100L) {
+
+  data <- prepare_iris()
+  xy_train <- data[[1]]
+  xy_test <- data[[2]]
+
+  # predicting with Random Forest
+  pred <- bagging(B=B, depth=depth, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
+                  random_forest = TRUE)
+
+  acc <- sum(xy_test[, ncol(xy_test)] == pred)/nrow(xy_test)
+
+  df_plot <- rename(data.frame(xy_test), x=Sepal.Length, y=Sepal.Width, z=y)
+  df_plot$z <- as.double(pred)
+  xy_train$y <- as.double(xy_train$y)
+  df_plot2 <- rename(data.frame(xy_train), x=Sepal.Length, y=Sepal.Width, z=y)
+
+  gg <- ggplot(data=df_plot) +
+    geom_point(data=df_plot2, aes(x=x, y=y), alpha=0.1) +
+    geom_point(aes(x=x, y=y, colour=pred)) +
+    ggtitle(str_c("Iris: Random Forest Classification")) +
+    annotate("text", x=max(df_plot[, 1]), y=4.1, label= str_c("Accuracy: ", round(acc, digits=5))) +
+    xlab("") +
+    ylab("") +
+    bbc_style() +
+    theme(legend.position="none")
+
+  print(gg)
+
+}
+
+# pred_plot_iris_class(depth=2, B=1L)
 
 #' Function that performs classification with all 4 methods on
 compare_classify_iris <- function(depth=5L, B=100L) {
