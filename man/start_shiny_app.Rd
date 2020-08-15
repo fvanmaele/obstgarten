@@ -7,7 +7,15 @@
 start_shiny_app()
 }
 \arguments{
+\item{Datatype}{choose a datatype}
+
 \item{Number_of_obs}{number of generated data rows (numeric)}
+
+\item{Dimension}{dimension of the record}
+
+\item{Display_dimension}{number of shown dimensions}
+
+\item{m}{count of random dimensions}
 
 \item{Sigma}{standard deviation of irreducible error in y (numeric)}
 
@@ -16,6 +24,8 @@ start_shiny_app()
 \item{Depth}{depths of the CART generated regression tree (numeric)}
 
 \item{Bootstrap_samples}{number of bootstrap samples (numeric)}
+
+\item{k}{borders of the sine2D plot}
 
 \item{Simulate}{starts the calculation with the given parameters (button)}
 }

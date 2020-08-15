@@ -22,6 +22,8 @@ bagging(
 
 \item{x_test}{data.frame: test data with labels of dimensions Number of Samples x Features + 1}
 
+\item{m}{Count of random dimensions in random forest. Is set on heuristically motivated values if m is NULL}
+
 \item{regression}{logical: specify whether tree is a classification or a
 regression tree. default=TRUE, TRUE for regression, FALSE for classification}
 
