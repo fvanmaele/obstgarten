@@ -110,7 +110,7 @@ start_shiny_app <- function(){
             sliderInput('B_sine2D', 'Number of bootstrap samples', 10, 100, 10, 10),
             sliderInput('depth_sine2D', 'Tree depth', 1, 10, 3, 1),
             sliderInput('sigma_sine2D', 'Sigma', 0, 0.5, 0.2, 0.05),
-            sliderInput('k_sine2D', 'Borders of the sine2D plot (k)', 1, 10, 3, 1),
+            sliderInput('k_sine2D', 'Borders of the sine2D plot (k)', 5, 15, 10, 1),
             checkboxInput("random_sine2D", "Random forest", value=FALSE),
         ),
         box(id = "gaussian", width = '800px',
@@ -130,7 +130,7 @@ start_shiny_app <- function(){
         actionButton("simulate", "Simulate CART!")
       ),
       mainPanel(
-        plotOutput('plot')
+        plotOutput('plot', width = "100%", height = "600px")
       )
     )
   )
