@@ -20,8 +20,14 @@ test_that("cart_greedy: argument XY", {
   expect_s3_class(res, "R6")
 })
 
+# See [Richter, p.9]
 test_that("cart_greedy: duplicate data", {
-
+  M <- generate_sin_data(100, sigma=0.2)
+  M <- rbind(M, M) # create second copy of data
+  T1 <- cart_greedy(M, depth=10, threshold=1)
+  expect_s3_class(T1, "Baum")
+  expect_s3_class(T1, "R6")
+  expect_null(T1$validate())
 })
 
 # See [Richter, p.177]
