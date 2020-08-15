@@ -1,4 +1,6 @@
 library(shiny)
+library(shinydashboard)
+library(shinyjs)
 library(tidyverse)
 library(plot3D)
 library(rayshader)
@@ -69,18 +71,34 @@ start_shiny_app <- function(){
     titlePanel("Greedy CART"),
     sidebarLayout(
       sidebarPanel(
+        useShinyjs(),
         selectInput("datatype", "Datatype", choices=c("sine_CART", "sineclass_CART", "sine_bagging", "sineclass_bagging", "sine2D", "gaussian")),
-        numericInput('n', 'Number of obs', 200),
-        sliderInput('d', 'Dimension', 1, 10, 3, 1),
-        checkboxInput("m_NULL", "Heuristically motivated values", value=TRUE),
-        sliderInput('m', 'Count of random dimensions (m)', 1, 10, 1, 1),
-        sliderInput('B', 'Number of bootstrap samples', 10, 100, 10, 10),
-        sliderInput('depth', 'Tree depth', 1, 10, 3, 1),
-        sliderInput('display_d', 'Display dimension', 1, 10, 3, 1),
-        sliderInput('sigma', 'Sigma', 0, 0.5, 0.2, 0.05),
-        sliderInput('k', 'Borders of the sine2D plot', 1, 10, 3, 1),
-        checkboxInput("classification", "Classification", value=FALSE),
-        checkboxInput("random", "Random forest", value=FALSE),
+
+        box(id = "sine_CART", width = '800px',
+            numericInput('n_sine_CART', 'Number of obs', 200),
+            sliderInput('depth_sine_CART', 'Tree depth', 1, 10, 3, 1),
+            sliderInput('sigma_sine_CART', 'Sigma', 0, 0.5, 0.2, 0.05),
+            checkboxInput("random_sine_CART", "Random forest", value=FALSE),
+        ),
+        box(id = "sineclass_CART", width = '800px',
+            numericInput('n', 'Number of obs', 200),
+            sliderInput('depth', 'Tree depth', 1, 10, 3, 1),
+            sliderInput('sigma', 'Sigma', 0, 0.5, 0.2, 0.05),
+            checkboxInput("random", "Random forest", value=FALSE),
+        ),
+
+
+        #numericInput('n', 'Number of obs', 200),
+        #sliderInput('d', 'Dimension', 1, 10, 3, 1),
+        #checkboxInput("m_NULL", "Heuristically motivated values", value=TRUE),
+        #sliderInput('m', 'Count of random dimensions (m)', 1, 10, 1, 1),
+        #sliderInput('B', 'Number of bootstrap samples', 10, 100, 10, 10),
+        #sliderInput('depth', 'Tree depth', 1, 10, 3, 1),
+        #sliderInput('display_d', 'Display dimension', 1, 10, 3, 1),
+        #sliderInput('sigma', 'Sigma', 0, 0.5, 0.2, 0.05),
+        #sliderInput('k', 'Borders of the sine2D plot', 1, 10, 3, 1),
+        #checkboxInput("classification", "Classification", value=FALSE),
+        #checkboxInput("random", "Random forest", value=FALSE),
         actionButton("simulate", "Simulate CART!")
       ),
       mainPanel(
@@ -90,45 +108,48 @@ start_shiny_app <- function(){
   )
 
   server <- function(input, output) {
-    datatype <- eventReactive(input$simulate, {
-      input$datatype
+
+    datatype <- eventReactive(input$simulate, {input$datatype})
+
+    observeEvent(input$datatype, {
+      if(input$datatype != "sine_CART"){
+        shinyjs::hide(id = "sine_CART")
+      }else{
+        shinyjs::show(id = "sine_CART")
+      }
+      if(input$datatype != "sineclass_CART"){
+        shinyjs::hide(id = "sineclass_CART")
+      }else{
+        shinyjs::show(id = "sineclass_CART")
+      }
     })
-    n <- eventReactive(input$simulate, {
-      input$n
-    })
-    d <- eventReactive(input$simulate, {
-      input$d
-    })
-    m_NULL <- eventReactive(input$simulate, {
-      input$m_NULL
-    })
-    m <- eventReactive(input$simulate, {
-      input$m
-    })
-    B <- eventReactive(input$simulate, {
-      input$B
-    })
-    depth <- eventReactive(input$simulate, {
-      input$depth
-    })
-    display_d <- eventReactive(input$simulate, {
-      input$display_d
-    })
-    sigma <- eventReactive(input$simulate, {
-      input$sigma
-    })
-    k <- eventReactive(input$simulate, {
-      input$k
-    })
-    classification <- eventReactive(input$simulate, {
-      input$classification
-    })
-    random <- eventReactive(input$simulate, {
-      input$random
-    })
+
+    #sine_CART
+    n_sine_CART <- eventReactive(input$simulate, {input$n_sine_CART})
+    depth_sine_CART <- eventReactive(input$simulate, {input$depth_sine_CART})
+    sigma_sine_CART <- eventReactive(input$simulate, {input$sigma_sine_CART})
+    random_sine_CART <- eventReactive(input$simulate, {input$random_sine_CART})
+
+
+    n <- eventReactive(input$simulate, {input$n})
+    d <- eventReactive(input$simulate, {input$d})
+    m_NULL <- eventReactive(input$simulate, {input$m_NULL})
+    m <- eventReactive(input$simulate, {input$m})
+    B <- eventReactive(input$simulate, {input$B})
+    depth <- eventReactive(input$simulate, {input$depth})
+    display_d <- eventReactive(input$simulate, {input$display_d})
+    sigma <- eventReactive(input$simulate, {input$sigma})
+    k <- eventReactive(input$simulate, {input$k})
+    classification <- eventReactive(input$simulate, {input$classification})
+    random <- eventReactive(input$simulate, {input$random})
+
     output$plot <- renderPlot({
+      if(datatype() = "sine_CART"){
+        rf_plot(datatype=datatype(), n=n(), d=d(), m=m(), B=B(), depth=depth(), display_d=display_d(), sd=sigma(), k=k(), random_forest=random())
+      }
       rf_plot(datatype=datatype(), n=n(), d=d(), m=m(), B=B(), depth=depth(), display_d=display_d(), sd=sigma(), k=k(), random_forest=random())
     })
+
   }
 
   return(shinyApp(ui, server))
