@@ -40,7 +40,7 @@ rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, gri
 
 }
 
-# rf_plot(datatype="sine2D", n=1000, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.05)
+rf_plot(datatype="iris", n=100, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.25)
 
 
 

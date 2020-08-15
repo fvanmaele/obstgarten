@@ -114,7 +114,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
     geom_line(aes(colour="Prediction")) +
     geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
     ggtitle(str_c("1D Random Forest Regression")) +
-    annotate("text", x=1, y=1.5, label= str_c("MSE: ", round(mse, digits=5))) +
+    annotate("text", x=0.9, y=1.1, label= str_c("MSE: ", round(mse, digits=5))) +
     xlab("") +
     ylab("") +
     bbc_style()
@@ -143,7 +143,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150) {
 
   gg <- ggplot(data=df_plot) +
     geom_point(aes(x=x, y=y, colour=pred)) +
-    ggtitle(str_c("Random Forest Classification")) +
+    ggtitle(str_c("1D Random Forest Classification")) +
     geom_line(aes(x=grid, y=(0.5*sin(2*pi*grid)) + 0.5)) +
     annotate("text", x=0.9, y=1.05, label= str_c("Accuracy: ", round(acc, digits=5))) +
     xlab("") +
@@ -803,8 +803,8 @@ pred_plot_iris_class <- function(depth, B=100L) {
   gg <- ggplot(data=df_plot) +
     geom_point(data=df_plot2, aes(x=x, y=y), alpha=0.1) +
     geom_point(aes(x=x, y=y, colour=pred)) +
-    ggtitle(str_c("Random Forest Classification")) +
-    annotate("text", x=max(df_plot[, 1])-1, y=max(df_plot[, 2])+1, label= str_c("Accuracy: ", round(acc, digits=5))) +
+    ggtitle(str_c("Iris: Random Forest Classification")) +
+    annotate("text", x=max(df_plot[, 1]), y=4.1, label= str_c("Accuracy: ", round(acc, digits=5))) +
     xlab("") +
     ylab("") +
     bbc_style() +
