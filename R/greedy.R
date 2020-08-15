@@ -132,6 +132,8 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
   # TODO: add test for this case
   if (sample == TRUE) {
     stop("function not implemented")
+  } else {
+
   }
 
   # Initialize regression tree
