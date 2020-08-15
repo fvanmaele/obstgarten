@@ -17,10 +17,13 @@ rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, gri
   else if (datatype == "sine2D") {
     pred_plot_sine2D(n=n, B=B, depth=depth, sd=sd, k=k)
   }
+  else if (datatype == "sineclass") {
+    pred_plot_bagging_class(B=B, depth=depth, sigma=sd, n=n)
+  }
 
 }
 
-# rf_plot(datatype="sine", n=100, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.5)
+# rf_plot(datatype="sine2D", n=1000, d=2, m=1, B=10L, depth=3, display_d = 1, sd=0.05)
 
 
 

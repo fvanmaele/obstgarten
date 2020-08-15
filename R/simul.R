@@ -113,7 +113,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
     geom_point(aes(x=grid, y=x[, 2]), alpha=0.5) +
     geom_line(aes(colour="Prediction")) +
     geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
-    ggtitle(str_c("Prediction of Bagging Alg.")) +
+    ggtitle(str_c("1D Random Forest Regression")) +
     annotate("text", x=1, y=1.5, label= str_c("MSE: ", round(mse, digits=5))) +
     xlab("") +
     ylab("") +
@@ -122,6 +122,41 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
   print(gg)
 
 }
+
+
+# plots prediction of Bagging generated decision tree
+#'
+#' @param depth Integer depths of the bagging generated decision tree
+#' @example pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
+pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150) {
+
+  grid <- seq(0, 1, len=n)
+
+  x <- generate_sin_data(n, sigma=sigma, reg = FALSE)
+  x_test <- generate_sin_data(n, sigma=sigma, reg = FALSE)
+
+  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE) # predicting with current tree
+
+  acc <- sum(x_test[, ncol(x_test)] == pred)/nrow(x)
+
+  df_plot <- rename(data.frame(x_test), x=x1, y=x2, z=y)
+
+  gg <- ggplot(data=df_plot) +
+    geom_point(aes(x=x, y=y, colour=pred)) +
+    ggtitle(str_c("Random Forest Classification")) +
+    geom_line(aes(x=grid, y=(0.5*sin(2*pi*grid)) + 0.5)) +
+    annotate("text", x=0.9, y=1.05, label= str_c("Accuracy: ", round(acc, digits=5))) +
+    xlab("") +
+    ylab("") +
+    bbc_style() +
+    theme(legend.position="none")
+
+  print(gg)
+
+}
+
+
+# pred_plot_bagging_class(B=10L, depth = 50, n=100)
 
 #' Method to Plot Predicted Density of a Random Forest
 #' for a two dimensional case for a sine generated dataset
@@ -137,14 +172,16 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10) {
 
   #predicting
   pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = TRUE) # predicting with current tree
-  mse <- 1/n * sum((pred - test_data[, -ncol(test_data)] ** 2))
+  mse <- 1/n * sum((pred - test_data[, ncol(test_data)]) ** 2)
 
   plot_df <- data.frame(x=test_data[, 1], y=test_data[, 2], pred=pred, true=test_data[, ncol(test_data)])
 
   gg <- ggplot(plot_df, aes(x=x, y=y, z = pred)) +
     geom_contour_filled() +
-    geom_contour(aes(x=x, y=y, z = true, colour=after_stat(level)), bins=20, size = 0.5) +
-    ggtitle("Predicted Density and True Density") +
+    scale_color_gradient(low='white', high='red') +
+    geom_contour(aes(x=x, y=y, z = true, colour=after_stat(level)), bins=15, size = 0.5) +
+    ggtitle("2D Random Forest Regression") +
+    annotate("text", x=k-3, y=k+0.5, label= str_c("Total MSE: ", round(mse, digits=5))) +
     # geom_point() +
     xlab("") +
     ylab("")
@@ -170,7 +207,8 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10) {
 
 # pred_plot_sine2D(n=1000, B=5L, depth=5, sd=0.1, k=10)
 
-
+#' Method plotting one dimension of a multidimensional regression
+#' problem of a multicariate gaussian using a random forest.
 pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
   data <- generate_mult_data(n=n, d=d, sigma=diag(d), mu=rep(0., d))
   x <- data[[1]]
@@ -210,7 +248,7 @@ pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
     geom_line(aes(x=grid, y=true_val, colour="True")) +
     xlab(str_c("Dimension ", display_d)) +
     xlim(-2*sigma[display_d, display_d], +2*sigma[display_d, display_d]) +
-    ggtitle("Random Forest Prediction") +
+    ggtitle("Random Forest Regression") +
     annotate("text", x=1, y=max(true_val) + 0.025, label= str_c("MSE: ", round(mse, digits=5))) +
     ylab("") +
     bbc_style()
