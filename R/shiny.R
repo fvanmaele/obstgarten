@@ -57,16 +57,16 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
 #'
 #' @description All arguments are selectable in the App
 #'
-#' @param Datatype choose a datatype
+#' @param Datatype choose a datatype (Dropdown menu)
 #' @param Number_of_obs number of generated data rows (numeric)
-#' @param Dimension dimension of the record
-#' @param Display_dimension number of shown dimensions
-#' @param m count of random dimensions
+#' @param Dimension dimension of the record (numeric)
+#' @param Display_dimension number of shown dimensions (numeric)
+#' @param m count of random dimensions (numeric)
 #' @param Sigma standard deviation of irreducible error in y (numeric)
 #' @param Random_forest TRUE: random forest, FALSE: bagging (logical)
 #' @param Depth depths of the CART generated regression tree (numeric)
 #' @param Bootstrap_samples number of bootstrap samples (numeric)
-#' @param k borders of the sine2D plot
+#' @param k borders of the sine2D plot (numeric)
 #' @param Simulate starts the calculation with the given parameters (button)
 #'
 #' @return
