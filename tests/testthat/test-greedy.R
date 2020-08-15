@@ -20,6 +20,22 @@ test_that("cart_greedy: argument XY", {
   expect_s3_class(res, "R6")
 })
 
+test_that("cart_greedy: duplicate data", {
+
+})
+
+# See [Richter, p.177]
+test_that("cart_greedy: fully generated tree", {
+  n <- 150
+  M <- generate_sin_data(n, sigma=0.2)
+  dimnames(M) <- list(NULL, c(1, "y"))
+  T2 <- cart_greedy(M, depth=20, threshold=1)
+  leaves <- T2$obstkorb()
+  expect_equal(length(T2$nodes[leaves]), n)
+  expect_equal(sort(sapply(T2$nodes[leaves], function(n) `$`(n, "y"))),
+               sort(M[, "y"]))
+})
+
 test_that("cart_part", {
   XY <- generate_sin_data(10)
   res <- cart_part(0.5, 1,XY)
