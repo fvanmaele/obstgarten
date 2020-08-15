@@ -7,9 +7,8 @@ library(ggplot2)
 library(ggpubr)
 library(bbplot)
 
-<<<<<<< HEAD
-rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
-=======
+#rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
+
 #' Method for generating plots in the shiny app
 #' @param datatype choose either gaussian, sine, sine2D, sineclass, or iris
 #' for different datasets
@@ -85,12 +84,9 @@ start_shiny_app <- function(){
         actionButton("simulate", "Simulate CART!")
       ),
       mainPanel(
-        plotOutput('plot'),
+        plotOutput('plot')
       )
     )
-
-
-
   )
 
   server <- function(input, output) {

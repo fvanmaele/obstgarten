@@ -136,11 +136,9 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
   x <- generate_sin_data(n, sigma=sigma, reg = FALSE)
   x_test <- generate_sin_data(n, sigma=sigma, reg = FALSE)
 
-<<<<<<< HEAD
   pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest=random_forest) # predicting with current tree
-=======
+
   pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest = TRUE) # predicting with current tree
->>>>>>> 77142db86d811e03667fde094f7a7e9063fb2ac9
 
   acc <- sum(x_test[, ncol(x_test)] == pred)/nrow(x)
 
