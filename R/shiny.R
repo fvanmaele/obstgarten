@@ -7,6 +7,8 @@ library(ggplot2)
 library(ggpubr)
 library(bbplot)
 
+#rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
+
 #' Method for generating plots in the shiny app
 #' @param datatype choose either gaussian, sine, sine2D, sineclass, or iris
 #' for different datasets
@@ -21,23 +23,28 @@ library(bbplot)
 #' @param grid
 #'
 #' @return print(plot)
-rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, grid=NULL) {
+rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest) {
   if (datatype == "gaussian") {
     pred_plot_rf(n=n, d=d, m=m, B=B, depth=depth, display_d=display_d, sd=sd)
   }
-  else if (datatype == "sine") {
+  else if (datatype == "sine_bagging") {
     pred_plot_bagging(depth=depth, B=B, sigma=sd, n=n, grid=grid)
   }
   else if (datatype == "sine2D") {
     pred_plot_sine2D(n=n, B=B, depth=depth, sd=sd, k=k)
   }
-  else if (datatype == "sineclass") {
-    pred_plot_bagging_class(B=B, depth=depth, sigma=sd, n=n)
+  else if (datatype == "sineclass_bagging") {
+    pred_plot_bagging_class(B=B, depth=depth, sigma=sd, n=n, random_forest=random_forest)
+  }
+  else if (datatype == "sine_CART") {
+    pred_plot_greedy(depth=depth, n=n, sigma=sd,random=random_forest)
+  }
+  else if (datatype == "sineclass_CART") {
+    pred_plot_greedy_class(depth=depth, n=n, sigma=sd,random=random_forest)
   }
   else if (datatype == "iris") {
     pred_plot_iris_class(depth=depth, B=B)
   }
-
 }
 
 # rf_plot(datatype="sine", n=1000, d=5, m=3, B=10L, depth=3, display_d = 1, sd=0.25)
@@ -59,92 +66,68 @@ rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, gri
 #' @export
 start_shiny_app <- function(){
   ui <- fluidPage(
-    titlePanel("Greedy"),
+    titlePanel("Greedy CART"),
     sidebarLayout(
       sidebarPanel(
-        numericInput('n_greedy', 'Number of obs', 200),
-        sliderInput('depth_greedy', 'Depth', 1, 10, 3, 1),
-        sliderInput('sigma_greedy', 'Sigma', 0, 0.5, 0.2, 0.05),
-        checkboxInput("classification_greedy", "Classification", value=FALSE),
-        checkboxInput("random_greedy", "Random forest", value=FALSE),
-        actionButton("simulate_greedy", "Simulate CART!")
+        selectInput("datatype", "Datatype", choices=c("sine_CART", "sineclass_CART", "sine_bagging", "sineclass_bagging", "sine2D", "gaussian")),
+        numericInput('n', 'Number of obs', 200),
+        sliderInput('d', 'Dimension', 1, 10, 3, 1),
+        checkboxInput("m_NULL", "Heuristically motivated values", value=TRUE),
+        sliderInput('m', 'Count of random dimensions (m)', 1, 10, 1, 1),
+        sliderInput('B', 'Number of bootstrap samples', 10, 100, 10, 10),
+        sliderInput('depth', 'Tree depth', 1, 10, 3, 1),
+        sliderInput('display_d', 'Display dimension', 1, 10, 3, 1),
+        sliderInput('sigma', 'Sigma', 0, 0.5, 0.2, 0.05),
+        sliderInput('k', 'Borders of the sine2D plot', 1, 10, 3, 1),
+        checkboxInput("classification", "Classification", value=FALSE),
+        checkboxInput("random", "Random forest", value=FALSE),
+        actionButton("simulate", "Simulate CART!")
       ),
       mainPanel(
-        plotOutput('plot_greedy'),
+        plotOutput('plot')
       )
-    ),
-
-    titlePanel("Bagging Regression"),
-    sidebarLayout(
-      sidebarPanel(
-        numericInput('n_bagging', 'Number of obs', 200),
-        sliderInput('B', 'Bootstrap samples', 100, 1000, 100, 100),
-        sliderInput('depth_bagging', 'Depth', 1, 10, 3, 1),
-        sliderInput('sigma_bagging', 'Sigma', 0, 0.5, 0.2, 0.05),
-        checkboxInput("random_bagging", "Random forest", value=FALSE),
-        actionButton("simulate_bagging", "Simulate Bagging!")
-      ),
-      mainPanel(
-        plotOutput('plot_bagging')
-      )
-    ),
-    checkboxInput("m_NULL_bagging", "Heuristically motivated values", value=TRUE),
-    sliderInput('m_bagging', 'Count of random dimensions (m)', 1, 10, 1, 1)
+    )
   )
 
   server <- function(input, output) {
-    # Greedy
-    depth_greedy <- eventReactive(input$simulate_greedy, {
-      input$depth_greedy
+    datatype <- eventReactive(input$simulate, {
+      input$datatype
     })
-    sigma_greedy <- eventReactive(input$simulate_greedy, {
-      input$sigma_greedy
+    n <- eventReactive(input$simulate, {
+      input$n
     })
-    n_greedy <- eventReactive(input$simulate_greedy, {
-      input$n_greedy
+    d <- eventReactive(input$simulate, {
+      input$d
     })
-    classification_greedy <- eventReactive(input$simulate_greedy, {
-      input$classification_greedy
+    m_NULL <- eventReactive(input$simulate, {
+      input$m_NULL
     })
-    random_greedy <- eventReactive(input$simulate_greedy, {
-      input$random_greedy
+    m <- eventReactive(input$simulate, {
+      input$m
     })
-    output$plot_greedy <- renderPlot({
-      if(classification_greedy()){
-        pred_plot_greedy_class(depth=depth_greedy(), n = n_greedy(), sigma = sigma_greedy(), random = random_greedy())
-      }
-      else{
-        pred_plot_greedy(depth=depth_greedy(), n = n_greedy(), sigma = sigma_greedy(), random = random_greedy())
-      }
-    })
-
-    # Bagging Regression
-    B <- eventReactive(input$simulate_bagging, {
+    B <- eventReactive(input$simulate, {
       input$B
     })
-    depth_bagging <- eventReactive(input$simulate_bagging, {
-      input$depth_bagging
+    depth <- eventReactive(input$simulate, {
+      input$depth
     })
-    sigma_bagging <- eventReactive(input$simulate_bagging, {
-      input$sigma_bagging
+    display_d <- eventReactive(input$simulate, {
+      input$display_d
     })
-    n_bagging <- eventReactive(input$simulate_bagging, {
-      input$n_bagging
+    sigma <- eventReactive(input$simulate, {
+      input$sigma
     })
-    random_bagging <- eventReactive(input$simulate_bagging, {
-      input$random_bagging
+    k <- eventReactive(input$simulate, {
+      input$k
     })
-    output$plot_bagging <- renderPlot({
-      pred_plot_bagging(depth=depth_bagging(), B=B(), sigma=sigma_bagging(), n=n_bagging(), random_forest=random_bagging())
+    classification <- eventReactive(input$simulate, {
+      input$classification
     })
-
-
-
-    m_NULL_bagging <- eventReactive(input$simulate_bagging, {
-      input$m_NULL_bagging
+    random <- eventReactive(input$simulate, {
+      input$random
     })
-    m_bagging <- eventReactive(input$simulate_bagging, {
-      input$m_bagging
+    output$plot <- renderPlot({
+      rf_plot(datatype=datatype(), n=n(), d=d(), m=m(), B=B(), depth=depth(), display_d=display_d(), sd=sigma(), k=k(), random_forest=random())
     })
   }
 
