@@ -94,13 +94,14 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
 #' @example pred_plot_bagging(100, sigma=0.25, n=150)
-pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, m=NULL, grid=NULL) {
+pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL) {
 
   if (is.null(grid)) grid <- seq(0, 1, len=n)
 
   x <- generate_sin_data(n, grid=grid, sigma=sigma)
+  x_test <- generate_sin_data(n, grid=grid, sigma=sigma)
 
-  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x, random_forest=random_forest, m=m) # predicting with current tree
+  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test) # predicting with current tree
 
   df_plot <- data.frame(grid=grid, y=pred)
 
@@ -110,7 +111,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
     scale_colour_manual("",
                         breaks = c("Prediction", "True"),
                         values = c("Prediction"="Blue", "True"="red")) +
-    geom_point(aes(x=grid, y=x[, 2]), alpha=0.5) +
+    geom_point(aes(x=grid, y=x_test[, 2]), alpha=0.25) +
     geom_line(aes(colour="Prediction")) +
     geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
     ggtitle(str_c("1D Random Forest Regression")) +
