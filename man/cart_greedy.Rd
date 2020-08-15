@@ -7,6 +7,7 @@
 cart_greedy(
   XY,
   depth = 10L,
+  mode = "regression",
   threshold = 1L,
   sample = FALSE,
   random = FALSE,
@@ -22,6 +23,9 @@ is set to TRUE, it is required that there are no observations
 
 \item{depth}{The amount of steps before halting the algorithm (defaults to
 10)}
+
+\item{mode}{"regression" or "classification" specifies whether to train
+decision or regression tree. Default is "regression"}
 
 \item{threshold}{(integer)}
 

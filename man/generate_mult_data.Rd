@@ -4,7 +4,7 @@
 \alias{generate_mult_data}
 \title{Generate Data from a multivariate Gaussian}
 \usage{
-generate_mult_data(n, d, mu = NULL, sigma = NULL)
+generate_mult_data(n, d, sd = 0.01, mu = NULL, sigma = NULL)
 }
 \arguments{
 \item{n}{dimensional vector with feature means}

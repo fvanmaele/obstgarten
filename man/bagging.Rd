@@ -8,6 +8,8 @@ bagging(
   B,
   x_train,
   x_test,
+  depth = 5,
+  m = NULL,
   regression = TRUE,
   use_parallel = FALSE,
   random_forest = FALSE
