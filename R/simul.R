@@ -330,9 +330,10 @@ bv_plot <- function(data) {
     geom_line(aes(x=grid, y=mean, colour="depth 10"), data=df3, alpha=1) +
     geom_line(aes(x=grid, y=mean, colour="depth 5"), data=df2, alpha=1) +
     geom_line(alpha=1, aes(colour="depth 2")) +
-    ggtitle("Prediction of different CART generated Trees") +
+    ggtitle("Prediction CART Regression Tree") +
     ylab("") +
-    xlab("")
+    xlab("") +
+    bbc_style()
 
   print(gg)
 
