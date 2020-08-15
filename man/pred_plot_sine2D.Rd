@@ -5,7 +5,7 @@
 \title{Method to Plot Predicted Density of a Random Forest
 for a two dimensional case for a sine generated dataset}
 \usage{
-pred_plot_sine2D(n, B, depth, sd, k = 10)
+pred_plot_sine2D(n, B, depth, sd, k = 10, random_forest = TRUE)
 }
 \description{
 Method to Plot Predicted Density of a Random Forest
