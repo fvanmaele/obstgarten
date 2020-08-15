@@ -126,6 +126,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
 
 # plots prediction of Bagging generated decision tree
 #'
+#' (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
 #' @param depth Integer depths of the bagging generated decision tree
 #' @example pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150) {
@@ -135,7 +136,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150) {
   x <- generate_sin_data(n, sigma=sigma, reg = FALSE)
   x_test <- generate_sin_data(n, sigma=sigma, reg = FALSE)
 
-  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE) # predicting with current tree
+  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest = TRUE) # predicting with current tree
 
   acc <- sum(x_test[, ncol(x_test)] == pred)/nrow(x)
 
@@ -143,7 +144,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150) {
 
   gg <- ggplot(data=df_plot) +
     geom_point(aes(x=x, y=y, colour=pred)) +
-    ggtitle(str_c("1D Random Forest Classification")) +
+    ggtitle(str_c("2D Random Forest Classification")) +
     geom_line(aes(x=grid, y=(0.5*sin(2*pi*grid)) + 0.5)) +
     annotate("text", x=0.9, y=1.05, label= str_c("Accuracy: ", round(acc, digits=5))) +
     xlab("") +
