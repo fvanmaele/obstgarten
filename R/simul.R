@@ -546,7 +546,7 @@ compare_m <- function(m_list, d, n, B) {
 #' Method to qualitatively compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
-#' @example compare_methods(d=3, n=100, B=10L)
+#' @example compare_methods(d=3, n=1000, B=100L)
 compare_methods <- function(d, n, B=100L) {
 
   training_data <- generate_mult_data(n=n, d=d)
@@ -738,7 +738,7 @@ plot_3D_compare_m <- function(path, render=FALSE) {
 #'  if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
-plot_3D_compare_m_DIFF <- function(path, render=FALSE) {
+plot_3D_compare_m_DIFF <- function(path, margin=0.01, render=FALSE) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
               is.character(path))
   load(path)
@@ -752,7 +752,7 @@ plot_3D_compare_m_DIFF <- function(path, render=FALSE) {
                           , "Squared Diff. m=10"), names_to = c("diff")) -> df
 
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
-  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, margin))
 
   endp <- ncol(df) - ncol(df) %% 2 - 2
 
