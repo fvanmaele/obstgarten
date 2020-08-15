@@ -13,6 +13,7 @@ library(parallel)
 #' regression tree. default=TRUE, TRUE for regression, FALSE for classification
 #' @param use_parallel: Whether to use parallel computation or not
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
+#' @param m Count of random dimensions in random forest. Is set on heuristically motivated values if m is NULL
 #'
 #' @return vector: of size Number of Samples containing bagged predictions to dataset
 #' character vector for classification case and double vector for regression case

@@ -24,10 +24,9 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
   }
 
   x <- generate_sin_data(n, grid=grid, sigma=sigma)
-  #TODO data cannot be used for random_forest
 
   dimnames(x) <- list(NULL, c(1, "y"))
-  tree <- cart_greedy(x, depth=depth, random=random_forest)
+  tree <- cart_greedy(x, depth=depth, random=random_forest, m=1)
   pred <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
 
   df_plot <- data.frame(grid=grid, y=pred)
@@ -64,9 +63,8 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
   }
 
   x <- generate_sin_data(n, sigma=sigma, reg = FALSE)
-  #TODO data cannot be used for random_forest
 
-  tree <- cart_greedy(x, depth=depth, random=random_forest, mode = "classification")
+  tree <- cart_greedy(x, depth=depth, random=random_forest, m=1, mode = "classification")
   pred <- round(apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict)) # predicting with current tree
 
   print(x)
@@ -96,14 +94,13 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
 #' @example pred_plot_bagging(100, sigma=0.25, n=150)
-pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest = FALSE, grid=NULL) {
+pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, m=NULL, grid=NULL) {
 
   if (is.null(grid)) grid <- seq(0, 1, len=n)
 
   x <- generate_sin_data(n, grid=grid, sigma=sigma)
-  #TODO data cannot be used for random_forest
 
-  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x, random_forest = random_forest) # predicting with current tree
+  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x, random_forest=random_forest, m=m) # predicting with current tree
 
   df_plot <- data.frame(grid=grid, y=pred)
 
