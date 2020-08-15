@@ -1,0 +1,25 @@
+---
+title: "simul"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{simul}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+#library(obstgarten)
+devtools::load_all()
+library(obstgarten)
+```
+
+```{r, warning=FALSE, fig.width=7.5, fig.height=5}
+suppressMessages(pred_plot_bagging(depth=5, B=10L))
+```
