@@ -537,7 +537,7 @@ compare_m <- function(m_list, d, n, B) {
 
   ret[(ncol(ret)+1):(ncol(ret)+length(m_list))] <- pred_mat
 
-  names(ret)[(length(names(ret))-3):length(names(ret))] <- str_c("m", 1:4)
+  names(ret)[(length(names(ret))-3):length(names(ret))] <- str_c("m", 1:length(m_list))
   save("ret", file=str_c("data/simul/","compare_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
@@ -697,17 +697,22 @@ plot_3D_compare_DIFF <- function(path, render=FALSE) {
 #' if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
-plot_3D_compare_m <- function(path, render=FALSE) {
+plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
               is.character(path))
   load(path)
 
+  # ret %>%
+  #   rename("True"=y, "m=1"=m1, "m=3"=m2, "m=5"=m3, "m=10" = m4) %>%
+  #   pivot_longer(cols = c("True", "m=1", "m=3", "m=5", "m=10"), names_to = c("pred")) -> df
+
   ret %>%
-    rename("True"=y, "m=1"=m1, "m=3"=m2, "m=5"=m3, "m=10" = m4) %>%
-    pivot_longer(cols = c("True", "m=1", "m=3", "m=5", "m=10"), names_to = c("pred")) -> df
+    rename("True"=m4, "m=1"=m1, "m=2"=m2, "m=3"=m3) %>%
+    pivot_longer(cols = c("True", "m=1", "m=2", "m=3"), names_to = c("pred")) -> df
+
 
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
-  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, margin))
 
   endp <- ncol(df) - ncol(df) %% 2 - 2
 
@@ -743,13 +748,20 @@ plot_3D_compare_m_DIFF <- function(path, margin=0.01, render=FALSE) {
               is.character(path))
   load(path)
 
+  # ret %>%
+  #   rename("True"=y, "m1"=m1, "m3"=m2, "m5"=m3, "m10" = m4) %>%
+  #   mutate("Squared Diff. m=1"=(True - m1)**2, "Squared Diff. m=3"=(True - m3)**2,
+  #          "Squared Diff. m=5"=(True - m5)**2, "Squared Diff. m=10"=(True - m10)**2) %>%
+  #   select(-True, -m1, -m3, -m5, -m10) %>%
+  #   pivot_longer(cols = c("Squared Diff. m=1", "Squared Diff. m=3", "Squared Diff. m=5"
+  #                         , "Squared Diff. m=10"), names_to = c("diff")) -> df
+
   ret %>%
-    rename("True"=y, "m1"=m1, "m3"=m2, "m5"=m3, "m10" = m4) %>%
-    mutate("Squared Diff. m=1"=(True - m1)**2, "Squared Diff. m=3"=(True - m3)**2,
-           "Squared Diff. m=5"=(True - m5)**2, "Squared Diff. m=10"=(True - m10)**2) %>%
-    select(-True, -m1, -m3, -m5, -m10) %>%
-    pivot_longer(cols = c("Squared Diff. m=1", "Squared Diff. m=3", "Squared Diff. m=5"
-                          , "Squared Diff. m=10"), names_to = c("diff")) -> df
+    rename("True"=m4, "m1"=m1, "m3"=m2, "m5"=m3) %>%
+    mutate("Squared Diff. m=1"=(True - m1)**2, "Squared Diff. m=2"=(True - m3)**2,
+           "Squared Diff. m=3"=(True - m5)**2) %>%
+    select(-True, -m1, -m3, -m5) %>%
+    pivot_longer(cols = c("Squared Diff. m=1", "Squared Diff. m=2", "Squared Diff. m=3"), names_to = c("diff")) -> df
 
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
   sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, margin))
