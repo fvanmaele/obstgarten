@@ -128,14 +128,14 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, random_forest=FALSE, 
 #'
 #' @param depth Integer depths of the bagging generated decision tree
 #' @example pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
-pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150) {
+pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=FALSE) {
 
   grid <- seq(0, 1, len=n)
 
   x <- generate_sin_data(n, sigma=sigma, reg = FALSE)
   x_test <- generate_sin_data(n, sigma=sigma, reg = FALSE)
 
-  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE) # predicting with current tree
+  pred <- bagging(depth=depth, B=B, x_train=x, x_test=x_test, regression=FALSE, random_forest=random_forest) # predicting with current tree
 
   acc <- sum(x_test[, ncol(x_test)] == pred)/nrow(x)
 
