@@ -30,7 +30,7 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
     pred_plot_rf(n=n, d=d, m=m, B=B, depth=depth, display_d=display_d, sd=sd)
   }
   else if (datatype == "sine_bagging") {
-    pred_plot_bagging(depth=depth, B=B, sigma=sd, n=n, grid=grid)
+    pred_plot_bagging(depth=depth, B=B, sigma=sd, n=n, grid=grid, random_forest=random_forest)
   }
   else if (datatype == "sine2D") {
     pred_plot_sine2D(n=n, B=B, depth=depth, sd=sd, k=k, random_forest=random_forest)
@@ -111,6 +111,7 @@ start_shiny_app <- function(){
             sliderInput('depth_sine2D', 'Tree depth', 1, 10, 3, 1),
             sliderInput('sigma_sine2D', 'Sigma', 0, 0.5, 0.2, 0.05),
             sliderInput('k_sine2D', 'Borders of the sine2D plot (k)', 1, 10, 3, 1),
+            checkboxInput("random_sine2D", "Random forest", value=FALSE),
         ),
         box(id = "gaussian", width = '800px',
             numericInput('n_gaussian', 'Number of obs', 200),
@@ -208,6 +209,7 @@ start_shiny_app <- function(){
     depth_sine2D <- eventReactive(input$simulate, {input$depth_sine2D})
     sigma_sine2D <- eventReactive(input$simulate, {input$sigma_sine2D})
     k_sine2D <- eventReactive(input$simulate, {input$k_sine2D})
+    random_sine2D <- eventReactive(input$simulate, {input$random_sine2D})
 
     #gaussian
     n_gaussian <- eventReactive(input$simulate, {input$n_gaussian})
@@ -225,7 +227,8 @@ start_shiny_app <- function(){
     output$plot <- renderPlot({
       if(datatype() == "sine_CART"){
         rf_plot(datatype=datatype(), n=n_sine_CART(), depth=depth_sine_CART(), sd=sigma_sine_CART(), random_forest=random_sine_CART())
-      }else if(datatype() == "sineclass_CART"){
+      }
+      else if(datatype() == "sineclass_CART"){
         rf_plot(datatype=datatype(), n=n_sineclass_CART(), depth=depth_sineclass_CART(), sd=sigma_sineclass_CART(), random_forest=random_sineclass_CART())
       }
       else if(datatype() == "sine_bagging"){
@@ -235,7 +238,7 @@ start_shiny_app <- function(){
         rf_plot(datatype=datatype(), n=n_sineclass_bagging(), B=B_sineclass_bagging(), depth=depth_sineclass_bagging(), sd=sigma_sineclass_bagging(), random_forest=random_sineclass_bagging())
       }
       else if(datatype() == "sine2D"){
-        rf_plot(datatype=datatype(), n=n_sine2D(), B=B_sine2D(), depth=depth_sine2D(), sd=sigma_sine2D(), k=k_sine2D())
+        rf_plot(datatype=datatype(), n=n_sine2D(), B=B_sine2D(), depth=depth_sine2D(), sd=sigma_sine2D(), k=k_sine2D(), random_forest=random_sine2D())
       }
       else if(datatype() == "gaussian"){
         rf_plot(datatype=datatype(), n=n_gaussian(), d=d_gaussian(), m=m_gaussian(), B=B_gaussian(), depth=depth_gaussian(), display_d=display_d_gaussian(), sd=sigma_gaussian())
