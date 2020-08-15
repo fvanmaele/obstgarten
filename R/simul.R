@@ -361,7 +361,7 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
     for (i in 1:reps) {
       x <- generate_sin_data(n, grid=grid, sigma=sigma)
       # predicting with current Bagging alg
-      pred[i, ] <- bagging(bs, x_train=x, x_test=x, regression=TRUE, use_parallel=FALSE)
+      pred[i, ] <- bagging(bs, x_train=x, x_test=x, depth=5, regression=TRUE, use_parallel=FALSE)
     }
 
     ret[[count]] <- apply(pred, MARGIN=2, function(x) c(mean(x), sd(x)))
