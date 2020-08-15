@@ -33,7 +33,7 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
     pred_plot_bagging(depth=depth, B=B, sigma=sd, n=n, grid=grid)
   }
   else if (datatype == "sine2D") {
-    pred_plot_sine2D(n=n, B=B, depth=depth, sd=sd, k=k)
+    pred_plot_sine2D(n=n, B=B, depth=depth, sd=sd, k=k, random_forest=random_forest)
   }
   else if (datatype == "sineclass_bagging") {
     pred_plot_bagging_class(B=B, depth=depth, sigma=sd, n=n, random_forest=random_forest)

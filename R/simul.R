@@ -163,7 +163,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 #' Method to Plot Predicted Density of a Random Forest
 #' for a two dimensional case for a sine generated dataset
 #' @example pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
-pred_plot_sine2D <- function(n, B, depth, sd, k=10) {
+pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
   data <- generate_sin_2D(n=n, sigma=sd, k=k)
 
   l <- round(sqrt(n))
@@ -173,7 +173,7 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10) {
   test_data <- data.frame(x1=coords[, 1], x2=coords[, 2], y=(sin(sqrt(coords[, 1]**2+coords[, 2]**2))/(sqrt(coords[, 1]**2+coords[, 2]**2))))
 
   #predicting
-  pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = TRUE) # predicting with current tree
+  pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = random_forest) # predicting with current tree
   mse <- 1/n * sum((pred - test_data[, ncol(test_data)]) ** 2)
 
   plot_df <- data.frame(x=test_data[, 1], y=test_data[, 2], pred=pred, true=test_data[, ncol(test_data)])
