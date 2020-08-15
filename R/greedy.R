@@ -145,10 +145,9 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
   for (i in 1:depth) {
     k <- length(leaves)
     for (node in leaves) {
-      if(random) {
+      stopifnot("parameter m must be smaller or as greate as dimension d"= m <= d)
+      if(random & d > 1) {
         # random dimensions to minimize on
-        stopifnot("dimension must be greater 1"= d > 1)
-        stopifnot("parameter m must be smaller than dimension d"= m < d)
         S <- c(sample(1:d, m, replace = FALSE), d+1) # [X_i1 .. X_im] .. Y_i
       } else {
         S <- 1:(d+1)
