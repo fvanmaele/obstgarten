@@ -24,8 +24,7 @@ rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=
 #' @param grid
 #'
 #' @return print(plot)
-rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, grid=NULL) {
->>>>>>> 77142db86d811e03667fde094f7a7e9063fb2ac9
+rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest) {
   if (datatype == "gaussian") {
     pred_plot_rf(n=n, d=d, m=m, B=B, depth=depth, display_d=display_d, sd=sd)
   }
@@ -44,13 +43,9 @@ rf_plot <- function(datatype, n, d, m, B, depth, display_d=1L, sd=0.1, k=10, gri
   else if (datatype == "sineclass_CART") {
     pred_plot_greedy_class(depth=depth, n=n, sigma=sd,random=random_forest)
   }
-<<<<<<< HEAD
-=======
   else if (datatype == "iris") {
     pred_plot_iris_class(depth=depth, B=B)
   }
-
->>>>>>> 77142db86d811e03667fde094f7a7e9063fb2ac9
 }
 
 # rf_plot(datatype="sineclass", n=1000, d=5, m=3, B=10L, depth=3, display_d = 1, sd=0.25)
