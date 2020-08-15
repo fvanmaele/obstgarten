@@ -785,6 +785,40 @@ visualize_iris_feature_distr <- function() {
 
 }
 
+#' Method to Plot the classifcation of iris test dataset
+pred_plot_iris_class <- function(depth, B=100L) {
+
+  data <- prepare_iris()
+  xy_train <- data[[1]]
+  xy_test <- data[[2]]
+
+  # predicting with Random Forest
+  pred <- bagging(B=B, depth=depth, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
+                  random_forest = TRUE)
+
+  acc <- sum(xy_test[, ncol(xy_test)] == pred)/nrow(xy_test)
+
+  df_plot <- rename(data.frame(xy_test), x=Sepal.Length, y=Sepal.Width, z=y)
+  df_plot$z <- as.double(pred)
+  xy_train$y <- as.double(xy_train$y)
+  df_plot2 <- rename(data.frame(xy_train), x=Sepal.Length, y=Sepal.Width, z=y)
+
+  gg <- ggplot(data=df_plot) +
+    geom_point(data=df_plot2, aes(x=x, y=y), alpha=0.1) +
+    geom_point(aes(x=x, y=y, colour=pred)) +
+    ggtitle(str_c("Random Forest Classification")) +
+    annotate("text", x=max(df_plot[, 1])-1, y=max(df_plot[, 2])+1, label= str_c("Accuracy: ", round(acc, digits=5))) +
+    xlab("") +
+    ylab("") +
+    bbc_style() +
+    theme(legend.position="none")
+
+  print(gg)
+
+}
+
+# pred_plot_iris_class(depth=2, B=1L)
+
 #' Function that performs classification with all 4 methods on
 compare_classify_iris <- function(depth=5L, B=100L) {
   data <- prepare_iris()
