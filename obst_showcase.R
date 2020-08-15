@@ -1,6 +1,5 @@
 library(obstgarten)
 
-# ----
 n <- 150
 M <- generate_sin_data(n, sigma=0.2)
 dimnames(M) <- list(NULL, c(1, "y"))

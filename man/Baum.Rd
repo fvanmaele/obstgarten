@@ -95,9 +95,21 @@ Add a pair of nodes to the binary tree.
 \if{html}{\out{<a id="method-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-validate}{}}}
 \subsection{Method \code{validate()}}{
-
+Check the CART for consistency.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Baum$validate()}\if{html}{\out{</div>}}
+}
+
+\subsection{Details}{
+The following conditions are verified:
+\itemize{
+\item all node labels are unique;
+\item all leaves have \verb{$j} and \verb{$s} set to \code{NA};
+\item all leaves have \verb{$y} not set to \code{NA};
+\item all inner nodes have \verb{$y} set to \code{NA};
+\item all inner nodes have \verb{$j} and \verb{$s} not set to \code{NA};
+\item all leaves have at least 1 data point.
+}
 }
 
 }

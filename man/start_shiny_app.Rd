@@ -7,15 +7,15 @@
 start_shiny_app()
 }
 \arguments{
-\item{Datatype}{choose a datatype}
+\item{Datatype}{choose a datatype (Dropdown menu)}
 
 \item{Number_of_obs}{number of generated data rows (numeric)}
 
-\item{Dimension}{dimension of the record}
+\item{Dimension}{dimension of the record (numeric)}
 
-\item{Display_dimension}{number of shown dimensions}
+\item{Display_dimension}{number of shown dimensions (numeric)}
 
-\item{m}{count of random dimensions}
+\item{m}{count of random dimensions (numeric)}
 
 \item{Sigma}{standard deviation of irreducible error in y (numeric)}
 
@@ -25,7 +25,7 @@ start_shiny_app()
 
 \item{Bootstrap_samples}{number of bootstrap samples (numeric)}
 
-\item{k}{borders of the sine2D plot}
+\item{k}{borders of the sine2D plot (numeric)}
 
 \item{Simulate}{starts the calculation with the given parameters (button)}
 }

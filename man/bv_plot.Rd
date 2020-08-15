@@ -4,7 +4,7 @@
 \alias{bv_plot}
 \title{bias variance plot for CARTs for different depths}
 \usage{
-bv_plot(data)
+bv_plot(data, plot_title = "Prediction CART Regression Tree", bagging = FALSE)
 }
 \description{
 bias variance plot for CARTs for different depths

@@ -5,7 +5,7 @@
 \title{Method to plot 3D comparisons of prediction DIFFERENCES
 between ground truth and Random Forest for different m}
 \usage{
-plot_3D_compare_m_DIFF(path, render = FALSE)
+plot_3D_compare_m_DIFF(path, margin = 0.01, render = FALSE)
 }
 \arguments{
 \item{path}{character specifying path to compare_RF_m file}

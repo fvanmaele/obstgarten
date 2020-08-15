@@ -201,7 +201,15 @@ Baum <- R6::R6Class("Baum",
     },
 
     #' @description
-    #'
+    #' Check the CART for consistency.
+    #' @details
+    #' The following conditions are verified:
+    #' - all node labels are unique;
+    #' - all leaves have `$j` and `$s` set to `NA`;
+    #' - all leaves have `$y` not set to `NA`;
+    #' - all inner nodes have `$y` set to `NA`;
+    #' - all inner nodes have `$j` and `$s` not set to `NA`;
+    #' - all leaves have at least 1 data point.
     validate = function() {
       # ensure all node labels are unique
       v1 <- sapply(self$nodes, function(node) node$label)
