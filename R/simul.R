@@ -299,7 +299,7 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 #'
 #' @example load("data/simul/bv_greedy_20200810-101102")
 #'          bv_plot(bv_data)
-bv_plot <- function(data) {
+bv_plot <- function(data, plot_title="Prediction CART Regression Tree", bagging=FALSE) {
 
   grid <- seq(0, 1, len=150)
 
@@ -316,23 +316,57 @@ bv_plot <- function(data) {
   plt_data <- data[[4]]
   df4 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
 
+  if (bagging) {
+    plt_data <- data[[4]]
+    df1 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+    plt_data <- data[[3]]
+    df2 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+    plt_data <- data[[2]]
+    df3 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+    plt_data <- data[[1]]
+    df4 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+  }
+
+  if (!bagging) {
   gg <- ggplot(df1, aes(x=grid, y=mean)) +
     scale_colour_manual("",
                         breaks = c("depth 2", "depth 5", "depth 10", "depth 15"),
-                        values = c("depth 2"="grey", "depth 5"="green", "depth 10"="red",
-                                   "depth 15"="blue")) +
-    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df4, alpha=0.5, outline.type="both") +
-    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df3, alpha=0.5, outline.type="both") +
-    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df2, alpha=0.5, outline.type="both") +
-    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", alpha=0.5, outline.type="both") +
+                        values = c("depth 2"="red", "depth 5"="grey", "depth 10"="blue",
+                                   "depth 15"="green")) +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df4, alpha=0.5, outline.type="both") +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", data=df2, alpha=0.5, outline.type="both") +
+    geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", alpha=0.5, outline.type="both") +
     geom_line(aes(x=grid, y=sin(2*pi*grid))) +
     geom_line(aes(x=grid, y=mean, colour="depth 15"), data=df4, alpha=1) +
     geom_line(aes(x=grid, y=mean, colour="depth 10"), data=df3, alpha=1) +
     geom_line(aes(x=grid, y=mean, colour="depth 5"), data=df2, alpha=1) +
     geom_line(alpha=1, aes(colour="depth 2")) +
-    ggtitle("Prediction of different CART generated Trees") +
+    ggtitle(plot_title) +
     ylab("") +
-    xlab("")
+    xlab("") +
+    bbc_style()
+  }
+  else {
+    gg <- ggplot(df4, aes(x=grid, y=mean)) +
+      scale_colour_manual("",
+                          breaks = c("B = 1", "B = 5", "B = 25", "B = 100"),
+                          values = c("B = 1"="grey", "B = 5"="blue", "B = 25"="green",
+                                     "B = 100"="red")) +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df1, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df2, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", alpha=0.5, outline.type="both") +
+      geom_line(aes(x=grid, y=sin(2*pi*grid))) +
+      geom_line(aes(x=grid, y=mean, colour="B = 100"), data=df1, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="B = 25"), data=df2, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="B = 5"), data=df3, alpha=1) +
+      geom_line(alpha=1, aes(colour="B = 1")) +
+      ggtitle(plot_title) +
+      ylab("") +
+      xlab("") +
+      bbc_style()
+  }
 
   print(gg)
 
