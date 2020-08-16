@@ -111,7 +111,14 @@ R_min <- function(A, d, mode = "regression") {
 #' @param random generates CART for random forest (logical)
 #' @param m default: 0 so it only has to be set at random=TRUE (numeric)
 #'
-#' @return
+#' @return A regression or classification tree modelled after the training data
+#'   (`Baum`)
+#' @examples
+#' n <- 150
+#' M <- generate_sin_data(n, sigma=0.2)
+#' dimnames(M) <- list(NULL, c(1, "y"))
+#' T2 <- cart_greedy(M, depth=20, threshold=1)
+#' T2$validate()
 #' @export
 cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, sample = FALSE, random = FALSE, m = 0L) {
   stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
