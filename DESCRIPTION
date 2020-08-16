@@ -34,5 +34,10 @@ Suggests:
     rmarkdown
 Imports: 
     R6,
-    ggplot2
+    ggplot2,
+    mvtnorm,
+    dplyr,
+    shiny,
+    shinyjs,
+    parallel
 VignetteBuilder: knitr
