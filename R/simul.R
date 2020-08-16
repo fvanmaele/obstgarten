@@ -12,7 +12,7 @@ library(grid)
 #'
 #' @param depth Integer depths of the CART generated regression tree
 #' @example pred_plot_greedy(5, sigma=0.25, n=150)
-pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
+pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
   if (random_forest == TRUE & depth <= 2) {
     stop("Random Forest require depth > 1!")
   }
@@ -31,19 +31,43 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
 
   df_plot <- data.frame(grid=grid, y=pred)
 
+  mse <- 1/n * sum((pred - sin(2*pi*grid)) ** 2)
+
   gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
     scale_colour_manual("",
                         breaks = c("Prediction", "True"),
                         values = c("Prediction"="Blue", "True"="red")) +
     geom_line(aes(colour="Prediction")) +
     geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
-    geom_point(aes(x=grid, y=x[, 2])) +
+    geom_point(aes(x=grid, y=x[, 2]), alpha=0.5) +
+    annotate("text", x=0.9, y=1.1, label= str_c("MSE: ", round(mse, digits=5))) +
     ggtitle(str_c("Prediction of CART Regression Tree with Depth ", depth)) +
     xlab("") +
-    ylab("")
+    ylab("") +
+    bbc_style()
 
-  print(gg)
+  if (simul) return(gg)
+  else print(gg)
 
+}
+
+
+simul_plot_greedy <- function() {
+  depth_list <- list(2L, 5L, 10L, 15L)
+  plot_list <- list()
+  count <- 1
+  for (depth in depth_list) {
+    plot_list[[count]] <- pred_plot_greedy(n = 100, depth=depth, simul=TRUE)
+    count <- count + 1
+  }
+  grid.arrange(plot_list[[1]] + ggtitle("depth = 2") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[2]] + ggtitle("depth = 5") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[3]] + ggtitle("depth = 10") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[4]]  + ggtitle("depth = 15") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               nrow = 2,
+               top = textGrob("Regression Tree Predictors",
+                              gp=gpar(fontsize=14))
+  )
 }
 
 
@@ -94,7 +118,7 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
 #' @example pred_plot_bagging(100, sigma=0.25, n=150)
-pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_forest=FALSE) {
+pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_forest=FALSE, simul=FALSE) {
 
   if (is.null(grid)) grid <- seq(0, 1, len=n)
 
@@ -120,14 +144,52 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_for
     ylab("") +
     bbc_style()
 
-  print(gg)
+  if (simul) return(gg)
+  else print(gg)
 
 }
 
 
+simul_plot_bagging <- function() {
+  B_list <- list(1L, 5L, 25L, 100L)
+  plot_list <- list()
+  count <- 1
+  for (bs in B_list) {
+    plot_list[[count]] <- pred_plot_bagging(depth=5, n = 100, B=bs, simul=TRUE)
+    count <- count + 1
+  }
+  grid.arrange(plot_list[[1]] + ggtitle("No. BS = 1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[2]] + ggtitle("No. BS = 5") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[3]] + ggtitle("No. BS = 25") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[4]]  + ggtitle("No. BS = 100") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               nrow = 2,
+               top = textGrob("Bagging Predictors",
+                              gp=gpar(fontsize=14))
+  )
+}
+
+# simul_plot_rf <- function() {
+#   B_list <- list(1L, 2L, 3L)
+#   plot_list <- list()
+#   count <- 1
+#   for (bs in B_list) {
+#     plot_list[[count]] <- pred_plot_rf(n=500, d=4, m=bs, B=10L, depth=5, display_d=1, sd=0.1, simul = TRUE)
+#
+#     count <- count + 1
+#   }
+#   grid.arrange(plot_list[[1]] + ggtitle("m = 1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+#                plot_list[[2]] + ggtitle("m = 2") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+#                plot_list[[3]] + ggtitle("m = 3") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+#                nrow = 2,
+#                top = textGrob("Random Forest Predictors",
+#                               gp=gpar(fontsize=14))
+#   )
+# }
+
+
+
 # plots prediction of Bagging generated decision tree
 #'
-#' (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
 #' @param depth Integer depths of the bagging generated decision tree
 #' @example pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -162,6 +224,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 
 #' Method to Plot Predicted Density of a Random Forest
 #' for a two dimensional case for a sine generated dataset
+#' (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
 #' @example pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
 pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
   data <- generate_sin_2D(n=n, sigma=sd, k=k)
@@ -211,7 +274,7 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
 
 #' Method plotting one dimension of a multidimensional regression
 #' problem of a multicariate gaussian using a random forest.
-pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
+pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L, simul=FALSE) {
   data <- generate_mult_data(n=n, d=d, sigma=diag(d), mu=rep(0., d))
   x <- data[[1]]
   sigma <- data[[3]]
@@ -221,7 +284,7 @@ pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
   grid <- seq(mu[display_d] - 2*sigma[display_d, display_d], mu[display_d] + 2*sigma[display_d, display_d], len=n)
   gridmat <- matrix(0., nrow=n, ncol=d)
   gridmat[, display_d] <- grid
-  true_val <- apply(gridmat, MARGIN=1, dmvnorm, mu, sigma,)
+  true_val <- apply(gridmat, MARGIN=1, dmvnorm, mu, sigma)
 
   # data for testing prediction
   x_test <- x
@@ -255,7 +318,8 @@ pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L) {
     ylab("") +
     bbc_style()
 
-  print(gg)
+  if (simul) return(gg)
+  else print(gg)
 
 }
 
@@ -734,6 +798,8 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
     }
   }
 }
+
+
 
 
 #' Method to plot 3D comparisons of prediction DIFFERENCES
