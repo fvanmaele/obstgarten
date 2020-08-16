@@ -60,14 +60,13 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
 #'
 #' @return
 #' @import shiny
-#' @import shinyjs
 #' @export
 start_shiny_app <- function(){
   ui <- fluidPage(
     titlePanel(""),
     sidebarLayout(
       sidebarPanel(
-        useShinyjs(),
+        shinyjs::useShinyjs(),
         selectInput("datatype", "Datatype", choices=c("sine_CART", "sineclass_CART", "sine_bagging", "sineclass_bagging", "sine2D", "gaussian", "iris")),
 
         box(id = "sine_CART", width = '800px',
