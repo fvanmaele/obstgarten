@@ -125,7 +125,7 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
     n <- nrow(XY)
     # random number of leaves
     t <- sample((n/2):n, 1) # TODO: not sure if t is defined correctly
-    print(str_c("t ", t))
+    # print(str_c("t ", t))
   }
 
   # Check data for duplicates (cf. [Richter 1.2, p.9])
