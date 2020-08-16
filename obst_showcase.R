@@ -1,5 +1,29 @@
 library(obstgarten)
 
+cart_partition = function(node, d) {
+  stopifnot(d == (ncol(node$points) - 1L))
+  y_val <- numeric(0)
+
+  recurse <- function(node, d) {
+    if (!is.null(node$childL) && !is.null(node$childR)) {
+      row_s <- rep(NA, d)
+      row_s[[node$j]] <- node$s
+
+      return(rbind(recurse(node$childL, d), row_s,
+                   recurse(node$childR, d)))
+    }
+    else if (is.null(node$childL) && is.null(node$childR)) {
+      y_val <<- c(y_val, node$y) # DFS for y values
+      return(NULL)
+    }
+    else {
+      stop("none or both of node$childL and node$childR must be set")
+    }
+  }
+  part <- recurse(node, d)
+  return(list(part = part, y = y_val))
+}
+
 n <- 150
 M <- generate_sin_data(n, sigma=0.2)
 dimnames(M) <- list(NULL, c(1, "y"))
