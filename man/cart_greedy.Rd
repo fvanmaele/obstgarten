@@ -2,7 +2,7 @@
 % Please edit documentation in R/greedy.R
 \name{cart_greedy}
 \alias{cart_greedy}
-\title{Create a regression tree greedily based on training data.}
+\title{Greedy algorithm for CART}
 \usage{
 cart_greedy(
   XY,
@@ -11,15 +11,18 @@ cart_greedy(
   threshold = 1L,
   sample = FALSE,
   random = FALSE,
-  m = 0L
+  m = 0L,
+  q_threshold = 100L,
+  q_pct = 0.25,
+  quantile = FALSE
 )
 }
 \arguments{
 \item{XY}{matrix with columns \eqn{1..d} (representing the training data
-\eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}). Unless sample
-is set to TRUE, it is required that there are no observations
-\eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1}
-  = X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.}
+\eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}). Unless sample is
+set to TRUE, it is required that there are no observations \eqn{(X_{i_1},
+  Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} = X_{i_2}}, but
+\eqn{Y_{i_1} \neq Y_{i_2}}.}
 
 \item{depth}{The amount of steps before halting the algorithm (defaults to
 10)}
@@ -27,17 +30,31 @@ is set to TRUE, it is required that there are no observations
 \item{mode}{"regression" or "classification" specifies whether to train
 decision or regression tree. Default is "regression"}
 
-\item{threshold}{(integer)}
+\item{threshold}{The minimum amount of data points to divide a leaf (integer)}
 
-\item{sample}{(logical)}
+\item{sample}{Use \code{sample()} to (logical)}
 
 \item{random}{generates CART for random forest (logical)}
 
 \item{m}{default: 0 so it only has to be set at random=TRUE (numeric)}
+
+\item{q_threshold}{minimal of data points for using quantiles (integer)}
+
+\item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
+set size. ()}
 }
 \value{
-
+A regression or classification tree modelled after the training data
+(\code{Baum})
 }
 \description{
-Create a regression tree greedily based on training data.
+Create a regression or classification tree tree greedily based
+on training data.
+}
+\examples{
+n <- 150
+M <- generate_sin_data(n, sigma=0.2)
+dimnames(M) <- list(NULL, c(1, "y"))
+T2 <- cart_greedy(M, depth=20, threshold=1)
+T2$validate()
 }
