@@ -7,6 +7,7 @@ library(ggplot2)
 library(ggpubr)
 library(gridExtra)
 library(grid)
+library(bbplot)
 
 # plots prediction of CART generated regression tree
 #'
