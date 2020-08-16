@@ -17,3 +17,6 @@ list(df of data, feature means vector, covariance matrix)
 \description{
 Generate Data from a multivariate Gaussian
 }
+\examples{
+generate_mult_data(n=1000, d=5)
+}
