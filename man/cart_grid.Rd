@@ -4,7 +4,7 @@
 \alias{cart_grid}
 \title{Title}
 \usage{
-cart_grid(A, d, f, ...)
+cart_grid(A, d, f, q_threshold, q_pct, quantile)
 }
 \arguments{
 \item{...}{}
@@ -14,4 +14,7 @@ cart_grid(A, d, f, ...)
 }
 \description{
 Title
+}
+\examples{
+
 }

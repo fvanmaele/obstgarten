@@ -27,20 +27,32 @@ cart_part <- function(s, j, A) {
 #' @export
 #'
 #' @examples
-cart_grid <- function(A, d, f, ...) {
+#'
+cart_grid <- function(A, d, f, q_threshold, q_pct, quantile) {
   stopifnot(length(formals(f)) == 2)
-  G_dn <- list(NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
-  G <- array(dim=c(nrow(A), 2, d), dimnames=G_dn)
+  stopifnot(q_pct > 0 && q_pct < 1)
+  stopifnot(is.integer(q_threshold))
+  stopifnot(is.logical(quantile))
 
   # argmin: s_j \in (X_1j, .., X_nj) \sub A, j \in (1, .., d)
-  # TODO: cache computations of R (for duplicate data points/s values)
   for (j in 1:d) {
-    for (i in seq_along(A[, j])) {
-      s <- A[i, j]
+    if (quantile && length(A[, j]) > q_threshold) {
+      probs = seq(0, 1, length.out = q_pct * length(A[, j]))
+      stopifnot(length(probs) > 0)
+      Q <- quantile(A[, j], probs = probs, names = FALSE)
+    } else {
+      Q <- A[, j]
+    }
+
+    G_dn <- list(NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
+    G <- array(dim=c(length(Q), 2, d), dimnames=G_dn)
+
+    for (i in seq_along(Q)) { # seq_along(A[, j])
+      s <- Q[[i]] # s <- A[i, j]
       P <- cart_part(s, j, A) # new partition A1, A2
 
       if (nrow(P$A1) > 0) {
-        R <- f(P$A1[, "y"], P$A2[, "y"], ...)
+        R <- f(P$A1[, "y"], P$A2[, "y"])
       } else {
         #message("no data points for partition j = ", j, ", s = ", s)
         R <- NA_real_ # no data points in new partition, skip
@@ -66,20 +78,22 @@ C_hat <- function(y1, y2) {
   return(length(y1) * (1 - c1_p) + length(y2) * (1 - c2_p))
 }
 
+#' Find optimal subdivision for CART
+#' @description
 #' Find optimal split index \eqn{j} and split point \eqn{s} for a given
 #' partition A (regression or classification tree)
 #'
-#' @param A subset of training data \eqn{(X_i, Y_i)} (matrix)
-#' @param d dimension of the training data \eqn{X_{i_1}..X_{i_d}}
-#' @param mode
+#' @param A subset of training data \eqn{(X_i, Y_i)} (`matrix`)
+#' @param d dimension of the training data \eqn{X_{i_1}..X_{i_d}} (`integer`)
+#' @param mode `regression` or `classification`
 #'
 #' @return list containing optimal parameters \eqn{j}, \eqn{s}
 #' @export
-R_min <- function(A, d, mode = "regression") {
+R_min <- function(A, d, mode = "regression", ...) {
   if (mode == "regression") {
-    G <- cart_grid(A, d, R_hat)
+    G <- cart_grid(A, d, R_hat, ...)
   } else if (mode == "classification") {
-    G <- cart_grid(A, d, C_hat)
+    G <- cart_grid(A, d, C_hat, ...)
   } else {
     stop("invalid mode: must be regression or classification")
   }
@@ -95,23 +109,31 @@ R_min <- function(A, d, mode = "regression") {
   return(list(j = j_hat, s = s_hat))
 }
 
-#' Create a regression tree greedily based on training data.
-#'
+#' Greedy algorithm for CART
+#' @description Create a regression or classification tree tree greedily based
+#' on training data.
+#' @details
+#' Unless `sample` is set to `TRUE`, it is required that there are no observations
+#' \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
+#' X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
 #' @param XY matrix with columns \eqn{1..d} (representing the training data
-#'   \eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}). Unless sample
-#'   is set to TRUE, it is required that there are no observations
-#'   \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1}
-#'   = X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
+#'   \eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}).
 #' @param depth The amount of steps before halting the algorithm (defaults to
 #'   10)
-#' @param threshold (integer)
-#' @param sample (logical)
-#' @param mode "regression" or "classification" specifies whether to train
-#' decision or regression tree. Default is "regression"
-#' @param random generates CART for random forest (logical)
-#' @param m default: 0 so it only has to be set at random=TRUE (numeric)
-#'
-#' @return A regression or classification tree modelled after the training data
+#' @param threshold The minimum amount of data points for dividing a leaf (`integer`)
+#' @param sample Use `sample()` to (`logical`)
+#' @param mode `regression` or `classification` specifies whether to train
+#'   a regression or classification tree, respectively. Default is "regression"
+#' @param random generates CART for random forest (`logical`, default `FALSE`)
+#' @param m The
+#' default: 0 so it only has to be set at random=TRUE (`numeric`)
+#' @param q_threshold minimal of data points for using quantiles (`integer`,
+#'   defaults to `100L`)
+#' @param q_pct amount of probabilities for `quantile()`, in pct. of the data
+#'   set size. (`numeric`, defaults to `0.25`)
+#' @param quantile whether to use quantiles for computing the optimal
+#'   subdivision (`logical`, defaults to `FALSE`)
+#' @return A regression or classification tree modeled after the training data
 #'   (`Baum`)
 #' @examples
 #' n <- 150
@@ -120,7 +142,9 @@ R_min <- function(A, d, mode = "regression") {
 #' T2 <- cart_greedy(M, depth=20, threshold=1)
 #' T2$validate()
 #' @export
-cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, sample = FALSE, random = FALSE, m = 0L) {
+cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
+                        sample = FALSE, random = FALSE, m = 0L,
+                        q_threshold = 100L, q_pct = 0.25, quantile = FALSE) {
   stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
   stopifnot("depth is not numeric and greater than 0"= is.numeric(depth) & depth > 0L)
   stopifnot("threshold is not numeric and greater than 0"= is.numeric(threshold) & threshold > 0L)
@@ -162,10 +186,12 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L, samp
         S <- 1:(d+1)
         m <- d
       }
+      # optimal subdivision
       if(nrow(unique(node$points[, S, drop=FALSE])) > threshold) {
-        # optimal subdivision
         # TODO: pass correct range to R_min (instead of d -> 1:d)
-        params <- R_min(node$points[, S, drop=FALSE], m, mode = mode) # minimize with j out of S
+        # minimize with j out of S
+        params <- R_min(node$points[, S, drop=FALSE], m, mode = mode,
+                        q_threshold = q_threshold, q_pct = q_pct, quantile = quantile)
         stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
         stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
         #params$j <- S[params$j]

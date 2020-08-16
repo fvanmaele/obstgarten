@@ -19,37 +19,44 @@ cart_greedy(
 }
 \arguments{
 \item{XY}{matrix with columns \eqn{1..d} (representing the training data
-\eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}). Unless sample is
-set to TRUE, it is required that there are no observations \eqn{(X_{i_1},
-  Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} = X_{i_2}}, but
-\eqn{Y_{i_1} \neq Y_{i_2}}.}
+\eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}).}
 
 \item{depth}{The amount of steps before halting the algorithm (defaults to
 10)}
 
-\item{mode}{"regression" or "classification" specifies whether to train
-decision or regression tree. Default is "regression"}
+\item{mode}{\code{regression} or \code{classification} specifies whether to train
+a regression or classification tree, respectively. Default is "regression"}
 
-\item{threshold}{The minimum amount of data points to divide a leaf (integer)}
+\item{threshold}{The minimum amount of data points for dividing a leaf (\code{integer})}
 
-\item{sample}{Use \code{sample()} to (logical)}
+\item{sample}{Use \code{sample()} to (\code{logical})}
 
-\item{random}{generates CART for random forest (logical)}
+\item{random}{generates CART for random forest (\code{logical}, default \code{FALSE})}
 
-\item{m}{default: 0 so it only has to be set at random=TRUE (numeric)}
+\item{m}{The
+default: 0 so it only has to be set at random=TRUE (\code{numeric})}
 
-\item{q_threshold}{minimal of data points for using quantiles (integer)}
+\item{q_threshold}{minimal of data points for using quantiles (\code{integer},
+defaults to \code{100L})}
 
 \item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
-set size. ()}
+set size. (\code{numeric}, defaults to \code{0.25})}
+
+\item{quantile}{whether to use quantiles for computing the optimal
+subdivision (\code{logical}, defaults to \code{FALSE})}
 }
 \value{
-A regression or classification tree modelled after the training data
+A regression or classification tree modeled after the training data
 (\code{Baum})
 }
 \description{
 Create a regression or classification tree tree greedily based
 on training data.
+}
+\details{
+Unless \code{sample} is set to \code{TRUE}, it is required that there are no observations
+\eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
+X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
 }
 \examples{
 n <- 150

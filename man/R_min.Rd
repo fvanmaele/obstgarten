@@ -2,17 +2,16 @@
 % Please edit documentation in R/greedy.R
 \name{R_min}
 \alias{R_min}
-\title{Find optimal split index \eqn{j} and split point \eqn{s} for a given
-partition A (regression or classification tree)}
+\title{Find optimal subdivision for CART}
 \usage{
-R_min(A, d, mode = "regression")
+R_min(A, d, mode = "regression", ...)
 }
 \arguments{
-\item{A}{subset of training data \eqn{(X_i, Y_i)} (matrix)}
+\item{A}{subset of training data \eqn{(X_i, Y_i)} (\code{matrix})}
 
-\item{d}{dimension of the training data \eqn{X_{i_1}..X_{i_d}}}
+\item{d}{dimension of the training data \eqn{X_{i_1}..X_{i_d}} (\code{integer})}
 
-\item{mode}{}
+\item{mode}{\code{regression} or \code{classification}}
 }
 \value{
 list containing optimal parameters \eqn{j}, \eqn{s}

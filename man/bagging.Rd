@@ -24,7 +24,7 @@ bagging(
 
 \item{m}{Count of random dimensions in random forest. Is set on heuristically motivated values if m is NULL}
 
-\item{regression}{logical: specify whether tree is a classification or a
+\item{regression}{logical: specify whether tree is a decision (classification) or a
 regression tree. default=TRUE, TRUE for regression, FALSE for classification}
 
 \item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
@@ -36,5 +36,16 @@ vector: of size Number of Samples containing bagged predictions to dataset
 character vector for classification case and double vector for regression case
 }
 \description{
-Performs bagging on a data set and returns predictions.
+The boostrap aggregating (Bagging) procedure is an ensemble
+method from statistical machine learning. It can reduce the
+model's variance, enhance the accuracy and has a regularization
+effect. The Bagging procedure adds randomness to the model
+by averaging (regression) or majority-voting (classification)
+the prediction for samples $x_i$ over the different models that
+were fitted on the bootstrap samples. The bootstrap samples are
+created by randomly drawing n samples from the dataset of size n
+with replacement. The number of bootstrap samples B is a
+hyperparameter of the model.
+
+This method performs bagging on a data set and returns predictions.
 }

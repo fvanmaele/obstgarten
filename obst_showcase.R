@@ -24,11 +24,13 @@ cart_partition = function(node, d) {
   return(list(part = part, y = y_val))
 }
 
-n <- 150
+n <- 1000
 M <- generate_sin_data(n, sigma=0.2)
 dimnames(M) <- list(NULL, c(1, "y"))
-T2 <- cart_greedy(M, depth=20, threshold=1)
+system.time(T2 <- cart_greedy(M, depth=6, threshold=1))
 T2$validate()
+system.time(T3 <- cart_greedy(M, depth=6, threshold=1, quantile=TRUE))
+T3$validate()
 
 P <- cart_partition(T2$root, 1)
 x <- unname(P$part[, 1])
