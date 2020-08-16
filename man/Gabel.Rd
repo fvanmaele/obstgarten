@@ -61,6 +61,7 @@ TODO: redundant copies of data points in child nodes of CART}
 \if{html}{\out{<a id="method-isObst"></a>}}
 \if{latex}{\out{\hypertarget{method-isObst}{}}}
 \subsection{Method \code{isObst()}}{
+Determine if a node is a leaf node.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Gabel$isObst()}\if{html}{\out{</div>}}
 }
@@ -74,6 +75,7 @@ TODO: redundant copies of data points in child nodes of CART}
 \if{html}{\out{<a id="method-isRoot"></a>}}
 \if{latex}{\out{\hypertarget{method-isRoot}{}}}
 \subsection{Method \code{isRoot()}}{
+Determine if a node is a root node.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Gabel$isRoot()}\if{html}{\out{</div>}}
 }
@@ -89,7 +91,7 @@ TODO: redundant copies of data points in child nodes of CART}
 Print a summary of node attributes. Attributes set to \code{NULL} (and the
 \verb{$points} attribute) are not printed.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Gabel$print(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Gabel$print()}\if{html}{\out{</div>}}
 }
 
 }

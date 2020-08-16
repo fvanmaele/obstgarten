@@ -1,15 +1,22 @@
-# library(obstgarten)
-library(parallel)
-
-#' ATTENTION!! method not finished for classification case.
-#'
+#' Bagging on a data set
 #' @description
-#' Performs bagging on a dataset and returns predictions.
+#' The boostrap aggregating (Bagging) procedure is an ensemble
+#' method from statistical machine learning. It can reduce the
+#' model's variance, enhance the accuracy and has a regularization
+#' effect. The Bagging procedure adds randomness to the model
+#' by averaging (regression) or majority-voting (classification)
+#' the prediction for samples $x_i$ over the different models that
+#' were fitted on the bootstrap samples. The bootstrap samples are
+#' created by randomly drawing n samples from the dataset of size n
+#' with replacement. The number of bootstrap samples B is a
+#' hyperparameter of the model.
+#'
+#' This method performs bagging on a data set and returns predictions.
 #'
 #' @param B integer: number of bootstrap samples
 #' @param x_train data.frame: training data with labels of dimensions Number of Samples x Features + 1
 #' @param x_test data.frame: test data with labels of dimensions Number of Samples x Features + 1
-#' @param regression logical: specify whether tree is a classification or a
+#' @param regression logical: specify whether tree is a decision (classification) or a
 #' regression tree. default=TRUE, TRUE for regression, FALSE for classification
 #' @param use_parallel: Whether to use parallel computation or not
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
@@ -80,16 +87,18 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
   if (use_parallel) {
     # set up parallel
     nb_cores <- detectCores() - 1
-    cluster_pred <- makeCluster(nb_cores)
-    clusterEvalQ(cluster_pred, {
+    cluster_pred <- parallel::makeCluster(nb_cores)
+    parallel::clusterEvalQ(cluster_pred, {
       library(obstgarten)})
 
-    predictions <- matrix(unlist(parLapply(cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
+    predictions <- matrix(unlist(parallel::parLapply(
+      cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
 
-    stopCluster(cluster_pred) # close cluster
+    parallel::stopCluster(cluster_pred) # close cluster
   }
   else {
-    predictions <- matrix(unlist(lapply(X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
+    predictions <- matrix(unlist(lapply(
+      X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
   }
 
   # returning predictions for test set via mean in regression case and via majority vote in classification case

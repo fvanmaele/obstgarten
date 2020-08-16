@@ -6,7 +6,7 @@
 between ground truth and Random Forest Predictions for
 different m}
 \usage{
-plot_3D_compare_m(path, render = FALSE)
+plot_3D_compare_m(path, render = FALSE, margin = 1)
 }
 \arguments{
 \item{path}{character specifying path to compare_RF_m file}
