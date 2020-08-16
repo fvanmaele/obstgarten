@@ -6,6 +6,7 @@ library(ggplot2)
 library(ggpubr)
 library(gridExtra)
 library(grid)
+library(bbplot)
 
 simul_plot_greedy <- function() {
   depth_list <- list(2L, 5L, 10L, 15L)
