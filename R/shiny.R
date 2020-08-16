@@ -1,14 +1,3 @@
-library(shiny)
-library(shinydashboard)
-library(shinyjs)
-library(tidyverse)
-library(plot3D)
-library(rayshader)
-library(RColorBrewer)
-library(ggplot2)
-library(ggpubr)
-library(bbplot)
-
 #rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
 
 #' Method for generating plots in the shiny app
@@ -70,6 +59,8 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
 #' @param Simulate starts the calculation with the given parameters (button)
 #'
 #' @return
+#' @import shiny
+#' @import shinyjs
 #' @export
 start_shiny_app <- function(){
   ui <- fluidPage(
