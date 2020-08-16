@@ -81,3 +81,16 @@ test_that("R_min", {
   expect_length(res, 2)
   expect_named(res, c("j", "s"))
 })
+
+test_that("cart_predict", {
+  n <- 100
+  M <- generate_sin_data(n, sigma=0.2)
+  dimnames(M) <- list(NULL, c(1, "y"))
+  T2 <- cart_greedy(M, depth=20, threshold=1)
+  res <- numeric(n)
+  for (i in 1:n) {
+    x <- M[, "1"][[i]]
+    res[[i]] <- cart_predict(x, T2$root)
+  }
+  expect_equal(res, M[, "y"])
+})

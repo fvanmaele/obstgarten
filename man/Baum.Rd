@@ -90,6 +90,17 @@ Add a pair of nodes to the binary tree.
 \if{html}{\out{<div class="r">}}\preformatted{Baum$append(Parent, Child1, Child2)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{Parent}}{The parent node to append to. (\code{Gabel})}
+
+\item{\code{Child1}}{The left child node to append. (\code{Gabel})}
+
+\item{\code{Child2}}{The right child node to append. (\code{Gabel})}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate"></a>}}

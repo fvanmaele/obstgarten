@@ -2,7 +2,7 @@
 % Please edit documentation in R/bagging.R
 \name{bagging}
 \alias{bagging}
-\title{ATTENTION!! method not finished for classification case.}
+\title{Bagging on a data set}
 \usage{
 bagging(
   B,
@@ -36,5 +36,5 @@ vector: of size Number of Samples containing bagged predictions to dataset
 character vector for classification case and double vector for regression case
 }
 \description{
-Performs bagging on a dataset and returns predictions.
+Performs bagging on a data set and returns predictions.
 }

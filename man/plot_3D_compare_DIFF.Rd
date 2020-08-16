@@ -5,7 +5,7 @@
 \title{Method to plot 3D comparisons of prediction DIFFERENCES
 between ground truth and model for different methods}
 \usage{
-plot_3D_compare_DIFF(path, render = FALSE)
+plot_3D_compare_DIFF(path, margin = 1, render = FALSE)
 }
 \arguments{
 \item{path}{character specifying path to compare_RF_m file}

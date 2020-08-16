@@ -40,6 +40,7 @@ Gabel <- R6::R6Class("Gabel",
     y = NA, # < NA_integer_, NA_real_
 
     #' @description
+    #' Determine if a node is a leaf node.
     #' @return `TRUE` if node is a leaf (both `childL` and `childR` are
     #'   `NULL`), `FALSE` otherwise.
     isObst = function() {
@@ -47,6 +48,7 @@ Gabel <- R6::R6Class("Gabel",
     },
 
     #' @description
+    #' Determine if a node is a root node.
     #' @return `TRUE` if node is a root (parent is set to `NULL`), `FALSE` otherwise.
     isRoot = function() {
       is.null(parent)
@@ -55,7 +57,7 @@ Gabel <- R6::R6Class("Gabel",
     #' @description
     #' Print a summary of node attributes. Attributes set to `NULL` (and the
     #' `$points` attribute) are not printed.
-    print = function(...) {
+    print = function() {
       cat("Knoten: \n")
       cat("  Label: ", self$label, "\n", sep = "")
       if (!is.null(self$parent))
@@ -182,9 +184,9 @@ Baum <- R6::R6Class("Baum",
 
     #' @description
     #' Add a pair of nodes to the binary tree.
-    #' @param Parent
-    #' @param Child1
-    #' @param Child2
+    #' @param Parent The parent node to append to. (`Gabel`)
+    #' @param Child1 The left child node to append. (`Gabel`)
+    #' @param Child2 The right child node to append. (`Gabel`)
     append = function(Parent, Child1, Child2) { # Parent, Child1, Child2
       stopifnot(identical(self$nodes[[Parent$label]], Parent))
 

@@ -1,10 +1,6 @@
-# library(obstgarten)
-library(parallel)
-
-#' ATTENTION!! method not finished for classification case.
-#'
+#' Bagging on a data set
 #' @description
-#' Performs bagging on a dataset and returns predictions.
+#' Performs bagging on a data set and returns predictions.
 #'
 #' @param B integer: number of bootstrap samples
 #' @param x_train data.frame: training data with labels of dimensions Number of Samples x Features + 1
@@ -80,16 +76,18 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
   if (use_parallel) {
     # set up parallel
     nb_cores <- detectCores() - 1
-    cluster_pred <- makeCluster(nb_cores)
-    clusterEvalQ(cluster_pred, {
+    cluster_pred <- parallel::makeCluster(nb_cores)
+    parallel::clusterEvalQ(cluster_pred, {
       library(obstgarten)})
 
-    predictions <- matrix(unlist(parLapply(cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
+    predictions <- matrix(unlist(parallel::parLapply(
+      cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
 
-    stopCluster(cluster_pred) # close cluster
+    parallel::stopCluster(cluster_pred) # close cluster
   }
   else {
-    predictions <- matrix(unlist(lapply(X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
+    predictions <- matrix(unlist(lapply(
+      X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
   }
 
   # returning predictions for test set via mean in regression case and via majority vote in classification case

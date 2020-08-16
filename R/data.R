@@ -1,7 +1,3 @@
-library(MASS)
-library(matlib)
-library(mvtnorm)
-
 #' Generate data set like in Example 6.3 of Richter19.pdf
 #'
 #' @param n number of generated data pairs
@@ -73,7 +69,9 @@ generate_sin_2D <- function(n, sigma=0.2, k=10) {
 #' @param n dimensional vector with feature means
 #' @param sigma positive definite square covariance matrix
 #' @return list(df of data, feature means vector, covariance matrix)
-#' @example generate_mult_data(n=1000, d=5)
+#' @examples
+#' generate_mult_data(n=1000, d=5)
+#' @export
 generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
   if (is.null(sigma)) {
     A <- matrix(runif(d*d, min = 0, max = 1), nrow=d, ncol=d)
@@ -83,7 +81,7 @@ generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
     mu <- runif(d, min = -1, max = +1)
   }
 
-  data <- rmvnorm(n, mean=mu, sigma=sigma)
+  data <- mvtnorm::rmvnorm(n, mean=mu, sigma=sigma)
 
   # print(data)
 
@@ -177,7 +175,7 @@ prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) 
   iris$Species[iris$Species == "versicolor"] <- 2L
   iris$Species[iris$Species == "virginica"] <- 3L
 
-  iris %>% rename(y=Species) -> iris
+  dplyr::rename(iris, y=Species) -> iris
 
   # split into training and test set
   if (is.null(training_split_indices)) {
