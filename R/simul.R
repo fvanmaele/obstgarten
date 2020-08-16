@@ -648,7 +648,7 @@ plot_3D_compare <- function(path, render=FALSE) {
 #'  if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
-plot_3D_compare_DIFF <- function(path, render=FALSE) {
+plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
               is.character(path))
   load(path)
@@ -662,7 +662,7 @@ plot_3D_compare_DIFF <- function(path, render=FALSE) {
                           , "Squared Diff. Random Forest"), names_to = c("diff")) -> df
 
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
-  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, margin))
 
   endp <- ncol(df) - ncol(df) %% 2 - 2
 
