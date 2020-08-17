@@ -31,7 +31,7 @@ plot_3D <- function(df) {
 #' if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
-plot_3D_compare <- function(path, render=FALSE) {
+plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
   stopifnot("Path should be a character specifying path to compare_plot_data file!" =
               is.character(path))
   load(path)
@@ -41,7 +41,7 @@ plot_3D_compare <- function(path, render=FALSE) {
     pivot_longer(cols = c(True, CART, Pruning, Bagging, "Random Forest"), names_to = c("pred")) -> df
 
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
-  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
+  sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, margin))
 
   endp <- ncol(df) - ncol(df) %% 2 - 2
 
