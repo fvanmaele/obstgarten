@@ -219,7 +219,6 @@ Baum <- R6::R6Class("Baum",
     #' - all node labels are unique;
     #' - all leaves have `$j` and `$s` set to `NA`;
     #' - all leaves have `$y` not set to `NA`;
-    #' - all inner nodes have `$y` set to `NA`;
     #' - all inner nodes have `$j` and `$s` not set to `NA`;
     #' - all leaves have at least 1 data point.
     validate = function() {

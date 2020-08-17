@@ -135,7 +135,6 @@ The following conditions are verified:
 \item all node labels are unique;
 \item all leaves have \verb{$j} and \verb{$s} set to \code{NA};
 \item all leaves have \verb{$y} not set to \code{NA};
-\item all inner nodes have \verb{$y} set to \code{NA};
 \item all inner nodes have \verb{$j} and \verb{$s} not set to \code{NA};
 \item all leaves have at least 1 data point.
 }

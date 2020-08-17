@@ -7,9 +7,9 @@
 cart_predict(x, node)
 }
 \arguments{
-\item{x}{(verctor)}
+\item{x}{(\code{vector})}
 
-\item{node}{(node)}
+\item{node}{(\code{Gabel})}
 }
 \value{
 
