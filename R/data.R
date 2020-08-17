@@ -87,7 +87,7 @@ generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
 
   eps <- rnorm(n, mean=0, sd=sd)
 
-  y <- apply(data, dmvnorm, mu, sigma, MARGIN = 1) + eps
+  y <- apply(data, mvtnorm::dmvnorm, mu, sigma, MARGIN = 1) + eps
 
   data <- data.frame(x=data, y=y)
 
