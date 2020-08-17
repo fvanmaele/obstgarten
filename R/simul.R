@@ -1,13 +1,6 @@
-library(tidyverse)
-library(plot3D)
-library(rayshader)
-library(RColorBrewer)
-library(ggplot2)
-library(ggpubr)
-library(gridExtra)
-library(grid)
-library(bbplot)
-
+#' @import grid
+#' @import gridExtra
+#' @import ggplot2
 simul_plot_greedy <- function() {
   depth_list <- list(2L, 5L, 10L, 15L)
   plot_list <- list()
@@ -27,6 +20,9 @@ simul_plot_greedy <- function() {
 }
 
 
+#' @import grid
+#' @import gridExtra
+#' @import ggplot2
 simul_plot_pruning <- function() {
   lambda_list <- list(0.01, 0.1, 1., 10.)
   plot_list <- list()
@@ -46,6 +42,9 @@ simul_plot_pruning <- function() {
 }
 
 
+#' @import grid
+#' @import gridExtra
+#' @import ggplot2
 simul_plot_bagging <- function() {
   B_list <- list(1L, 5L, 25L, 100L)
   plot_list <- list()
@@ -85,6 +84,7 @@ simul_plot_bagging <- function() {
 
 #' Method to test performance of quantiles
 #' @example compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
+#' @import stringr
 compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=100) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
 
@@ -130,6 +130,7 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
 #' high dimensional data.
 #' @example compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
 #' TAKES VERY LONG CPU EXPENSIVE
+#' @import stringr
 compare_methods_PE <- function(d, n, B=100L, reps=400) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
 
@@ -180,6 +181,7 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
 #' different parameters m.
 #' @example compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
 #' CAUTION CPU EXPENSIVE TAKES LONG
+#' @import stringr
 compare_m_PE <- function(m_list, d, n, B, reps=400) {
   for (m in m_list) {
     if (m >= d) {
@@ -227,6 +229,7 @@ compare_m_PE <- function(m_list, d, n, B, reps=400) {
 #' Quality of the Random Forests for
 #' different parameters m.
 #' @example compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
+#' @import stringr
 compare_m <- function(m_list, d, n, B) {
   for (m in m_list) {
     if (m >= d) {
@@ -267,6 +270,7 @@ compare_m <- function(m_list, d, n, B) {
 #' Quality of the four different methods for
 #' high dimensional data.
 #' @example compare_methods(d=3, n=1000, B=100L)
+#' @import stringr
 compare_methods <- function(d, n, B=100L) {
 
   training_data <- generate_mult_data(n=n, d=d)
@@ -308,6 +312,9 @@ compare_methods <- function(d, n, B=100L) {
 
 #' Visualizing the Distribution of the Iris Dataset Features
 #' Adapted from Antonio Lopez
+#' @import ggplot2
+#' @import grid
+#' @import gridExtra
 visualize_iris_feature_distr <- function() {
   iris <- load_iris()
 
@@ -351,6 +358,7 @@ visualize_iris_feature_distr <- function() {
 
 
 #' Function that performs classification with all 4 methods on
+#' @import stringr
 compare_classify_iris <- function(depth=5L, B=100L) {
   data <- prepare_iris()
   xy_train <- data[[1]]

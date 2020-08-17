@@ -1,16 +1,9 @@
-library(tidyverse)
-library(plot3D)
-library(rayshader)
-library(RColorBrewer)
-library(ggplot2)
-library(ggpubr)
-library(gridExtra)
-library(grid)
-
 #' CPU Heavy!!!
 #' Method to 3D render Gaussian Multivariates estimates coming from
 #' generated samples or predicted values
 #' @param df data.frame with columns x, y and z. samples are in the rows
+#' @import ggplot2
+#' @import rayshader
 plot_3D <- function(df) {
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
   sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, 1))
@@ -31,6 +24,10 @@ plot_3D <- function(df) {
 #' if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
+#' @import dplyr
+#' @import ggplot2
+#' @import rayshader
+#' @import RColorBrewer
 plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
   stopifnot("Path should be a character specifying path to compare_plot_data file!" =
               is.character(path))
@@ -72,6 +69,10 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 #'  if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
+#' @import dplyr
+#' @import ggplot2
+#' @import RColorBrewer
+#' @import rayshader
 plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
               is.character(path))
@@ -118,6 +119,10 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 #' if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
+#' @import dplyr
+#' @import ggplot2
+#' @import RColorBrewer
+#' @import rayshader
 plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
               is.character(path))
@@ -164,6 +169,10 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 #'  if FALSE only 2D plots are returned
 #'
 #' @example plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
+#' @import dplyr
+#' @import ggplot2
+#' @import RColorBrewer
+#' @import rayshader
 plot_3D_compare_m_DIFF <- function(path, margin=0.01, render=FALSE) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
               is.character(path))
