@@ -65,7 +65,8 @@ simul_plot_bagging <- function() {
 
 
 #' Method to test performance of quantiles
-compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
+#' @example compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
+compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=100) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
 
   for (i in 1:reps) {
@@ -78,19 +79,22 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
 
     coords <- matrix(c(rep(seq(-k,k,len=l), each=l), rep(seq(-k, k, len=l), times=l)), ncol=2)
     test_data <- data.frame(x1=coords[, 1], x2=coords[, 2], y=(sin(sqrt(coords[, 1]**2+coords[, 2]**2))/(sqrt(coords[, 1]**2+coords[, 2]**2))))
-    end_time <- Sys.time()
 
     #predicting without quantiles
     start_time <- Sys.time()
     pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = random_forest) # predicting with current tree
-    pe_mat[i, 1] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    pe_mat[i, 1] <- 1/n * sum((pred - test_data[, ncol(test_data)])**2)
+    end_time <- Sys.time()
     pe_mat[i, 2] <- end_time - start_time
 
     #predicting with quantiles
     start_time <- Sys.time()
     pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = random_forest, quantile = TRUE) # predicting with current tree
-    pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    pe_mat[i, 3] <- 1/n * sum((pred - test_data[, ncol(test_data)])**2)
+    end_time <- Sys.time()
     pe_mat[i, 4] <- end_time - start_time
+
+    print(str_c("Finished ", i, "th repetition!"))
 
   }
 
