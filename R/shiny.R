@@ -1,3 +1,7 @@
+library(shiny)
+library(shinydashboard)
+library(shinyjs)
+
 #rf_plot <- function(datatype, n=500, d=2, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
 
 #' Method for generating plots in the shiny app
