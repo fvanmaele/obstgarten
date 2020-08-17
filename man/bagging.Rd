@@ -12,7 +12,10 @@ bagging(
   m = NULL,
   regression = TRUE,
   use_parallel = FALSE,
-  random_forest = FALSE
+  random_forest = FALSE,
+  quantile = FALSE,
+  q_threshold = 100L,
+  q_pct = 0.25
 )
 }
 \arguments{
@@ -28,6 +31,15 @@ bagging(
 regression tree. default=TRUE, TRUE for regression, FALSE for classification}
 
 \item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
+
+\item{quantile}{whether to use quantiles for computing the optimal
+subdivision (\code{logical}, defaults to \code{FALSE})}
+
+\item{q_threshold}{minimal of data points for using quantiles (\code{integer},
+defaults to \code{100L})}
+
+\item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
+set size. (\code{numeric}, defaults to \code{0.25})}
 
 \item{use_parallel:}{Whether to use parallel computation or not}
 }

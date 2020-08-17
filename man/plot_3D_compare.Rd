@@ -5,7 +5,7 @@
 \title{Method to plot 3D comparisons of predictions
 for different methods}
 \usage{
-plot_3D_compare(path, render = FALSE)
+plot_3D_compare(path, render = FALSE, margin = 1)
 }
 \arguments{
 \item{path}{character specifying path to compare_plot_data file}

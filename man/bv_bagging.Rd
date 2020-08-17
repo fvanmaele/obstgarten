@@ -12,3 +12,8 @@ bv_bagging(bs_list, sigma = 0.2, n = 150, reps = 400)
 \description{
 bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
 }
+\examples{
+# generate test date for different depths values of the CART algorithm with 400
+# reps and 150 data points
+bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
+}
