@@ -2,16 +2,23 @@
 % Please edit documentation in R/greedy.R
 \name{cart_part}
 \alias{cart_part}
-\title{Title}
+\title{Cart partition}
 \usage{
 cart_part(s, j, A)
 }
 \arguments{
-\item{A}{}
+\item{s}{point at which the data is separated (numeric)}
+
+\item{j}{dimension of the data (numeric)}
+
+\item{A}{data (data.frame or matrix)}
 }
 \value{
-
+seperated data A as list
 }
 \description{
-Title
+seperates the data A at s
+}
+\examples{
+cart_part(0.5,1,generate_sin_data(10))
 }

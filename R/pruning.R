@@ -25,7 +25,7 @@
 #' @param lambda Cost weight.
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`), pruned according to Cost-Complexity
-#' @examples
+#' @examples cart_greedy_prune(generate_sin_data(100))
 #' @export
 cart_greedy_prune <- function(XY, depth = 10L, mode="regression", threshold = 1L,
                               sample = FALSE, random = FALSE, m = 0L,

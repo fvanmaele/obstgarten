@@ -13,3 +13,6 @@ Method to Plot Predicted Density of a Random Forest
 for a two dimensional case for a sine generated dataset
 (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
 }
+\examples{
+pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
+}

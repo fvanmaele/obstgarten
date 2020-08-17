@@ -17,3 +17,7 @@ different parameters m.
 compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
 CAUTION CPU EXPENSIVE TAKES LONG
 }
+\examples{
+compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1) CAUTION CPU EXPENSIVE TAKES LONG
+
+}

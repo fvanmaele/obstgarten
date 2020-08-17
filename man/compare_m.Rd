@@ -15,3 +15,6 @@ Quality of the Random Forests for
 different parameters m.
 compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
 }
+\examples{
+compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
+}

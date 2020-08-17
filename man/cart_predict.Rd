@@ -2,16 +2,18 @@
 % Please edit documentation in R/greedy.R
 \name{cart_predict}
 \alias{cart_predict}
-\title{Title}
+\title{cart_predict}
 \usage{
 cart_predict(x, node)
 }
 \arguments{
-\item{node}{}
+\item{x}{(verctor)}
+
+\item{node}{(node)}
 }
 \value{
 
 }
 \description{
-Title
+returns y of leaf nodes
 }
