@@ -41,81 +41,37 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 }
 
 
-#' bias variance plot for CARTs for different depths
-#'
-#' @example load("data/simul/bv_greedy_20200810-101102")
-#'          bv_plot(bv_data)
-bv_plot <- function(data, plot_title="Prediction CART Regression Tree", bagging=FALSE) {
+#' bias variance data for 400 reps for pruned CARTs with different pruning parameter
+#' @example generate test date for different depths values of the CART algorithm with 400 reps
+#' and 150 data points bv_greedy(list(0.01, 0.1, 1., 10.), n=150, reps=400, sigma=0.25)
+bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=400) {
 
-  grid <- seq(0, 1, len=150)
-
-  depth_list <- data[[1]]
-  data <- data[[2]]
-  pd <- position_dodge(0.1)
-
-  plt_data <- data[[1]]
-  df1 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
-  plt_data <- data[[2]]
-  df2 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
-  plt_data <- data[[3]]
-  df3 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
-  plt_data <- data[[4]]
-  df4 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
-
-  if (bagging) {
-    plt_data <- data[[4]]
-    df1 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
-    plt_data <- data[[3]]
-    df2 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
-    plt_data <- data[[2]]
-    df3 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
-    plt_data <- data[[1]]
-    df4 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
   }
 
-  if (!bagging) {
-    gg <- ggplot(df1, aes(x=grid, y=mean)) +
-      scale_colour_manual("",
-                          breaks = c("depth 2", "depth 5", "depth 10", "depth 15"),
-                          values = c("depth 2"="red", "depth 5"="grey", "depth 10"="blue",
-                                     "depth 15"="green")) +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df4, alpha=0.5, outline.type="both") +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", data=df2, alpha=0.5, outline.type="both") +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", alpha=0.5, outline.type="both") +
-      geom_line(aes(x=grid, y=sin(2*pi*grid))) +
-      geom_line(aes(x=grid, y=mean, colour="depth 15"), data=df4, alpha=1) +
-      geom_line(aes(x=grid, y=mean, colour="depth 10"), data=df3, alpha=1) +
-      geom_line(aes(x=grid, y=mean, colour="depth 5"), data=df2, alpha=1) +
-      geom_line(alpha=1, aes(colour="depth 2")) +
-      ggtitle(plot_title) +
-      ylab("") +
-      xlab("") +
-      bbc_style()
-  }
-  else {
-    gg <- ggplot(df4, aes(x=grid, y=mean)) +
-      scale_colour_manual("",
-                          breaks = c("B = 1", "B = 5", "B = 25", "B = 100"),
-                          values = c("B = 1"="grey", "B = 5"="blue", "B = 25"="green",
-                                     "B = 100"="red")) +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df1, alpha=0.5, outline.type="both") +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df2, alpha=0.5, outline.type="both") +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
-      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", alpha=0.5, outline.type="both") +
-      geom_line(aes(x=grid, y=sin(2*pi*grid))) +
-      geom_line(aes(x=grid, y=mean, colour="B = 100"), data=df1, alpha=1) +
-      geom_line(aes(x=grid, y=mean, colour="B = 25"), data=df2, alpha=1) +
-      geom_line(aes(x=grid, y=mean, colour="B = 5"), data=df3, alpha=1) +
-      geom_line(alpha=1, aes(colour="B = 1")) +
-      ggtitle(plot_title) +
-      ylab("") +
-      xlab("") +
-      bbc_style()
-  }
+  params_list <- list()
+  ret <- list()
+  count <- 1
 
-  print(gg)
+  for (lam in lambda_list) {
+    pred <- matrix(0., nrow=reps, ncol=n)
 
+    params_list[[count]] <- lam
+    grid <- seq(0, 1, len=n)
+
+    for (i in 1:reps) {
+      x <- generate_sin_data(n, grid=grid, sigma=sigma)
+      dimnames(x) <- list(NULL, c(1, "y"))
+      tree <- cart_greedy_prune(x, depth=5, lambda=lam)
+      pred[i, ] <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
+    }
+
+    ret[[count]] <- apply(pred, MARGIN=2, function(x) c(mean(x), sd(x)))
+    count <- count + 1
+  }
+  bv_data <- list(params_list, ret)
+  save("bv_data", file=str_c("data/simul/","bv_pruning_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
 
@@ -153,3 +109,102 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
 # load("data/simul/bv_bagging_20200810-115904")
 # bv_plot(bv_data)
+
+
+#' bias variance plot for CARTs for different depths
+#'
+#' @example load("data/simul/bv_greedy_20200810-101102")
+#'          bv_plot(bv_data)
+bv_plot <- function(data, plot_title="Prediction CART Regression Tree", bagging=FALSE, pruning=FALSE) {
+
+  grid <- seq(0, 1, len=150)
+
+  depth_list <- data[[1]]
+  data <- data[[2]]
+  pd <- position_dodge(0.1)
+
+  plt_data <- data[[1]]
+  df1 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+  plt_data <- data[[2]]
+  df2 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+  plt_data <- data[[3]]
+  df3 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+  plt_data <- data[[4]]
+  df4 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+
+  if (bagging) {
+    plt_data <- data[[4]]
+    df1 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+    plt_data <- data[[3]]
+    df2 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+    plt_data <- data[[2]]
+    df3 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+    plt_data <- data[[1]]
+    df4 <- data.frame(x=grid, mean=plt_data[1,], std=plt_data[2, ])
+  }
+
+  if (!bagging && !pruning) {
+    gg <- ggplot(df1, aes(x=grid, y=mean)) +
+      scale_colour_manual("",
+                          breaks = c("depth 2", "depth 5", "depth 10", "depth 15"),
+                          values = c("depth 2"="red", "depth 5"="grey", "depth 10"="blue",
+                                     "depth 15"="green")) +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df4, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", data=df2, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", alpha=0.5, outline.type="both") +
+      geom_line(aes(x=grid, y=sin(2*pi*grid))) +
+      geom_line(aes(x=grid, y=mean, colour="depth 15"), data=df4, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="depth 10"), data=df3, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="depth 5"), data=df2, alpha=1) +
+      geom_line(alpha=1, aes(colour="depth 2")) +
+      ggtitle(plot_title) +
+      ylab("") +
+      xlab("") +
+      bbc_style()
+  }
+  else if (bagging) {
+    gg <- ggplot(df4, aes(x=grid, y=mean)) +
+      scale_colour_manual("",
+                          breaks = c("B = 1", "B = 5", "B = 25", "B = 100"),
+                          values = c("B = 1"="grey", "B = 5"="blue", "B = 25"="green",
+                                     "B = 100"="red")) +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df1, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df2, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", alpha=0.5, outline.type="both") +
+      geom_line(aes(x=grid, y=sin(2*pi*grid))) +
+      geom_line(aes(x=grid, y=mean, colour="B = 100"), data=df1, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="B = 25"), data=df2, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="B = 5"), data=df3, alpha=1) +
+      geom_line(alpha=1, aes(colour="B = 1")) +
+      ggtitle(plot_title) +
+      ylab("") +
+      xlab("") +
+      bbc_style()
+  }
+  elseif (pruning) {
+    gg <- ggplot(df4, aes(x=grid, y=mean)) +
+      scale_colour_manual("",
+                          breaks = c("Lambda = ", "Lambda = ", "Lambda = ", "Lambda = "),
+                          values = c("Lambda = "="grey", "Lambda = "="blue", "Lambda = "="green",
+                                     "Lambda = "="red")) +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df1, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df2, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
+      geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", alpha=0.5, outline.type="both") +
+      geom_line(aes(x=grid, y=sin(2*pi*grid))) +
+      geom_line(aes(x=grid, y=mean, colour="Lambda = "), data=df1, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="Lambda = "), data=df2, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="Lambda = "), data=df3, alpha=1) +
+      geom_line(alpha=1, aes(colour="Lambda = ")) +
+      ggtitle(plot_title) +
+      ylab("") +
+      xlab("") +
+      bbc_style()
+  }
+
+  print(gg)
+
+}
+
