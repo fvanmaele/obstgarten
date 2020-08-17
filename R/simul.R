@@ -27,6 +27,25 @@ simul_plot_greedy <- function() {
 }
 
 
+simul_plot_pruning <- function() {
+  lambda_list <- list(0.01, 0.1, 1., 10.)
+  plot_list <- list()
+  count <- 1
+  for (depth in depth_list) {
+    plot_list[[count]] <- pred_plot_pruning(n = 100, depth=5, simul=TRUE)
+    count <- count + 1
+  }
+  grid.arrange(plot_list[[1]] + ggtitle("lambda = 0.01") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[2]] + ggtitle("lambda = 0.1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[3]] + ggtitle("lambda = 1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[4]]  + ggtitle("lambda = 10") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               nrow = 2,
+               top = textGrob("Pruned Regression Tree Predictors",
+                              gp=gpar(fontsize=14))
+  )
+}
+
+
 simul_plot_bagging <- function() {
   B_list <- list(1L, 5L, 25L, 100L)
   plot_list <- list()
@@ -125,7 +144,7 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
     xy_test <- as.matrix(testing_data[[1]])
 
     # predicting with CART
-    tree <- cart_greedy(xy, depth=5, random=FALSE)
+    tree <- cart_greedy(xy, depth=5, random=FALSE, quantile = TRUE)
     pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                    function(x) cart_predict(x, node=tree$root))
     # calculating prediction error
@@ -134,14 +153,17 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
 
     # predicting with CART and pruning
     # yet to implement
-    pe_mat[i, 2] <- 0.
+    tree <- cart_greedy_prune(xy, depth=5, random=FALSE, quantile = TRUE)
+    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                  function(x) cart_predict(x, node=tree$root))
+    pe_mat[i, 2] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
 
     # predicting with Bagging alg
-    pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
+    pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE, quantile = TRUE)
     pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2) # calculating prediction error
 
     # predicting with Random Forest
-    pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE)
+    pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE, quantile = TRUE)
     pe_mat[i, 4] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2) # calculating prediction error
 
     print(str_c("Finished ", i, "th repetition!"))
@@ -266,8 +288,10 @@ compare_methods <- function(d, n, B=100L) {
 
   # predicting with CART and pruning
   # yet to implement
-  pred_pruning <- 0.
-  ret$pruning <- pred_pruning
+  tree <- cart_greedy_prune(xy, depth=5, random=FALSE)
+  pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                function(x) cart_predict(x, node=tree$root))
+  ret$pruning <- pred
 
   # predicting with Bagging alg
   pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
@@ -342,9 +366,10 @@ compare_classify_iris <- function(depth=5L, B=100L) {
   ret$CART <- pred
 
   # predicting with CART and pruning
-  # yet to implement
-  pred_pruning <- 0.
-  ret$pruning <- pred_pruning
+  tree <- cart_greedy_prune(xy_train, depth=depth, random=FALSE, mode = "classification")
+  pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                      function(x) cart_predict(x, node=tree$root)))
+  ret$pruning <- pred
 
   # predicting with Bagging alg
   pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
