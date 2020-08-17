@@ -40,5 +40,10 @@ Imports:
     shiny,
     shinyjs,
     parallel,
-    bbplot
+    bbplot,
+    stringr,
+    grid,
+    gridExtra,
+    rayshader,
+    RColorBrewer
 VignetteBuilder: knitr
