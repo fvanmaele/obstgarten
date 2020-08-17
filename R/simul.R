@@ -64,6 +64,44 @@ simul_plot_bagging <- function() {
 # }
 
 
+#' Method to test performance of quantiles
+compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
+  pe_mat <- matrix(0., nrow=reps, ncol=4)
+
+  for (i in 1:reps) {
+
+    data <- generate_sin_2D(n=n, sigma=sd, k=k)
+
+    l <- round(sqrt(n))
+
+    #creating test data
+
+    coords <- matrix(c(rep(seq(-k,k,len=l), each=l), rep(seq(-k, k, len=l), times=l)), ncol=2)
+    test_data <- data.frame(x1=coords[, 1], x2=coords[, 2], y=(sin(sqrt(coords[, 1]**2+coords[, 2]**2))/(sqrt(coords[, 1]**2+coords[, 2]**2))))
+    end_time <- Sys.time()
+
+    #predicting without quantiles
+    start_time <- Sys.time()
+    pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = random_forest) # predicting with current tree
+    pe_mat[i, 1] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    pe_mat[i, 2] <- end_time - start_time
+
+    #predicting with quantiles
+    start_time <- Sys.time()
+    pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = random_forest, quantile = TRUE) # predicting with current tree
+    pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    pe_mat[i, 4] <- end_time - start_time
+
+  }
+
+  ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat)
+  save("ret", file=str_c("data/simul/","performance_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+
+}
+
+# pred_plot_sine2D(n=1000, B=5L, depth=5, sd=0.1, k=10)
+
+
 #' Method to quantitavely compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
