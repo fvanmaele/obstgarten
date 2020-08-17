@@ -235,9 +235,9 @@ Baum <- R6::R6Class("Baum",
       })
       stopifnot(all(a1))
 
-      # ensure all inner nodes have $y unset (NA) and $j, $s set
+      # ensure all inner nodes have $j, $s set
       a2 <- sapply(self$nodes[!idx], function(node) {
-        all(!is.na(node$j), !is.na(node$s), is.na(node$y))
+        all(!is.na(node$j), !is.na(node$s))
       })
       stopifnot(all(a2))
 

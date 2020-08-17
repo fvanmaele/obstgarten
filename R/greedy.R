@@ -224,7 +224,7 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
         # TODO: pass correct range to R_min (instead of S[params$j])
         node$j <- S[params$j]
         node$s <- params$s # node$points (of data) set in previous iteration
-        node$y <- NA
+        #node$y <- NA
 
         # update attributes of left child
         rows_lt <- node$points[, node$j] < node$s
@@ -268,13 +268,12 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
 #'
 #' @description returns y of leaf nodes
 #'
-#' @param x (verctor)
-#' @param node (node)
-#'
+#' @param x (`vector`)
+#' @param node (`Gabel`)
 #' @return
 #' @export
 #'
-cart_predict <-  function(x, node) { # list or vector
+cart_predict <- function(x, node) { # list or vector
   # check if vector x matches tree dimension
   stopifnot(length(x) == (ncol(node$points)-1))
 
@@ -287,3 +286,4 @@ cart_predict <-  function(x, node) { # list or vector
     return(cart_predict(x, node$childR))
   }
 }
+
