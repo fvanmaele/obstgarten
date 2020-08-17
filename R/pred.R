@@ -263,7 +263,7 @@ pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L, simul=FALSE) {
   grid <- seq(mu[display_d] - 2*sigma[display_d, display_d], mu[display_d] + 2*sigma[display_d, display_d], len=n)
   gridmat <- matrix(0., nrow=n, ncol=d)
   gridmat[, display_d] <- grid
-  true_val <- apply(gridmat, MARGIN=1, dmvnorm, mu, sigma)
+  true_val <- apply(gridmat, MARGIN=1, mvtnorm::dmvnorm, mu, sigma)
 
   # data for testing prediction
   x_test <- x

@@ -22,7 +22,7 @@ test_that("cart_greedy: argument XY", {
 
   # d>1
   d <- sample(2:5, 1)
-  XY <- generate_mult_data(n=50, d=d, sigma=diag(d), mu=rep(0., d))
+  XY <- generate_mult_data(n=50, d=d, sigma=diag(d), mu=rep(0., d))[[1]]
   depth_s <-  sample(2:5, 1)
   res <- cart_greedy(XY, depth = depth_s)
   expect_s3_class(res, "Baum")
@@ -32,7 +32,7 @@ test_that("cart_greedy: argument XY", {
 test_that("cart_greedy: argument random", {
   d <- sample(1:5, 1)
   m <- sample(1:d, 1)
-  XY <- generate_mult_data(n=50, d=d, sigma=diag(d), mu=rep(0., d))
+  XY <- generate_mult_data(n=50, d=d, sigma=diag(d), mu=rep(0., d))[[1]]
   depth_s <-  sample(2:5, 1)
 
   # m > d -> error
