@@ -89,11 +89,11 @@ In higher dimensions fitting trees to random dimensional subsets of the features
 In this section the prediction performance of the methods are compared. To do so, the same multidimensional dataset as in section two is employed and the results are evaluated qualitatively as well as quantitavely in form of the prediction error.
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-# suppressMessages(plot_3D_compare_m("data/compare_methods", margin=0.5, render = FALSE))
+suppressMessages(plot_3D_compare("data/compare_methods_wo_pruning", margin=1., render = FALSE))
 ```
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-# suppressMessages(plot_3D_compare_m_DIFF("data/compare_methods", margin=0.2, render = FALSE))
+suppressMessages(plot_3D_compare_DIFF("data/compare_methods_wo_pruning", margin=0.2, render = FALSE))
 ```
 
 |                  | CART | Pruning | Bagging | Random Forest |
