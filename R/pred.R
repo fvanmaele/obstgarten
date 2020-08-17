@@ -131,7 +131,7 @@ pred_plot_pruning <- function(lambda, depth=5, sigma=0.25, n=150, random_forest=
 #' @param B integer number of bootstrap samples
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
-#' @example pred_plot_bagging(100, sigma=0.25, n=150)
+#' pred_plot_bagging(100, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_forest=FALSE, simul=FALSE) {

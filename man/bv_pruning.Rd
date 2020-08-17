@@ -7,10 +7,7 @@
 bv_pruning(lambda_list, sigma = 0.2, n = 150, reps = 400)
 }
 \description{
-bias variance data for 400 reps for pruned CARTs with different pruning parameter
-}
-\examples{
-# generate test data for different depths values of the CART algorithm with 400
-# reps and 150 data points
-bv_greedy(list(0.01, 0.1, 1., 10.), n=150, reps=400, sigma=0.25)
+generate test data for different depths values of the CART algorithm with 400
+reps and 150 data points
+bv_pruning(list(0.01, 0.1, 1., 10.), n=150, reps=400, sigma=0.25)
 }

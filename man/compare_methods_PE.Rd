@@ -4,7 +4,9 @@
 \alias{compare_methods_PE}
 \title{Method to quantitavely compare Prediction
 Quality of the four different methods for
-high dimensional data.}
+high dimensional data.
+compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
+TAKES VERY LONG CPU EXPENSIVE}
 \usage{
 compare_methods_PE(d, n, B = 100L, reps = 400)
 }
@@ -12,4 +14,6 @@ compare_methods_PE(d, n, B = 100L, reps = 400)
 Method to quantitavely compare Prediction
 Quality of the four different methods for
 high dimensional data.
+compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
+TAKES VERY LONG CPU EXPENSIVE
 }

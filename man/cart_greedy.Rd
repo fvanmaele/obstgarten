@@ -48,6 +48,12 @@ set size. (\code{numeric}, defaults to \code{0.25})}
 \value{
 A regression or classification tree modeled after the training data
 (\code{Baum})
+
+n <- 150
+M <- generate_sin_data(n, sigma=0.2)
+dimnames(M) <- list(NULL, c(1, "y"))
+T2 <- cart_greedy(M, depth=20, threshold=1)
+T2$validate()
 }
 \description{
 Create a regression or classification tree tree greedily based
@@ -57,11 +63,4 @@ on training data.
 Unless \code{sample} is set to \code{TRUE}, it is required that there are no observations
 \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
 X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
-}
-\examples{
-n <- 150
-M <- generate_sin_data(n, sigma=0.2)
-dimnames(M) <- list(NULL, c(1, "y"))
-T2 <- cart_greedy(M, depth=20, threshold=1)
-T2$validate()
 }

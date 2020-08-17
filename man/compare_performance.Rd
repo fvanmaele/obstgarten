@@ -2,10 +2,12 @@
 % Please edit documentation in R/simul.R
 \name{compare_performance}
 \alias{compare_performance}
-\title{Method to test performance of quantiles}
+\title{Method to test performance of quantiles
+compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)}
 \usage{
 compare_performance(n, B, depth, sd, k = 10, random_forest = TRUE, reps = 100)
 }
 \description{
 Method to test performance of quantiles
+compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
 }

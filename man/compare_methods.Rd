@@ -4,7 +4,8 @@
 \alias{compare_methods}
 \title{Method to qualitatively compare Prediction
 Quality of the four different methods for
-high dimensional data.}
+high dimensional data.
+compare_methods(d=3, n=1000, B=100L)}
 \usage{
 compare_methods(d, n, B = 100L)
 }
@@ -12,4 +13,5 @@ compare_methods(d, n, B = 100L)
 Method to qualitatively compare Prediction
 Quality of the four different methods for
 high dimensional data.
+compare_methods(d=3, n=1000, B=100L)
 }

@@ -18,7 +18,9 @@ pred_plot_bagging(
 \arguments{
 \item{B}{integer number of bootstrap samples}
 
-\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging
+
+pred_plot_bagging(100, sigma=0.25, n=150)}
 }
 \description{
 plots prediction of Bagging generated regression tree with depth 5

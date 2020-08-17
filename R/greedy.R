@@ -156,7 +156,7 @@ R_min <- function(A, d, mode = "regression", ...) {
 #'   set size. (`numeric`, defaults to `0.25`)
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`)
-#' @examples
+#'
 #' n <- 150
 #' M <- generate_sin_data(n, sigma=0.2)
 #' dimnames(M) <- list(NULL, c(1, "y"))

@@ -11,7 +11,9 @@ plot_3D_compare(path, render = FALSE, margin = 1)
 \item{path}{character specifying path to compare_plot_data file}
 
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
-if FALSE only 2D plots are returned}
+if FALSE only 2D plots are returned
+
+plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)}
 }
 \description{
 Method to plot 3D comparisons of predictions

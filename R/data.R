@@ -6,12 +6,12 @@
 #' @param grid specify data points on x axis only works for reg == TRUE
 #' @return if reg TRUE: n x 2 matrix [x_i, y_i] of generated data set
 #' @return if reg FALSE: n x 3 matrix [x_1i, x_2i, y_i] of generated data set
-#' @examples
-#' # regression:
+#'
+#' regression:
 #' dat <- generate_sin_data(100, sigma=0.2)
 #' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(-1, 1))
 #'
-#' # classification:
+#' classification:
 #' dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
 #' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(0, 1), col=dat[, 3])
 #' @export
@@ -69,7 +69,7 @@ generate_sin_2D <- function(n, sigma=0.2, k=10) {
 #' @param n dimensional vector with feature means
 #' @param sigma positive definite square covariance matrix
 #' @return list(df of data, feature means vector, covariance matrix)
-#' @examples
+#'
 #' generate_mult_data(n=1000, d=5)
 #' @import mvtnorm
 #' @export

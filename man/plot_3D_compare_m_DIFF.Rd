@@ -11,7 +11,9 @@ plot_3D_compare_m_DIFF(path, margin = 0.01, render = FALSE)
 \item{path}{character specifying path to compare_RF_m file}
 
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
-if FALSE only 2D plots are returned}
+if FALSE only 2D plots are returned
+
+plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)}
 }
 \description{
 Method to plot 3D comparisons of prediction DIFFERENCES

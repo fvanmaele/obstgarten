@@ -1,7 +1,7 @@
 #' bias variance data for 400 reps for CARTs of different depths
-#' @examples
-#' # generate test data for different depths values of the CART algorithm with 400
-#' # reps and 150 data points
+#'
+#' generate test data for different depths values of the CART algorithm with 400
+#' reps and 150 data points
 #' bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
 bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 
@@ -35,10 +35,10 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 
 
 #' bias variance data for 400 reps for pruned CARTs with different pruning parameter
-#' @examples
-#' # generate test data for different depths values of the CART algorithm with 400
-#' # reps and 150 data points
-#' bv_greedy(list(0.01, 0.1, 1., 10.), n=150, reps=400, sigma=0.25)
+#'
+#' generate test data for different depths values of the CART algorithm with 400
+#' reps and 150 data points
+#' bv_pruning(list(0.01, 0.1, 1., 10.), n=150, reps=400, sigma=0.25)
 bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=400) {
 
   predict <- function(x) {
@@ -73,9 +73,8 @@ bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=400) {
 #' bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
 #' @param bs_list List of different integer bagging parameters B to be tested
 #'
-#' @examples
-#' # generate test date for different depths values of the CART algorithm with 400
-#' # reps and 150 data points
+#' generate test date for different depths values of the CART algorithm with 400
+#' reps and 150 data points
 #' bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
 bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
@@ -102,13 +101,10 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
   save("bv_data", file=str_c("data/simul/","bv_bagging_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
-# load("data/simul/bv_bagging_20200810-115904")
-# bv_plot(bv_data)
 
 
 #' bias variance plot for CARTs for different depths
 #'
-#' @examples
 #' load("data/simul/bv_greedy_20200810-101102")
 #' bv_plot(bv_data)
 #' @import ggplot2

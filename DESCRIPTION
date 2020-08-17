@@ -42,6 +42,8 @@ Imports:
     parallel,
     bbplot,
     stringr,
+    tidyr,
+    tidyverse,
     grid,
     gridExtra,
     rayshader,

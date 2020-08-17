@@ -4,7 +4,8 @@
 \alias{compare_m}
 \title{Method to qualitatively compare Prediction
 Quality of the Random Forests for
-different parameters m.}
+different parameters m.
+compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)}
 \usage{
 compare_m(m_list, d, n, B)
 }
@@ -12,4 +13,5 @@ compare_m(m_list, d, n, B)
 Method to qualitatively compare Prediction
 Quality of the Random Forests for
 different parameters m.
+compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
 }

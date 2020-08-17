@@ -7,10 +7,7 @@
 bv_greedy(depths_list, sigma = 0.2, n = 150, reps = 400)
 }
 \description{
-bias variance data for 400 reps for CARTs of different depths
-}
-\examples{
-# generate test data for different depths values of the CART algorithm with 400
-# reps and 150 data points
+generate test data for different depths values of the CART algorithm with 400
+reps and 150 data points
 bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
 }

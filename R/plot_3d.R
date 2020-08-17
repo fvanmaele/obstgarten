@@ -23,11 +23,13 @@ plot_3D <- function(df) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #' if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
+#' plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 #' @import dplyr
 #' @import ggplot2
 #' @import rayshader
 #' @import RColorBrewer
+#' @import tidyverse
+#' @import tidyr
 plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
   stopifnot("Path should be a character specifying path to compare_plot_data file!" =
               is.character(path))
@@ -35,7 +37,7 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 
   ret %>%
     rename("True"=y, "CART"=CART, "Pruning"=pruning, "Bagging"=bagging, "Random Forest" = rf) %>%
-    pivot_longer(cols = c(True, CART, Pruning, Bagging, "Random Forest"), names_to = c("pred")) -> df
+    tidyr::pivot_longer(cols = c(True, CART, Pruning, Bagging, "Random Forest"), names_to = c("pred")) -> df
 
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
   sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, margin))
@@ -68,7 +70,7 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #'  if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
+#' plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer
@@ -118,11 +120,13 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #' if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
+#' plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import rayshader
+#' @import tidyverse
+#' @import tidyr
 plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
               is.character(path))
@@ -134,7 +138,7 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 
   ret %>%
     rename("True"=m4, "m=1"=m1, "m=2"=m2, "m=3"=m3) %>%
-    pivot_longer(cols = c("True", "m=1", "m=2", "m=3"), names_to = c("pred")) -> df
+    tidyr::pivot_longer(cols = c("True", "m=1", "m=2", "m=3"), names_to = c("pred")) -> df
 
 
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
@@ -168,7 +172,7 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #'  if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
+#' plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer

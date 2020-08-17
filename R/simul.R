@@ -83,7 +83,7 @@ simul_plot_bagging <- function() {
 
 
 #' Method to test performance of quantiles
-#' @example compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
+#' compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
 #' @import stringr
 compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=100) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
@@ -128,7 +128,7 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
 #' Method to quantitavely compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
-#' @example compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
+#' compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
 #' TAKES VERY LONG CPU EXPENSIVE
 #' @import stringr
 compare_methods_PE <- function(d, n, B=100L, reps=400) {
@@ -179,7 +179,7 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
 #' Method to quantitavely compare Prediction
 #' Quality of the Random Forests for
 #' different parameters m.
-#' @example compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
+#' compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
 #' CAUTION CPU EXPENSIVE TAKES LONG
 #' @import stringr
 compare_m_PE <- function(m_list, d, n, B, reps=400) {
@@ -228,7 +228,7 @@ compare_m_PE <- function(m_list, d, n, B, reps=400) {
 #' Method to qualitatively compare Prediction
 #' Quality of the Random Forests for
 #' different parameters m.
-#' @example compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
+#' compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
 #' @import stringr
 compare_m <- function(m_list, d, n, B) {
   for (m in m_list) {
@@ -269,7 +269,7 @@ compare_m <- function(m_list, d, n, B) {
 #' Method to qualitatively compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
-#' @example compare_methods(d=3, n=1000, B=100L)
+#' compare_methods(d=3, n=1000, B=100L)
 #' @import stringr
 compare_methods <- function(d, n, B=100L) {
 
