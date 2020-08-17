@@ -38,6 +38,7 @@ label and its index in this list must match. In particular,
 \itemize{
 \item \href{#method-new}{\code{Baum$new()}}
 \item \href{#method-obstkorb}{\code{Baum$obstkorb()}}
+\item \href{#method-depth}{\code{Baum$depth()}}
 \item \href{#method-append}{\code{Baum$append()}}
 \item \href{#method-validate}{\code{Baum$validate()}}
 \item \href{#method-clone}{\code{Baum$clone()}}
@@ -79,6 +80,23 @@ Return leaf nodes in the tree.
 \subsection{Returns}{
 logical vector with TRUE for leaf nodes, and FALSE otherwise. As
 \verb{$nodes}, this vector is in BFS order.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-depth"></a>}}
+\if{latex}{\out{\hypertarget{method-depth}{}}}
+\subsection{Method \code{depth()}}{
+Return depth of the tree.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Baum$depth()}\if{html}{\out{</div>}}
+}
+
+\subsection{Details}{
+The tree depth is defined as the maximum depth of leaves in the tree.
+}
+
+\subsection{Returns}{
+(\code{integer})
 }
 }
 \if{html}{\out{<hr>}}

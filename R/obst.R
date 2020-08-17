@@ -183,6 +183,16 @@ Baum <- R6::R6Class("Baum",
     },
 
     #' @description
+    #' Return depth of the tree.
+    #' @details
+    #' The tree depth is defined as the maximum depth of leaves in the tree.
+    #' @return (`integer`)
+    depth = function() {
+      leaves <- self$obstkorb()
+      max(sapply(self$nodes[leaves], function(node) `$`(node, "depth")))
+    },
+
+    #' @description
     #' Add a pair of nodes to the binary tree.
     #' @param Parent The parent node to append to. (`Gabel`)
     #' @param Child1 The left child node to append. (`Gabel`)
