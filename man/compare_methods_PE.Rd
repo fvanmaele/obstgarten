@@ -13,3 +13,7 @@ Method to quantitavely compare Prediction
 Quality of the four different methods for
 high dimensional data.
 }
+\examples{
+compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!! TAKES VERY LONG CPU EXPENSIVE
+
+}

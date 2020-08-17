@@ -2,19 +2,33 @@
 % Please edit documentation in R/greedy.R
 \name{cart_grid}
 \alias{cart_grid}
-\title{Title}
+\title{cart_grid}
 \usage{
 cart_grid(A, d, f, quantile = FALSE, q_threshold = 100L, q_pct = 0.25)
 }
 \arguments{
-\item{q_pct}{}
+\item{A}{data (data.frame or matrix)}
+
+\item{d}{dimensions (numeric)}
+
+\item{f}{R_hat or C_hat (function)}
+
+\item{quantile}{whether to use quantiles for computing the optimal
+subdivision (\code{logical}, defaults to \code{FALSE})}
+
+\item{q_threshold}{minimal of data points for using quantiles (\code{integer},
+defaults to \code{100L})}
+
+\item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
+set size. (\code{numeric}, defaults to \code{0.25})}
 }
 \value{
 
 }
 \description{
-Title
+calculates all possible s and R
 }
 \examples{
+cart_grid(generate_sin_data(100), 1, R_hat)
 
 }

@@ -23,7 +23,7 @@ plot_3D <- function(df) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #' if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
+#' @examples plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 #' @import dplyr
 #' @import ggplot2
 #' @import rayshader
@@ -68,7 +68,7 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #'  if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
+#' @examples plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer
@@ -118,7 +118,7 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #' if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
+#' @examples plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer
@@ -168,7 +168,7 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #'  if FALSE only 2D plots are returned
 #'
-#' @example plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
+#' @examples plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer

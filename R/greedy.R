@@ -1,13 +1,13 @@
-#' Title
-#' @description
-#' @param s
-#' @param j
-#' @param A
+#' Cart partition
+#' @description seperates the data A at s
+#' @param s point at which the data is separated (numeric)
+#' @param j dimension of the data (numeric)
+#' @param A data (data.frame or matrix)
 #'
-#' @return
+#' @return seperated data A as list
 #' @export
 #'
-#' @examples
+#' @examples cart_part(0.5,1,generate_sin_data(10))
 cart_part <- function(s, j, A) {
   rows_lt <- A[, j] < s
   rows_gt <- !rows_lt
@@ -16,19 +16,22 @@ cart_part <- function(s, j, A) {
               A2 = A[rows_gt, , drop=FALSE]))
 }
 
-#' Title
-#' @description
-#' @param A
-#' @param d
-#' @param f
-#' @param quantile
-#' @param q_threshold
-#' @param q_pct
+#' cart_grid
+#' @description calculates all possible s and R
+#' @param A data (data.frame or matrix)
+#' @param d dimensions (numeric)
+#' @param f R_hat or C_hat (function)
+#' @param quantile whether to use quantiles for computing the optimal
+#'   subdivision (`logical`, defaults to `FALSE`)
+#' @param q_threshold minimal of data points for using quantiles (`integer`,
+#'   defaults to `100L`)
+#' @param q_pct amount of probabilities for `quantile()`, in pct. of the data
+#'   set size. (`numeric`, defaults to `0.25`)
 #'
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples cart_grid(generate_sin_data(100), 1, R_hat)
 #'
 cart_grid <- function(A, d, f, quantile = FALSE, q_threshold = 100L, q_pct = 0.25) {
   stopifnot(length(formals(f)) == 2)
@@ -261,16 +264,17 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
   return(Cart)
 }
 
-#' Title
+#' cart_predict
 #'
-#' @param x
-#' @param node
+#' @description returns y of leaf nodes
+#'
+#' @param x (verctor)
+#' @param node (node)
 #'
 #' @return
 #' @export
 #'
-#' @examples
-cart_predict = function(x, node) { # list or vector
+cart_predict <-  function(x, node) { # list or vector
   # check if vector x matches tree dimension
   stopifnot(length(x) == (ncol(node$points)-1))
 

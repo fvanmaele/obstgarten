@@ -13,3 +13,6 @@ Method to qualitatively compare Prediction
 Quality of the four different methods for
 high dimensional data.
 }
+\examples{
+compare_methods(d=3, n=1000, B=100L)
+}
