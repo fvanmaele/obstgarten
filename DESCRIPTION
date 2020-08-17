@@ -39,5 +39,6 @@ Imports:
     dplyr,
     shiny,
     shinyjs,
-    parallel
+    parallel,
+    bbplot
 VignetteBuilder: knitr
