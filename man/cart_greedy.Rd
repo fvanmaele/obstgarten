@@ -12,9 +12,9 @@ cart_greedy(
   sample = FALSE,
   random = FALSE,
   m = 0L,
+  quantile = FALSE,
   q_threshold = 100L,
-  q_pct = 0.25,
-  quantile = FALSE
+  q_pct = 0.25
 )
 }
 \arguments{
@@ -36,14 +36,14 @@ a regression or classification tree, respectively. Default is "regression"}
 \item{m}{The
 default: 0 so it only has to be set at random=TRUE (\code{numeric})}
 
+\item{quantile}{whether to use quantiles for computing the optimal
+subdivision (\code{logical}, defaults to \code{FALSE})}
+
 \item{q_threshold}{minimal of data points for using quantiles (\code{integer},
 defaults to \code{100L})}
 
 \item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
 set size. (\code{numeric}, defaults to \code{0.25})}
-
-\item{quantile}{whether to use quantiles for computing the optimal
-subdivision (\code{logical}, defaults to \code{FALSE})}
 }
 \value{
 A regression or classification tree modeled after the training data

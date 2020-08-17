@@ -1,5 +1,5 @@
 #' Title
-#'
+#' @description
 #' @param s
 #' @param j
 #' @param A
@@ -17,35 +17,48 @@ cart_part <- function(s, j, A) {
 }
 
 #' Title
-#'
+#' @description
 #' @param A
 #' @param d
 #' @param f
-#' @param ...
+#' @param quantile
+#' @param q_threshold
+#' @param q_pct
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-cart_grid <- function(A, d, f, q_threshold, q_pct, quantile) {
+cart_grid <- function(A, d, f, quantile = FALSE, q_threshold = 100L, q_pct = 0.25) {
   stopifnot(length(formals(f)) == 2)
   stopifnot(q_pct > 0 && q_pct < 1)
   stopifnot(is.integer(q_threshold))
   stopifnot(is.logical(quantile))
 
+  # disable quantiles if threshold of data points is not reached
+  if (nrow(A) <= q_threshold) {
+    quantile <- FALSE
+  }
+  G_dn <- list(NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
+  if (quantile) {
+    q_len <- ceiling(q_pct * nrow(A))
+    G <- array(dim=c(q_len, 2, d), dimnames=G_dn)
+  } else {
+    G <- array(dim=c(nrow(A), 2, d), dimnames=G_dn)
+  }
+
   # argmin: s_j \in (X_1j, .., X_nj) \sub A, j \in (1, .., d)
   for (j in 1:d) {
-    if (quantile && length(A[, j]) > q_threshold) {
-      probs = seq(0, 1, length.out = q_pct * length(A[, j]))
+    if (quantile) {
+      probs = seq(0, 1, length.out = q_len)
       stopifnot(length(probs) > 0)
+
       Q <- quantile(A[, j], probs = probs, names = FALSE)
+      stopifnot(length(Q) == q_len)
     } else {
       Q <- A[, j]
     }
-
-    G_dn <- list(NULL, c("s", "R"), sapply(1:d, function(i) paste0("j = ", i)))
-    G <- array(dim=c(length(Q), 2, d), dimnames=G_dn)
 
     for (i in seq_along(Q)) { # seq_along(A[, j])
       s <- Q[[i]] # s <- A[i, j]
@@ -64,6 +77,10 @@ cart_grid <- function(A, d, f, q_threshold, q_pct, quantile) {
   return(G)
 }
 
+#' Minimizer function for regression
+#' @param y1 (`numeric`)
+#' @param y2 (`numeric`)
+#' @export
 R_hat <- function(y1, y2) {
   c1_hat <- sum(y1) / length(y1)
   c2_hat <- sum(y2) / length(y2)
@@ -71,6 +88,10 @@ R_hat <- function(y1, y2) {
   return(sum((y1 - c1_hat)^2) + sum((y2 - c2_hat)^2))
 }
 
+#' Minimizer function for classification
+#' @param y1 (`numeric`)
+#' @param y2 (`numeric`)
+#' @export
 C_hat <- function(y1, y2) {
   c1_p <- max(sapply(unique(y1), function(k) length(y1[y1 == k]) / length(y1)))
   c2_p <- max(sapply(unique(y2), function(k) length(y2[y2 == k]) / length(y2)))
@@ -127,12 +148,12 @@ R_min <- function(A, d, mode = "regression", ...) {
 #' @param random generates CART for random forest (`logical`, default `FALSE`)
 #' @param m The
 #' default: 0 so it only has to be set at random=TRUE (`numeric`)
+#' @param quantile whether to use quantiles for computing the optimal
+#'   subdivision (`logical`, defaults to `FALSE`)
 #' @param q_threshold minimal of data points for using quantiles (`integer`,
 #'   defaults to `100L`)
 #' @param q_pct amount of probabilities for `quantile()`, in pct. of the data
 #'   set size. (`numeric`, defaults to `0.25`)
-#' @param quantile whether to use quantiles for computing the optimal
-#'   subdivision (`logical`, defaults to `FALSE`)
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`)
 #' @examples
@@ -144,7 +165,7 @@ R_min <- function(A, d, mode = "regression", ...) {
 #' @export
 cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
                         sample = FALSE, random = FALSE, m = 0L,
-                        q_threshold = 100L, q_pct = 0.25, quantile = FALSE) {
+                        quantile = FALSE, q_threshold = 100L, q_pct = 0.25) {
   stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
   stopifnot("depth is not numeric and greater than 0"= is.numeric(depth) & depth > 0L)
   stopifnot("threshold is not numeric and greater than 0"= is.numeric(threshold) & threshold > 0L)
@@ -191,7 +212,7 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
         # TODO: pass correct range to R_min (instead of d -> 1:d)
         # minimize with j out of S
         params <- R_min(node$points[, S, drop=FALSE], m, mode = mode,
-                        q_threshold = q_threshold, q_pct = q_pct, quantile = quantile)
+                        quantile = quantile, q_threshold = q_threshold, q_pct = q_pct)
         stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
         stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
         #params$j <- S[params$j]

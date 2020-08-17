@@ -4,10 +4,10 @@
 \alias{cart_grid}
 \title{Title}
 \usage{
-cart_grid(A, d, f, q_threshold, q_pct, quantile)
+cart_grid(A, d, f, quantile = FALSE, q_threshold = 100L, q_pct = 0.25)
 }
 \arguments{
-\item{...}{}
+\item{q_pct}{}
 }
 \value{
 
