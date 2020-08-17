@@ -71,6 +71,7 @@ generate_sin_2D <- function(n, sigma=0.2, k=10) {
 #' @return list(df of data, feature means vector, covariance matrix)
 #' @examples
 #' generate_mult_data(n=1000, d=5)
+#' @import mvtnorm
 #' @export
 generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
   if (is.null(sigma)) {
@@ -81,13 +82,13 @@ generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
     mu <- runif(d, min = -1, max = +1)
   }
 
-  data <- mvtnorm::rmvnorm(n, mean=mu, sigma=sigma)
+  data <- rmvnorm(n, mean=mu, sigma=sigma)
 
   # print(data)
 
   eps <- rnorm(n, mean=0, sd=sd)
 
-  y <- apply(data, mvtnorm::dmvnorm, mu, sigma, MARGIN = 1) + eps
+  y <- apply(data, dmvnorm, mu, sigma, MARGIN = 1) + eps
 
   data <- data.frame(x=data, y=y)
 
@@ -165,6 +166,7 @@ load_iris <- function() {
 #' rows are chosen randomly
 #'
 #' @return Classification Training and Classification Test Set
+#' @import dplyr
 prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) {
   iris <- load_iris()
 
@@ -175,7 +177,7 @@ prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) 
   iris$Species[iris$Species == "versicolor"] <- 2L
   iris$Species[iris$Species == "virginica"] <- 3L
 
-  dplyr::rename(iris, y=Species) -> iris
+  rename(iris, y=Species) -> iris
 
   # split into training and test set
   if (is.null(training_split_indices)) {
