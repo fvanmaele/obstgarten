@@ -1,7 +1,7 @@
 #' plots prediction of CART generated regression tree
 #'
 #' @param depth Integer depths of the CART generated regression tree
-#' @examples pred_plot_greedy(5, sigma=0.25, n=150)
+#' pred_plot_greedy(5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
@@ -46,7 +46,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simu
 #' plots prediction of CART generated decision tree
 #'
 #' @param depth Integer depths of the CART generated decision tree
-#' @examples pred_plot_greedy_class(5, sigma=0.25, n=150)
+#' pred_plot_greedy_class(5, sigma=0.25, n=150)
 #' @import dplyr
 #' @import ggplot2
 pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -86,7 +86,7 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' plots prediction of pruned CART generated regression tree
 #'
 #' @param depth Integer depths of the CART generated regression tree
-#' @examples pred_plot_greedy(5, sigma=0.25, n=150)
+#' pred_plot_greedy(5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_pruning <- function(lambda, depth=5, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
@@ -169,7 +169,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_for
 #' plots prediction of Bagging generated decision tree
 #'
 #' @param depth Integer depths of the bagging generated decision tree
-#' @examples pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
+#' pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -204,7 +204,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 #' Method to Plot Predicted Density of a Random Forest
 #' for a two dimensional case for a sine generated dataset
 #' (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
-#' @examples pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
+#' pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
 #' @import ggplot2
 pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
   data <- generate_sin_2D(n=n, sigma=sd, k=k)

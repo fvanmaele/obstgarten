@@ -21,6 +21,3 @@ Method to plot 3D comparisons of prediction SQUARED DIFFERENCES
 between ground truth and Random Forest Predictions for
 different m
 }
-\examples{
-plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
-}

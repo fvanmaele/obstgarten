@@ -19,6 +19,3 @@ plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)}
 Method to plot 3D comparisons of prediction DIFFERENCES
 between ground truth and Random Forest for different m
 }
-\examples{
-plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
-}

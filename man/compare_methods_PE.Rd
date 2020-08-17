@@ -17,7 +17,3 @@ high dimensional data.
 compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
 TAKES VERY LONG CPU EXPENSIVE
 }
-\examples{
-compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!! TAKES VERY LONG CPU EXPENSIVE
-
-}

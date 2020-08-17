@@ -19,6 +19,3 @@ plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)}
 Method to plot 3D comparisons of predictions
 for different methods
 }
-\examples{
-plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
-}

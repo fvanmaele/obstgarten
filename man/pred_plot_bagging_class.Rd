@@ -7,11 +7,9 @@
 pred_plot_bagging_class(B, depth, sigma = 0.25, n = 150, random_forest = FALSE)
 }
 \arguments{
-\item{depth}{Integer depths of the bagging generated decision tree}
+\item{depth}{Integer depths of the bagging generated decision tree
+pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)}
 }
 \description{
 plots prediction of Bagging generated decision tree
-}
-\examples{
-pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 }

@@ -13,11 +13,9 @@ pred_plot_greedy(
 )
 }
 \arguments{
-\item{depth}{Integer depths of the CART generated regression tree}
+\item{depth}{Integer depths of the CART generated regression tree
+pred_plot_greedy(5, sigma=0.25, n=150)}
 }
 \description{
 plots prediction of CART generated regression tree
-}
-\examples{
-pred_plot_greedy(5, sigma=0.25, n=150)
 }

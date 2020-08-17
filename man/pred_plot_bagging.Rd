@@ -26,6 +26,3 @@ pred_plot_bagging(100, sigma=0.25, n=150)}
 plots prediction of Bagging generated regression tree with depth 5
 and specified number of bootstrap samples B
 }
-\examples{
-pred_plot_bagging(100, sigma=0.25, n=150)
-}

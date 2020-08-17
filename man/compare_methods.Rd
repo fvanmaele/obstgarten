@@ -15,6 +15,3 @@ Quality of the four different methods for
 high dimensional data.
 compare_methods(d=3, n=1000, B=100L)
 }
-\examples{
-compare_methods(d=3, n=1000, B=100L)
-}

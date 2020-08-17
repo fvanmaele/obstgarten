@@ -4,7 +4,8 @@
 \alias{pred_plot_sine2D}
 \title{Method to Plot Predicted Density of a Random Forest
 for a two dimensional case for a sine generated dataset
-(sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))}
+(sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
+pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)}
 \usage{
 pred_plot_sine2D(n, B, depth, sd, k = 10, random_forest = TRUE)
 }
@@ -12,7 +13,5 @@ pred_plot_sine2D(n, B, depth, sd, k = 10, random_forest = TRUE)
 Method to Plot Predicted Density of a Random Forest
 for a two dimensional case for a sine generated dataset
 (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
-}
-\examples{
 pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
 }

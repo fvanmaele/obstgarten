@@ -61,3 +61,6 @@ Unless \code{sample} is set to \code{TRUE}, it is required that there are no obs
 \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
 X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
 }
+\examples{
+cart_greedy_prune(generate_sin_data(100))
+}
