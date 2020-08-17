@@ -183,7 +183,7 @@ bv_plot <- function(data, plot_title="Prediction CART Regression Tree", bagging=
       xlab("") +
       bbc_style()
   }
-  elseif (pruning) {
+  else if (pruning) {
     gg <- ggplot(df4, aes(x=grid, y=mean)) +
       scale_colour_manual("",
                           breaks = c("Lambda = ", "Lambda = ", "Lambda = ", "Lambda = "),
