@@ -21,10 +21,15 @@
 #' @param use_parallel: Whether to use parallel computation or not
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #' @param m Count of random dimensions in random forest. Is set on heuristically motivated values if m is NULL
-#'
+#' @param quantile whether to use quantiles for computing the optimal
+#'   subdivision (`logical`, defaults to `FALSE`)
+#' @param q_threshold minimal of data points for using quantiles (`integer`,
+#'   defaults to `100L`)
+#' @param q_pct amount of probabilities for `quantile()`, in pct. of the data
+#'   set size. (`numeric`, defaults to `0.25`)
 #' @return vector: of size Number of Samples containing bagged predictions to dataset
 #' character vector for classification case and double vector for regression case
-bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_parallel=FALSE, random_forest = FALSE) {
+bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_parallel=FALSE, random_forest = FALSE, quantile = FALSE, q_threshold = 100L, q_pct = 0.25) {
   stopifnot("B needs to be an integer." = is.integer(B))
   stopifnot("regression needs to be logical" = is.logical(regression))
   stopifnot("random_forest needs to be logical" = is.logical(random_forest))
@@ -49,7 +54,8 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
   fit_tree <- function(x_b, random, m) {
     # (over-)fitting tree to bootstrap sample via CART algorithm
     # dimnames(x_b) <- list(NULL, c(1, "y"))
-    trees[[i]] <- cart_greedy(x_b, depth=depth, mode = mode, threshold=1, random = random, m = m) # return cart for x_b
+    trees[[i]] <- cart_greedy(x_b, depth=depth, mode = mode, threshold=1, random = random,
+                              m = m, quantile = quantile, q_threshold = q_threshold, q_pct = q_pct) # return cart for x_b
     trees[[i]]$validate()
 
     predict <- function(x) {

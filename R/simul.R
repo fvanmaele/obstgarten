@@ -27,6 +27,25 @@ simul_plot_greedy <- function() {
 }
 
 
+simul_plot_pruning <- function() {
+  lambda_list <- list(0.01, 0.1, 1., 10.)
+  plot_list <- list()
+  count <- 1
+  for (depth in depth_list) {
+    plot_list[[count]] <- pred_plot_pruning(n = 100, depth=5, simul=TRUE)
+    count <- count + 1
+  }
+  grid.arrange(plot_list[[1]] + ggtitle("lambda = 0.01") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[2]] + ggtitle("lambda = 0.1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[3]] + ggtitle("lambda = 1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[4]]  + ggtitle("lambda = 10") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               nrow = 2,
+               top = textGrob("Pruned Regression Tree Predictors",
+                              gp=gpar(fontsize=14))
+  )
+}
+
+
 simul_plot_bagging <- function() {
   B_list <- list(1L, 5L, 25L, 100L)
   plot_list <- list()
@@ -64,6 +83,48 @@ simul_plot_bagging <- function() {
 # }
 
 
+#' Method to test performance of quantiles
+#' @example compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
+compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=100) {
+  pe_mat <- matrix(0., nrow=reps, ncol=4)
+
+  for (i in 1:reps) {
+
+    data <- generate_sin_2D(n=n, sigma=sd, k=k)
+
+    l <- round(sqrt(n))
+
+    #creating test data
+
+    coords <- matrix(c(rep(seq(-k,k,len=l), each=l), rep(seq(-k, k, len=l), times=l)), ncol=2)
+    test_data <- data.frame(x1=coords[, 1], x2=coords[, 2], y=(sin(sqrt(coords[, 1]**2+coords[, 2]**2))/(sqrt(coords[, 1]**2+coords[, 2]**2))))
+
+    #predicting without quantiles
+    start_time <- Sys.time()
+    pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = random_forest) # predicting with current tree
+    pe_mat[i, 1] <- 1/n * sum((pred - test_data[, ncol(test_data)])**2)
+    end_time <- Sys.time()
+    pe_mat[i, 2] <- end_time - start_time
+
+    #predicting with quantiles
+    start_time <- Sys.time()
+    pred <- bagging(depth=depth, B=B, x_train=data, x_test=test_data, random_forest = random_forest, quantile = TRUE) # predicting with current tree
+    pe_mat[i, 3] <- 1/n * sum((pred - test_data[, ncol(test_data)])**2)
+    end_time <- Sys.time()
+    pe_mat[i, 4] <- end_time - start_time
+
+    print(str_c("Finished ", i, "th repetition!"))
+
+  }
+
+  ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat)
+  save("ret", file=str_c("data/simul/","performance_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+
+}
+
+# pred_plot_sine2D(n=1000, B=5L, depth=5, sd=0.1, k=10)
+
+
 #' Method to quantitavely compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
@@ -83,7 +144,7 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
     xy_test <- as.matrix(testing_data[[1]])
 
     # predicting with CART
-    tree <- cart_greedy(xy, depth=5, random=FALSE)
+    tree <- cart_greedy(xy, depth=5, random=FALSE, quantile = TRUE)
     pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                    function(x) cart_predict(x, node=tree$root))
     # calculating prediction error
@@ -92,14 +153,17 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
 
     # predicting with CART and pruning
     # yet to implement
-    pe_mat[i, 2] <- 0.
+    tree <- cart_greedy_prune(xy, depth=5, random=FALSE, quantile = TRUE)
+    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                  function(x) cart_predict(x, node=tree$root))
+    pe_mat[i, 2] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
 
     # predicting with Bagging alg
-    pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
+    pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE, quantile = TRUE)
     pe_mat[i, 3] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2) # calculating prediction error
 
     # predicting with Random Forest
-    pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE)
+    pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE, quantile = TRUE)
     pe_mat[i, 4] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2) # calculating prediction error
 
     print(str_c("Finished ", i, "th repetition!"))
@@ -224,8 +288,10 @@ compare_methods <- function(d, n, B=100L) {
 
   # predicting with CART and pruning
   # yet to implement
-  pred_pruning <- 0.
-  ret$pruning <- pred_pruning
+  tree <- cart_greedy_prune(xy, depth=5, random=FALSE)
+  pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                function(x) cart_predict(x, node=tree$root))
+  ret$pruning <- pred
 
   # predicting with Bagging alg
   pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
@@ -300,9 +366,10 @@ compare_classify_iris <- function(depth=5L, B=100L) {
   ret$CART <- pred
 
   # predicting with CART and pruning
-  # yet to implement
-  pred_pruning <- 0.
-  ret$pruning <- pred_pruning
+  tree <- cart_greedy_prune(xy_train, depth=depth, random=FALSE, mode = "classification")
+  pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+                      function(x) cart_predict(x, node=tree$root)))
+  ret$pruning <- pred
 
   # predicting with Bagging alg
   pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,

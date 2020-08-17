@@ -87,7 +87,45 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 
 }
 
-# pred_plot_greedy_class(15, n=500)
+
+# plots prediction of pruned CART generated regression tree
+#'
+#' @param depth Integer depths of the CART generated regression tree
+#' @example pred_plot_greedy(5, sigma=0.25, n=150)
+pred_plot_pruning <- function(lambda, depth=5, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
+
+  grid <- seq(0, 1, len=n)
+
+  predict <- function(x) {
+    return(cart_predict(x, node=tree$root))
+  }
+
+  x <- generate_sin_data(n, grid=grid, sigma=sigma)
+
+  dimnames(x) <- list(NULL, c(1, "y"))
+  tree <- cart_greedy_prune(x, lambda=lambda, depth=depth, random=random_forest, m=1)
+  pred <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
+
+  df_plot <- data.frame(grid=grid, y=pred)
+
+  mse <- 1/n * sum((pred - sin(2*pi*grid)) ** 2)
+
+  gg <- ggplot(data=df_plot, mapping=aes(x=grid, y=pred)) +
+    scale_colour_manual("",
+                        breaks = c("Prediction", "True"),
+                        values = c("Prediction"="Blue", "True"="red")) +
+    geom_line(aes(colour="Prediction")) +
+    geom_line(aes(x=grid, y=sin(2*pi*grid), colour="True")) +
+    geom_point(aes(x=grid, y=x[, 2]), alpha=0.5) +
+    annotate("text", x=0.9, y=1.1, label= str_c("MSE: ", round(mse, digits=5))) +
+    ggtitle(str_c("Prediction of Pruned CART Regression Tree (lambda= ", lambda, ")")) +
+    xlab("") +
+    ylab("") +
+    bbc_style()
+
+  if (simul) return(gg)
+  else print(gg)
+}
 
 
 #' plots prediction of Bagging generated regression tree with depth 5

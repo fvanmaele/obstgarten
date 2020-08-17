@@ -13,9 +13,32 @@ test_that("cart_greedy: argument XY", {
   expect_error(cart_greedy(matrix(1:4, 1)))
   expect_error(cart_greedy(matrix(c(1,1,1,2,1,2), 2, 3)))
 
+  # d=1
   XY <- generate_sin_data(10)
   depth_s <-  sample(2:5, 1)
   res <- cart_greedy(XY, depth = depth_s)
+  expect_s3_class(res, "Baum")
+  expect_s3_class(res, "R6")
+
+  # d>1
+  d <- sample(2:5, 1)
+  XY <- generate_mult_data(n=50, d=d, sigma=diag(d), mu=rep(0., d))
+  depth_s <-  sample(2:5, 1)
+  res <- cart_greedy(XY, depth = depth_s)
+  expect_s3_class(res, "Baum")
+  expect_s3_class(res, "R6")
+})
+
+test_that("cart_greedy: argument random", {
+  d <- sample(1:5, 1)
+  m <- sample(1:d, 1)
+  XY <- generate_mult_data(n=50, d=d, sigma=diag(d), mu=rep(0., d))
+  depth_s <-  sample(2:5, 1)
+
+  # m > d -> error
+  expect_error(cart_greedy(XY, depth = depth_s, random = TRUE, m = d+1))
+
+  res <- cart_greedy(XY, depth = depth_s, random = TRUE, m = m)
   expect_s3_class(res, "Baum")
   expect_s3_class(res, "R6")
 })

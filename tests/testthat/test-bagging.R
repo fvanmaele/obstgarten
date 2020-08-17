@@ -18,3 +18,23 @@ test_that("bagging: argument x_train and x_test", {
   res <- bagging(B=B, x_train=x, x_test=x)
   expect_type(res, "double")
 })
+
+test_that("bagging: argument random forest", {
+  d <- sample(1:5, 1)
+  m <- sample(1:d, 1)
+  XY1 <- generate_mult_data(n=50, d=d, sigma=diag(d), mu=rep(0., d))
+  XY2 <- generate_mult_data(n=25, d=d, sigma=diag(d), mu=rep(0., d))
+
+  # m > d -> error
+  expect_error(bagging(B=10L, x_train = XY1, x_test = XY2, random = TRUE, m = d+1))
+
+  # set m
+  res <- bagging(B=10L, x_train = XY1, x_test = XY2, random = TRUE, m = m)
+  expect_s3_class(res, "Baum")
+  expect_s3_class(res, "R6")
+
+  # m <- NULL
+  res <- bagging(B=10L, x_train = XY1, x_test = XY2, random = TRUE)
+  expect_s3_class(res, "Baum")
+  expect_s3_class(res, "R6")
+})
