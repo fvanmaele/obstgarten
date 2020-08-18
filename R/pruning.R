@@ -119,7 +119,7 @@ cart_greedy_prune <-
     }
 
     mInnerNodes <- function(tree, mask) {
-      !mLeaves(tree, mask) && mask
+      !mLeafes(tree, mask) && mask
     }
 
     innerNodes <- function(tree, mask) {
@@ -181,10 +181,11 @@ cart_greedy_prune <-
     }
 
     p <- 1
+    mT <- vector()
     mT[1] <- rep(TRUE, times=length(Cart$nodes))
     # mLeavesTp <- Cart$obstkorb()  #logical vector
     # mINodesTp <- mInnerNodes(Cart, maskT[1])        #mask of Nodes without those being Leaves
-    iNodesTp <- InnerNodes(Cart, maskT[1])
+    iNodesTp <- innerNodes(Cart, maskT[1])
     cT[1] <- complexity(Cart, maskT[1])
 
     while (mDepth(Cart, maskT[p]) > 0) {
@@ -201,7 +202,7 @@ cart_greedy_prune <-
 
       pivot <- rank(min(wlp))
       mT[p+1] <- pruneAt(iNodesTp[pivot], mT[p])
-      iNodesTp <- InnerNodes(Cart, mT[p+1])
+      iNodesTp <- innerNodes(Cart, mT[p+1])
       cT[p+1] <- complexity(mT[p+1])
       p = p + 1
     } # END while
@@ -214,5 +215,5 @@ cart_greedy_prune <-
     } # p_hat <- R_hat(T) + lambda * complexity(T)
 
     p_hat_min <- rank(min(p_hat))
-    return(mT[p_hat_min])
+    return(list(Cart, mT[p_hat_min]))
   }
