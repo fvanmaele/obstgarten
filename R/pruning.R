@@ -120,32 +120,35 @@ cart_greedy_prune <-
 
     mLeafes <- function(tree, mask) {
       f <- function(node) {
-        if (!mask[node$label]) return(FALSE)
+        if (!mask[node$label])
+          return(FALSE)
 
-       if( (is.null(node$childL) && is.null(node$childR)) ) {
-         return(TRUE)
-       } else if ( (!mask[[node$childL$label]] && !mask[[node$childR$label]]) ) {
-         return(TRUE)
-       } else if (mask[[node$childL$label]] && mask[[node$childR$label]]){
-         return(FALSE)
-       } else {
-         print(node)
-         print(node$childL)
-         print(node$childR)
-         print(mask)
-         stop("malformed tree")
-       }
+        if ((is.null(node$childL) && is.null(node$childR))) {
+          return(TRUE)
+        } else if ((!mask[[node$childL$label]] &&
+                    !mask[[node$childR$label]])) {
+          return(TRUE)
+        } else if (mask[[node$childL$label]] &&
+                   mask[[node$childR$label]]) {
+          return(FALSE)
+        } else {
+          print(node)
+          print(node$childL)
+          print(node$childR)
+          print(mask)
+          stop("malformed tree")
+        }
       }
 
-      sapply(tree$nodes, f)
+     sapply(tree$nodes, f, simplify = TRUE)
     }
 
     mInnerNodes <- function(tree, mask) {
-      !mLeafes(tree, mask) && mask
+      !mLeafes(tree, mask) & mask
     }
 
     innerNodes <- function(tree, mask) {
-      tree$nodes[mInnerNodes(tree, mask)]
+       tree$nodes[mInnerNodes(tree, mask)]
     }
 
     Leafes <- function(tree, mask) {
@@ -154,13 +157,13 @@ cart_greedy_prune <-
     #    isLeaf <- function(node, mask) {
     #      return((is.null(node$childR) && is.null(node$childL)) || !mask[[node$childR$label]] && !mask[[node$childL$label]])
     #    }
-
-    mDepth <- function(tree, mask) {
-      max(sapply(Leafes(tree, mask), function(node) {`$`(node, "depth")}))
-    }
-
     mDepthL <- function(tree, Leafmask) {
       max(sapply(tree$nodes[Leafmask], function(node) {`$`(node, "depth")}))
+    }
+
+
+    mDepth <- function(tree, mask) {
+      max(sapply(tree$nodes[mask], function(node) {`$`(node, "depth")}))
     }
 
     complexity <- function(tree, mask) {
@@ -169,15 +172,15 @@ cart_greedy_prune <-
     }
 
     pruneAt  <- function(node, mask) {
-      if (!mask[node$label] || (is.null(node$childR) && is.null(node$childL)) ||
+      if (!mask[[node$label]] || (is.null(node$childR) && is.null(node$childL)) ||
           !mask[[node$childR$label]] && !mask[[node$childL$label]]) {
         return(mask)
       } else {
         mask[[node$childL$label]] <- FALSE
-        mask <- cart_prune(node$childL, mask)
+        mask <- pruneAt(node$childL, mask)
 
         mask[[node$childR$label]] <- FALSE
-        mask <- cart_prune(node$childR, mask)
+        mask <- pruneAt(node$childR, mask)
         return(mask)
       }
     }
@@ -192,7 +195,7 @@ cart_greedy_prune <-
      # print(m)
     #  print(b)
      # print(x)
-     # return(cart_predict_pruned(x, node = b$root, m))
+      return(cart_predict_pruned(x, node = b$root, m))
     }
    #   Cart$validate()
       n <- nrow(XY) # Anzahl Beobachtungen
@@ -209,7 +212,7 @@ cart_greedy_prune <-
         stop("Invalid mode in Risk(). Must be regression or classification")
       }
       return(R)
-    }
+    } #END Risk()
 
     p <- 1
     mT <- list()
@@ -222,9 +225,11 @@ cart_greedy_prune <-
     cT[1] <- complexity(Cart, mT[[1]])
 
     while (mDepth(Cart, mT[[p]]) > 0) {
+print("STARTwhile")
+print(p)
 print(mDepth(Cart, mT[[p]]))
 #print(mT[[p]])
-print(p)
+
       # Berechne den weakest link
       mT_test <- vector()
       wlp <- vector()
@@ -232,13 +237,19 @@ print(p)
       for (node in iNodesTp ) {
         i <- i + 1
         mT_test <- pruneAt(node, mT[[p]])
-print(mT_test)
+#print(mT_test)
         wlp[i] <- (Risk(mT_test) + Risk(mT[[p]])) / (cT[p] - complexity(Cart, mT_test))
       }
-#print(wlp)
+print("Finished wlp")
+print(wlp)
+print(cT)
       pivot <- rank(min(wlp))
+
 print(pivot)
-      mT[[p+1]] <- pruneAt(iNodesTp[pivot], mT[[p]])
+print(length(mLeafes(Cart$mT[[1]])))
+#print(iNodesTp)
+#print(mT[[p]])
+      mT[[p+1]] <- pruneAt(iNodesTp[[pivot]], mT[[p]])
 
       iNodesTp <- innerNodes(Cart, mT[[p+1]])
       cT[p+1] <- complexity(Cart, mT[[p+1]])
