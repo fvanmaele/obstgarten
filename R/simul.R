@@ -128,7 +128,7 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
 #' Method to quantitavely compare Prediction
 #' Quality of the four different methods for
 #' high dimensional data.
-#' compare_methods_PE(d=10, n=1000, B=100L, reps=400) CAUTION!!
+#' compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
 #' TAKES VERY LONG CPU EXPENSIVE
 #' @import stringr
 compare_methods_PE <- function(d, n, B=100L, reps=400) {
@@ -149,15 +149,15 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
     pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                    function(x) cart_predict(x, node=tree$root))
     # calculating prediction error
-    print(sum((pred - xy_test[, ncol(xy_test)])**2))
     pe_mat[i, 1] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
 
     # predicting with CART and pruning
     # yet to implement
-    tree <- cart_greedy_prune(xy, depth=5, random=FALSE, quantile = TRUE)
-    pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
-                  function(x) cart_predict(x, node=tree$root))
-    pe_mat[i, 2] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    # tree <- cart_greedy_prune(xy, depth=5, random=FALSE, quantile = TRUE)
+    # pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+    #               function(x) cart_predict(x, node=tree$root))
+    # pe_mat[i, 2] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
+    pe_mat[i, 2] <- 0.
 
     # predicting with Bagging alg
     pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE, quantile = TRUE)
@@ -284,7 +284,7 @@ compare_methods <- function(d, n, B=100L) {
   ret <- data.frame(xy_test)
 
   # predicting with CART
-  tree <- cart_greedy(xy, depth=5, random=FALSE)
+  tree <- cart_greedy(xy, depth=5, random=FALSE, quantile=TRUE)
   pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                 function(x) cart_predict(x, node=tree$root))
 
@@ -292,20 +292,21 @@ compare_methods <- function(d, n, B=100L) {
 
   # predicting with CART and pruning
   # yet to implement
-  tree <- cart_greedy_prune(xy, depth=5, random=FALSE)
-  pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
-                function(x) cart_predict(x, node=tree$root))
+  # tree <- cart_greedy_prune(xy, depth=5, random=FALSE)
+  # pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+  #              function(x) cart_predict(x, node=tree$root))
+  pred <- 0.
   ret$pruning <- pred
 
   # predicting with Bagging alg
-  pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE)
+  pred <- bagging(B=B, x_train=xy, x_test=xy_test, regression=TRUE, use_parallel=FALSE, quantile = TRUE)
   ret$bagging <- pred
 
   # predicting with Random Forest
-  pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE)
+  pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE, quantile=TRUE)
   ret$rf <- pred
 
-  save("ret", file=str_c("data/simul/","compare_plot_data_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  save("ret", file=str_c("data/simul/","compare_methods_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
@@ -359,7 +360,7 @@ visualize_iris_feature_distr <- function() {
 
 #' Function that performs classification with all 4 methods on
 #' @import stringr
-compare_classify_iris <- function(depth=5L, B=100L) {
+compare_classify_iris <- function(depth=5L, B=10L) {
   data <- prepare_iris()
   xy_train <- data[[1]]
   xy_test <- data[[2]]
@@ -367,26 +368,27 @@ compare_classify_iris <- function(depth=5L, B=100L) {
   ret <- data.frame(xy_test)
 
   # predicting with CART
-  tree <- cart_greedy(xy_train, depth=depth, random=FALSE, mode = "classification")
+  tree <- cart_greedy(xy_train, depth=depth, random=FALSE, mode = "classification", quantile = TRUE)
   pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                 function(x) cart_predict(x, node=tree$root)))
 
   ret$CART <- pred
 
   # predicting with CART and pruning
-  tree <- cart_greedy_prune(xy_train, depth=depth, random=FALSE, mode = "classification")
-  pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
-                      function(x) cart_predict(x, node=tree$root)))
+  # tree <- cart_greedy_prune(xy_train, depth=depth, random=FALSE, mode = "classification", quantile = TRUE)
+  # pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
+  #                     function(x) cart_predict(x, node=tree$root)))
+  pred <- 0.
   ret$pruning <- pred
 
   # predicting with Bagging alg
   pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
-                  random_forest = FALSE)
+                  random_forest = FALSE, quantile = TRUE)
   ret$bagging <- pred
 
   # predicting with Random Forest
   pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
-                  random_forest = TRUE)
+                  random_forest = TRUE, quantile = TRUE)
   ret$rf <- pred
 
   save("ret", file=str_c("data/simul/","compare_iris_", format(Sys.time(), "%Y%m%d-%H%M%S")))
