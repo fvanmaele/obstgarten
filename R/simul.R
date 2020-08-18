@@ -360,7 +360,7 @@ visualize_iris_feature_distr <- function() {
 
 #' Function that performs classification with all 4 methods on
 #' @import stringr
-compare_classify_iris <- function(depth=5L, B=10L) {
+compare_classify_iris <- function(depth=5L, B=10L, h=FALSE) {
   data <- prepare_iris()
   xy_train <- data[[1]]
   xy_test <- data[[2]]
@@ -368,7 +368,7 @@ compare_classify_iris <- function(depth=5L, B=10L) {
   ret <- data.frame(xy_test)
 
   # predicting with CART
-  tree <- cart_greedy(xy_train, depth=depth, random=FALSE, mode = "classification", quantile = TRUE)
+  tree <- cart_greedy(xy_train, depth=depth, random=FALSE, mode = "classification", quantile = FALSE)
   pred <- round(apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                 function(x) cart_predict(x, node=tree$root)))
 
@@ -383,16 +383,45 @@ compare_classify_iris <- function(depth=5L, B=10L) {
 
   # predicting with Bagging alg
   pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
-                  random_forest = FALSE, quantile = TRUE)
+                  random_forest = FALSE, quantile = FALSE)
   ret$bagging <- pred
 
   # predicting with Random Forest
   pred <- bagging(B=B, x_train=xy_train, x_test=xy_test, regression=FALSE, use_parallel=FALSE,
-                  random_forest = TRUE, quantile = TRUE)
+                  random_forest = TRUE, quantile = FALSE)
   ret$rf <- pred
 
-  save("ret", file=str_c("data/simul/","compare_iris_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  if (h) return(ret)
+  else save("ret", file=str_c("data/simul/","compare_iris_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
+}
+
+#' Calculate Accuracy
+#'
+#' Method that calculated the accuracy the different methods achieved in the iris classification
+#' dataset
+calc_accuracy <- function(ret) {
+
+  dat <- ret [, 5:ncol(ret)]
+  acc <- rep(0., times=4)
+
+  for (i in 1:4) {
+    acc[[i]] <- sum(dat[, 1] == dat[, 1+i])/nrow(dat)
+    print(acc[[i]])
+  }
+
+  return(acc)
+}
+
+#' Calculate Mean Accuracy of Iris Dataset
+calc_mean_accuracy <- function(reps=100) {
+  mat <- matrix(0., nrow=reps, ncol=4)
+  for (i in 1:reps) {
+    mat[i, ] <- calc_accuracy(compare_classify_iris(depth=5L, B=10L, h=TRUE))
+    print(mat[i, ])
+  }
+  ret <- apply(ret, MARGIN=2, mean)
+  save("ret", file=str_c("data/simul/","iris_mean_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
 # compare_methods(d=5, n=100, B=10L)
