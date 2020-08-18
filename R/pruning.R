@@ -12,9 +12,11 @@ cart_predict_pruned <- function(x, node, mask) { # list or vector
   stopifnot(length(x) == (ncol(node$points)-1))
   stopifnot(is.vector(mask, mode = "logical"))
 
-  if ((is.null(node$childR) && is.null(node$childL)) ||
-      !mask[[node$childR$label]] && !mask[[node$childL$label]]) {
+  if ( !mask[node$label] || (is.null(node$childR) && is.null(node$childL)) ) {
     # leaf node found -> return value
+    return(node$y)
+  } else if(!mask[[node$childR$label]] && !mask[[node$childL$label]]) {
+    # "virtual" leaf node found -> return value
     return(node$y)
   } else if (x[[node$j]] < node$s) {
     return(cart_predict(x, node$childL, mask))
@@ -33,8 +35,11 @@ cart_predict_pruned <- function(x, node, mask) { # list or vector
 #'
 #' @examples
 cart_prune <- function(node, mask) { # list or vector
-  if (!mask[node$label] || (is.null(node$childR) && is.null(node$childL)) ||
-      !mask[[node$childR$label]] && !mask[[node$childL$label]]) {
+  stopifnot(is.vector(mask, mode = "logical"))
+
+  if (!mask[node$label] || (is.null(node$childR) && is.null(node$childL)) ) {
+    return(mask)
+  } else if(!mask[[node$childR$label]] && !mask[[node$childL$label]]) {
     return(mask)
   } else {
     mask[[node$childL$label]] <- FALSE
@@ -114,8 +119,25 @@ cart_greedy_prune <-
 
 
     mLeafes <- function(tree, mask) {
-      sapply(tree$nodes, function(node) mask[node$label] && (is.null(node$childL) && is.null(node$childR)) ||
-               !mask[[node$childL$label]] && !mask[[node$childR$label]])
+      f <- function(node) {
+        if (!mask[node$label]) return(FALSE)
+
+       if( (is.null(node$childL) && is.null(node$childR)) ) {
+         return(TRUE)
+       } else if ( (!mask[[node$childL$label]] && !mask[[node$childR$label]]) ) {
+         return(TRUE)
+       } else if (mask[[node$childL$label]] && mask[[node$childR$label]]){
+         return(FALSE)
+       } else {
+         print(node)
+         print(node$childL)
+         print(node$childR)
+         print(mask)
+         stop("malformed tree")
+       }
+      }
+
+      sapply(tree$nodes, f)
     }
 
     mInnerNodes <- function(tree, mask) {
@@ -141,7 +163,7 @@ cart_greedy_prune <-
       max(sapply(tree$nodes[Leafmask], function(node) {`$`(node, "depth")}))
     }
 
-    complexity <- function(tree = Cart, mask) {
+    complexity <- function(tree, mask) {
       # return(length(tree$obstkorb()[tree$obstkorb() == TRUE]))
       return(sum(mLeafes(tree, mask), na.rm = TRUE))
     }
@@ -160,16 +182,25 @@ cart_greedy_prune <-
       }
     }
 
-    predict <- function(x, tree, mask) {
-      return(cart_predict_pruned(x, node = tree$root, mask = mask))
-    }
 
-    Risk <- function(tree = Cart, mask, XY = XY, mode = mode)  {
-      #tree$validate()
+
+    Risk <- function(mask)  {
+
+      mtest <- mask
+
+      predict <- function(x, b, m) {
+     # print(m)
+    #  print(b)
+     # print(x)
+     # return(cart_predict_pruned(x, node = b$root, m))
+    }
+   #   Cart$validate()
       n <- nrow(XY) # Anzahl Beobachtungen
+   #   print(n)
+     # print(XY[,-ncol(XY), drop = FALSE])
       #obstCount <- complexity(tree)
       pred <-
-        apply(XY[,-ncol(XY), drop = FALSE], MARGIN = 1, predict(), par(tree = tree, mask = mask)) # predicting with current tree
+        apply(XY[,-ncol(XY), drop = FALSE], MARGIN = 1, FUN = predict, m = mtest, b = Cart) #, par(mask = mask) predicting with current tree
       if (mode == "regression") {
         R <- 1 / n * sum((pred - XY[,ncol(XY), drop = FALSE]) ** 2)
       } else if (mode == "classification") {
@@ -181,39 +212,50 @@ cart_greedy_prune <-
     }
 
     p <- 1
-    mT <- vector()
-    mT[1] <- rep(TRUE, times=length(Cart$nodes))
+    mT <- list()
+    mT[[1]] <- rep(TRUE, times=length(Cart$nodes))
+
     # mLeavesTp <- Cart$obstkorb()  #logical vector
     # mINodesTp <- mInnerNodes(Cart, maskT[1])        #mask of Nodes without those being Leaves
-    iNodesTp <- innerNodes(Cart, maskT[1])
-    cT[1] <- complexity(Cart, maskT[1])
+    iNodesTp <- innerNodes(Cart, mT[[1]])
+    cT <- vector()
+    cT[1] <- complexity(Cart, mT[[1]])
 
-    while (mDepth(Cart, maskT[p]) > 0) {
-
+    while (mDepth(Cart, mT[[p]]) > 0) {
+print(mDepth(Cart, mT[[p]]))
+#print(mT[[p]])
+print(p)
       # Berechne den weakest link
       mT_test <- vector()
       wlp <- vector()
       i <- 0L
       for (node in iNodesTp ) {
         i <- i + 1
-        mT_test <- pruneAt(node, mT[p])
-        wlp[i] <- (Risk(mT_test) + Risk(mT[p])) / (cT[p] - complexity(Cart, mT_test))
+        mT_test <- pruneAt(node, mT[[p]])
+print(mT_test)
+        wlp[i] <- (Risk(mT_test) + Risk(mT[[p]])) / (cT[p] - complexity(Cart, mT_test))
       }
-
+#print(wlp)
       pivot <- rank(min(wlp))
-      mT[p+1] <- pruneAt(iNodesTp[pivot], mT[p])
-      iNodesTp <- innerNodes(Cart, mT[p+1])
-      cT[p+1] <- complexity(mT[p+1])
-      p = p + 1
-    } # END while
+print(pivot)
+      mT[[p+1]] <- pruneAt(iNodesTp[pivot], mT[[p]])
 
+      iNodesTp <- innerNodes(Cart, mT[[p+1]])
+      cT[p+1] <- complexity(Cart, mT[[p+1]])
+      p = p + 1
+
+    } # END while
+    print("Nearly FINISHED!")
     # Berechne den optimal geschnittenen Baum
     P <- p
     p_hat <- vector()
     for (p in 1:P) {
-      p_hat[p] <- Risk(mT[p]) + lambda * complexity(T[p])
+      p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
     } # p_hat <- R_hat(T) + lambda * complexity(T)
 
     p_hat_min <- rank(min(p_hat))
-    return(list(Cart, mT[p_hat_min]))
+
+    print("FINISHED!")
+
+    return(list(Cart, mT[[p_hat_min]]))
   }
