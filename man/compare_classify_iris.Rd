@@ -4,7 +4,7 @@
 \alias{compare_classify_iris}
 \title{Function that performs classification with all 4 methods on}
 \usage{
-compare_classify_iris(depth = 5L, B = 100L)
+compare_classify_iris(depth = 5L, B = 10L, h = FALSE)
 }
 \description{
 Function that performs classification with all 4 methods on

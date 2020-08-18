@@ -32,7 +32,8 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-Imports: 
+Imports:
+    devtools,
     R6,
     ggplot2,
     mvtnorm,
