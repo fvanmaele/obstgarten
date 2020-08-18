@@ -94,7 +94,7 @@ pred_plot_pruning <- function(lambda, depth=5, sigma=0.25, n=150, random_forest=
   grid <- seq(0, 1, len=n)
 
   predict <- function(x) {
-    return(cart_predict(x, node=tree$root))
+    return(cart_predict_pruned(x, node=tree[[1]]$root, tree[[2]]))
   }
 
   x <- generate_sin_data(n, grid=grid, sigma=sigma)
