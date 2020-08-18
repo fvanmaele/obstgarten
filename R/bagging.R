@@ -92,15 +92,19 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
 
   if (use_parallel) {
     # set up parallel
-    nb_cores <- detectCores() - 1
-    cluster_pred <- parallel::makeCluster(nb_cores)
-    parallel::clusterEvalQ(cluster_pred, {
-      library(obstgarten)})
+#   nb_cores <- detectCores() - 1
+#   cluster_pred <- parallel::makeCluster(nb_cores)
+#    parallel::clusterEvalQ(cluster_pred, {
+#      library(obstgarten)})
 
-    predictions <- matrix(unlist(parallel::parLapply(
-      cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
+#    predictions <- matrix(unlist(parallel::parLapply(
+#      cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
 
-    parallel::stopCluster(cluster_pred) # close cluster
+#    parallel::stopCluster(cluster_pred) # close cluster
+
+    nb_cores <- detectCores()
+    predictions <- matrix(unlist(parallel::mclapply(
+         cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
   }
   else {
     predictions <- matrix(unlist(lapply(
