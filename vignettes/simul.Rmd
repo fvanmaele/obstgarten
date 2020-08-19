@@ -131,7 +131,7 @@ To train and evaluate the model on this dataset it was split randomly into train
 A Random Forest with $m = 1$, depth $5$ and $10$ bootstrap samples is perfectly able to classify the flowers to a high accuracy. See below:
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-suppressMessages(pred_plot_iris_class(depth=5, B=10L))
+suppressMessages(pred_plot_iris_class(depth=5, B=3L))
 ```
 Sepal length is on the x-axis while sepal width is on the y axis.
 
