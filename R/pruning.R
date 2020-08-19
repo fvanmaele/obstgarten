@@ -1,7 +1,7 @@
-#' Title
+#' cart_predict_pruned
 #'
-#' @param x
-#' @param node
+#' @param x one col of XY except y
+#' @param node first call with root
 #' @param mask
 #'
 #' @return

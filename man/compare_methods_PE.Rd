@@ -8,7 +8,7 @@ high dimensional data.
 compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
 TAKES VERY LONG CPU EXPENSIVE}
 \usage{
-compare_methods_PE(d, n, B = 100L, reps = 400)
+compare_methods_PE(d, n, B = 25L, reps = 400)
 }
 \description{
 Method to quantitavely compare Prediction

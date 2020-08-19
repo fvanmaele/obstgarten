@@ -5,7 +5,7 @@
 \title{plots prediction of pruned CART generated regression tree}
 \usage{
 pred_plot_pruning(
-  lambda,
+  lambda = 1/3,
   depth = 5,
   sigma = 0.25,
   n = 150,

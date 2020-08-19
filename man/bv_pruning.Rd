@@ -4,10 +4,10 @@
 \alias{bv_pruning}
 \title{bias variance data for 400 reps for pruned CARTs with different pruning parameter}
 \usage{
-bv_pruning(lambda_list, sigma = 0.2, n = 150, reps = 400)
+bv_pruning(lambda_list, sigma = 0.2, n = 150, reps = 50)
 }
 \description{
 generate test data for different depths values of the CART algorithm with 400
 reps and 150 data points
-bv_pruning(list(0.01, 0.1, 1., 10.), n=150, reps=400, sigma=0.25)
+bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)
 }
