@@ -45,7 +45,7 @@ In terms of the Bias-Variance decomposition of the prediction error a model is c
 Pruning is a regularization technique which is used to cut back fully grown CART generated rergession and decision trees. The idea behind it is to impose an additional loss which scales with the depth of the tree. In the following the same dataset as in the section before is used and the cost-complexity parameter lambda which controls the amount of regularization is varied. 
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-# suppressMessages(simul_plot_pruning())
+suppressMessages(simul_plot_pruning())
 ```
 
 The Bias-Variance tradeoff is displayed qualitatively in the next plot. 

@@ -133,10 +133,10 @@ cart_greedy_prune <-
                    mask[[node$childR$label]]) {
           return(FALSE)
         } else {
-          print(node)
-          print(node$childL)
-          print(node$childR)
-          print(mask)
+          # print(node)
+          # print(node$childL)
+          # print(node$childR)
+          # print(mask)
           stop("malformed tree")
         }
       }
@@ -276,20 +276,20 @@ cart_greedy_prune <-
     # Berechne den optimal geschnittenen Baum
     P <- p
    # lambda <- 0.01
-    print("lambda")
-    print(lambda)
+    # print("lambda")
+    # print(lambda)
     p_hat <- vector()
     for (p in 1:P) {
       p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
       #print(p)
-      print(Risk(mT[[p]]))
+      # print(Risk(mT[[p]]))
 
     } # p_hat <- R_hat(T) + lambda * complexity(T)
-    print("p_hat")
-    print(p_hat)
+    # print("p_hat")
+    # print(p_hat)
     p_hat_min <- which.min(p_hat)
     #print("FINISHED!")
-    print(p_hat[p_hat_min])
+    # print(p_hat[p_hat_min])
     #print(mT[[p_hat_min]])
     return(list(Cart, mT[[p_hat_min]]))
   }

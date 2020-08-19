@@ -38,11 +38,11 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 #'
 #' generate test data for different depths values of the CART algorithm with 400
 #' reps and 150 data points
-#' bv_pruning(list(0.01, 0.1, 1., 10.), n=150, reps=400, sigma=0.25)
-bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=400) {
+#' bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)
+bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=50) {
 
   predict <- function(x) {
-    return(cart_predict(x, node=tree$root))
+    return(cart_predict_pruned(x, node=tree[[1]]$root, tree[[2]]))
   }
 
   params_list <- list()
@@ -58,8 +58,9 @@ bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=400) {
     for (i in 1:reps) {
       x <- generate_sin_data(n, grid=grid, sigma=sigma)
       dimnames(x) <- list(NULL, c(1, "y"))
-      tree <- cart_greedy_prune(x, depth=5, lambda=lam)
+      tree <- cart_greedy_prune(x, depth=5, lambda=lam, quantile = TRUE)
       pred[i, ] <- apply(x[, -ncol(x), drop=FALSE], MARGIN=1, predict) # predicting with current tree
+      print(str_c("Finished rep ", i))
     }
 
     ret[[count]] <- apply(pred, MARGIN=2, function(x) c(mean(x), sd(x)))

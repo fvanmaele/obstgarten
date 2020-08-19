@@ -24,7 +24,7 @@ simul_plot_greedy <- function() {
 #' @import gridExtra
 #' @import ggplot2
 simul_plot_pruning <- function() {
-  lambda_list <- list(0.001, 0.005, .01, 0.02)
+  lambda_list <- list(0., 0.001, 0.01, 0.03)
   plot_list <- list()
   count <- 1
   for (lambda in lambda_list) {
