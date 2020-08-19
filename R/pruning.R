@@ -21,6 +21,7 @@ cart_predict_pruned <- function(x, node, mask) {
              !mask[[node$childL$label]]) {
     # "virtual" leaf node found -> return value
     if (!is.na(node$y))
+      #print("Root")
       return(0) # Wurzel. TODO: Sollte mean oder majority sein oder besser gar nicht vorkommen
     return(node$y)
   } else if (x[[node$j]] < node$s) {
@@ -207,9 +208,9 @@ cart_greedy_prune <-
         ) #, par(mask = mask) predicting with current tree
 
       if (mode == "regression") {
-        R <- 1 / n * sum((pred - XY[, ncol(XY), drop = FALSE]) ** 2)
+        R <- 1 / n * sum((pred - XY[, ncol(XY), drop = FALSE]) ** 2) #, na.rm = TRUE
       } else if (mode == "classification") {
-        R <- 1 / n * sum((pred != XY[, ncol(XY), drop = FALSE]), na.rm = TRUE)
+        R <- 1 / n * sum((pred != XY[, ncol(XY), drop = FALSE])) #, na.rm = TRUE
       } else {
         stop("Invalid mode in Risk(). Must be regression or classification")
       }
@@ -262,10 +263,11 @@ cart_greedy_prune <-
       #print(pivot)
       #print("length leaves")
       #print(sum(mLeafes(Cart, mT[[p]])))
-      #print(iNodesTp)
-      #print(mT[[p]])
+      #print("iNodesTp")
+      #print(sapply(iNodesTp, function(node) {`$`(node, "label")}))
+      #print("mTp+1")
       mT[[p + 1]] <- pruneAt(iNodesTp[[pivot]], mT[[p]])
-
+      #print(mT[[p+1]])
 
       p = p + 1
 
@@ -273,16 +275,21 @@ cart_greedy_prune <-
     #print("Nearly FINISHED!")
     # Berechne den optimal geschnittenen Baum
     P <- p
-    #print(p)
+   # lambda <- 0.01
+    print("lambda")
+    print(lambda)
     p_hat <- vector()
     for (p in 1:P) {
       p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
+      #print(p)
+      print(Risk(mT[[p]]))
+
     } # p_hat <- R_hat(T) + lambda * complexity(T)
-    #print("p_hat")
-    #print(p_hat)
+    print("p_hat")
+    print(p_hat)
     p_hat_min <- which.min(p_hat)
     #print("FINISHED!")
-    #print(p_hat_min)
+    print(p_hat[p_hat_min])
     #print(mT[[p_hat_min]])
     return(list(Cart, mT[[p_hat_min]]))
   }
