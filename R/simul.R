@@ -125,11 +125,19 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
 # pred_plot_sine2D(n=1000, B=5L, depth=5, sd=0.1, k=10)
 
 
-#' Method to quantitavely compare Prediction
-#' Quality of the four different methods for
-#' high dimensional data.
-#' compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
+#' compare_methods_PE
+#'
+#' @description Method to quantitavely compare Prediction Quality of the four different methods for high dimensional data.
+#'
+#' @examples  compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
+#'
 #' TAKES VERY LONG CPU EXPENSIVE
+#'
+#' @param d dimension
+#' @param n number of generated data pairs
+#' @param B number of bootstrap samples
+#' @param reps rows of data
+#'
 #' @import stringr
 compare_methods_PE <- function(d, n, B=25L, reps=400) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
@@ -175,11 +183,20 @@ compare_methods_PE <- function(d, n, B=25L, reps=400) {
 }
 
 
-#' Method to quantitavely compare Prediction
-#' Quality of the Random Forests for
-#' different parameters m.
-#' compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
+#' compare_m_PE
+#'
+#' @description Method to quantitavely compare Prediction Quality of the Random Forests for different parameters m.
+#'
 #' CAUTION CPU EXPENSIVE TAKES LONG
+#'
+#' @param m_list list of parameters m to compare
+#' @param d dimension
+#' @param n number of generated data pairs
+#' @param B number of bootstrap samples
+#' @param reps rows of data
+#'
+#' @examples compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
+#'
 #' @import stringr
 compare_m_PE <- function(m_list, d, n, B, reps=400) {
   for (m in m_list) {
@@ -224,10 +241,15 @@ compare_m_PE <- function(m_list, d, n, B, reps=400) {
 }
 
 
-#' Method to qualitatively compare Prediction
-#' Quality of the Random Forests for
-#' different parameters m.
-#' compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
+#' @description Method to qualitatively compare Prediction Quality of the Random Forests for different parameters m.
+#'
+#' @param m_list list of parameters m to compare
+#' @param d dimension
+#' @param n number of generated data pairs
+#' @param B number of bootstrap samples
+#'
+#' @examples compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
+#'
 #' @import stringr
 compare_m <- function(m_list, d, n, B) {
   for (m in m_list) {
@@ -265,10 +287,16 @@ compare_m <- function(m_list, d, n, B) {
 }
 
 
-#' Method to qualitatively compare Prediction
-#' Quality of the four different methods for
-#' high dimensional data.
-#' compare_methods(d=3, n=1000, B=100L)
+#' compare_methods
+#'
+#' @description Method to qualitatively compare Prediction Quality of the four different methods for high dimensional data.
+#'
+#' @param d dimension
+#' @param n number of generated data pairs
+#' @param B number of bootstrap samples
+#'
+#' @examples  compare_methods(d=3, n=1000, B=100L)
+#'
 #' @import stringr
 compare_methods <- function(d, n, B=100L) {
 
@@ -357,6 +385,11 @@ visualize_iris_feature_distr <- function() {
 
 
 #' Function that performs classification with all 4 methods on
+#'
+#' @param depth The amount of steps before halting the algorithm
+#' @param B number of bootstrap samples
+#' @param h if false, the generated dataset is saved
+#'
 #' @import stringr
 compare_classify_iris <- function(depth=5L, B=10L, h=FALSE) {
   data <- prepare_iris()
@@ -395,8 +428,10 @@ compare_classify_iris <- function(depth=5L, B=10L, h=FALSE) {
 
 #' Calculate Accuracy
 #'
-#' Method that calculated the accuracy the different methods achieved in the iris classification
-#' dataset
+#' @param ret data of iris classification dataset
+#'
+#' @description Method that calculated the accuracy the different methods achieved in the iris classification dataset
+#'
 calc_accuracy <- function(ret) {
 
   dat <- ret [, 5:ncol(ret)]
@@ -409,7 +444,10 @@ calc_accuracy <- function(ret) {
   return(acc)
 }
 
-#' Calculate Mean Accuracy of Iris Dataset
+#' @description Calculate Mean Accuracy of Iris Dataset
+#'
+#' @param reps rows of data
+#'
 calc_mean_accuracy <- function(reps=100) {
   mat <- matrix(0., nrow=reps, ncol=4)
   for (i in 1:reps) {

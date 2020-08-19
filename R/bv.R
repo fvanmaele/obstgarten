@@ -1,8 +1,13 @@
 #' bias variance data for 400 reps for CARTs of different depths
 #'
-#' generate test data for different depths values of the CART algorithm with 400
-#' reps and 150 data points
-#' bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
+#' @description generate test data for different depths values of the CART algorithm with 400 reps and 150 data points
+#'
+#' @param depths_list List of different integer depth parameters to be tested
+#' @param sigma standard deviation of irreducible error in y
+#' @param n number of generated data pairs
+#' @param reps rows of data
+#'
+#' @examples  bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
 bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 
   predict <- function(x) {
@@ -36,9 +41,14 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 
 #' bias variance data for 400 reps for pruned CARTs with different pruning parameter
 #'
-#' generate test data for different depths values of the CART algorithm with 400
-#' reps and 150 data points
-#' bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)
+#' @description  generate test data for different depths values of the CART algorithm with 400 reps and 150 data points
+#'
+#' @param lambda_list List of different double lambda parameters to be tested
+#' @param sigma standard deviation of irreducible error in y
+#' @param n number of generated data pairs
+#' @param reps rows of data
+#'
+#' @examples bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)
 bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=50) {
 
   predict <- function(x) {
@@ -73,10 +83,13 @@ bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=50) {
 
 #' bias variance data for 400 reps for Bagging with different numbers of Bootstrap samples
 #' @param bs_list List of different integer bagging parameters B to be tested
+#' @param sigma standard deviation of irreducible error in y
+#' @param n number of generated data pairs
+#' @param reps rows of data
 #'
-#' generate test date for different depths values of the CART algorithm with 400
-#' reps and 150 data points
-#' bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
+#' @description generate test date for different depths values of the CART algorithm with 400 reps and 150 data points
+#'
+#' @examples bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
 bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
   params_list <- list()
@@ -106,8 +119,13 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
 #' bias variance plot for CARTs for different depths
 #'
-#' load("data/simul/bv_greedy_20200810-101102")
-#' bv_plot(bv_data)
+#' @param data data to be plotted
+#' @param plot_title title shown on the plot
+#' @param bagging using bagging
+#' @param pruning using pruning
+#'
+#' @examples load("data/simul/bv_greedy_20200810-101102"); bv_plot(bv_data);
+#'
 #' @import ggplot2
 #' @import bbplot
 bv_plot <- function(data, plot_title="Prediction CART Regression Tree", bagging=FALSE, pruning=FALSE) {
@@ -177,7 +195,7 @@ bv_plot <- function(data, plot_title="Prediction CART Regression Tree", bagging=
       ylab("") +
       xlab("") +
       bbc_style()
-  }(0., 0.001, 0.01, 0.03)
+  }#(0., 0.001, 0.01, 0.03)
   else if (pruning) {
     gg <- ggplot(df4, aes(x=grid, y=mean)) +
       scale_colour_manual("",

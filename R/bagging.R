@@ -16,9 +16,10 @@
 #' @param B integer: number of bootstrap samples
 #' @param x_train data.frame: training data with labels of dimensions Number of Samples x Features + 1
 #' @param x_test data.frame: test data with labels of dimensions Number of Samples x Features + 1
+#' @param depth numeric: The amount of steps before halting the algorithm (defaults to 5)
 #' @param regression logical: specify whether tree is a decision (classification) or a
 #' regression tree. default=TRUE, TRUE for regression, FALSE for classification
-#' @param use_parallel: Whether to use parallel computation or not
+#' @param use_parallel logical: Whether to use parallel computation or not
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #' @param m Count of random dimensions in random forest. Is set on heuristically motivated values if m is NULL
 #' @param quantile whether to use quantiles for computing the optimal

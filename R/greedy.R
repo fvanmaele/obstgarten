@@ -110,6 +110,7 @@ C_hat <- function(y1, y2) {
 #' @param A subset of training data \eqn{(X_i, Y_i)} (`matrix`)
 #' @param d dimension of the training data \eqn{X_{i_1}..X_{i_d}} (`integer`)
 #' @param mode `regression` or `classification`
+#' @param ... remaining arguments passed on to the next function
 #'
 #' @return list containing optimal parameters \eqn{j}, \eqn{s}
 #' @export

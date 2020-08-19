@@ -66,7 +66,7 @@ The predictor in the top left corner is equivalent to a single CART generated re
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
 load("data/bv_bagging")
-suppressMessages(bv_plot(bv_data, plot_title = "Bagging Bias-Variance Tradeoff", bagging = TRUE))
+#suppressMessages(bv_plot(bv_data, plot_title = "Bagging Bias-Variance Tradeoff", bagging = TRUE))
 ```
 
 All predictor means already are pretty close to the true function suggesting a small Bias. A significant decrease in variance can be observed between the case $B = 1$ and $B = 5$. A further decrease would be expected for a larger number of bootstrap samples. Nevertheless, this cannot be confirmed in this case. This most probably is due to the fact that on one hand the dataset is very small and on the other hand the underlying generative function is very simple. For more complex generative functions we can observe that with a larger number of bootstrap samples model variance is strongly reduced. 

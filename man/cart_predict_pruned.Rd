@@ -2,16 +2,20 @@
 % Please edit documentation in R/pruning.R
 \name{cart_predict_pruned}
 \alias{cart_predict_pruned}
-\title{Title}
+\title{cart_predict_pruned}
 \usage{
 cart_predict_pruned(x, node, mask)
 }
 \arguments{
+\item{x}{one col of XY except y}
+
+\item{node}{first call with root}
+
 \item{mask}{}
 }
 \value{
 
 }
 \description{
-Title
+cart_predict_pruned
 }

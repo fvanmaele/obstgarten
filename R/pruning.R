@@ -33,7 +33,7 @@ cart_predict_pruned <- function(x, node, mask) {
 
 #' Title
 #'
-#' @param node
+#' @param node first call with root
 #' @param mask
 #'
 #' @return
