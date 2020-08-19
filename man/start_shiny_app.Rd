@@ -6,32 +6,19 @@
 \usage{
 start_shiny_app()
 }
-\arguments{
-\item{Datatype}{choose a datatype (Dropdown menu)}
-
-\item{Number_of_obs}{number of generated data rows (numeric)}
-
-\item{Dimension}{dimension of the record (numeric)}
-
-\item{Display_dimension}{number of shown dimensions (numeric)}
-
-\item{m}{count of random dimensions (numeric)}
-
-\item{Sigma}{standard deviation of irreducible error in y (numeric)}
-
-\item{Random_forest}{TRUE: random forest, FALSE: bagging (logical)}
-
-\item{Depth}{depths of the CART generated regression tree (numeric)}
-
-\item{Bootstrap_samples}{number of bootstrap samples (numeric)}
-
-\item{k}{borders of the sine2D plot (numeric)}
-
-\item{Simulate}{starts the calculation with the given parameters (button)}
-}
 \value{
 
 }
 \description{
-All arguments are selectable in the App
+Datatype choose a datatype (Dropdown menu)
+Number_of_obs number of generated data rows (numeric)
+Dimension dimension of the record (numeric)
+Display_dimension number of shown dimensions (numeric)
+m count of random dimensions (numeric)
+Sigma standard deviation of irreducible error in y (numeric)
+Random_forest TRUE: random forest, FALSE: bagging (logical)
+Depth depths of the CART generated regression tree (numeric)
+Bootstrap_samples number of bootstrap samples (numeric)
+k borders of the sine2D plot (numeric)
+Simulate starts the calculation with the given parameters (button)
 }

@@ -13,9 +13,19 @@ pred_plot_greedy(
 )
 }
 \arguments{
-\item{depth}{Integer depths of the CART generated regression tree
-pred_plot_greedy(5, sigma=0.25, n=150)}
+\item{depth}{The amount of steps before halting the algorithm}
+
+\item{sigma}{standard deviation of irreducible error in y}
+
+\item{n}{number of generated data pairs}
+
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
+
+\item{simul}{True: return data}
 }
 \description{
 plots prediction of CART generated regression tree
+}
+\examples{
+pred_plot_greedy(5, sigma=0.25, n=150)
 }

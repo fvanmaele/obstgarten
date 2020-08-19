@@ -12,6 +12,8 @@ plot_3D_compare(path, render = FALSE, margin = 1)
 
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 if FALSE only 2D plots are returned}
+
+\item{margin}{margin of the scale}
 }
 \description{
 Method to plot 3D comparisons of predictions

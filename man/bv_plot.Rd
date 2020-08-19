@@ -18,12 +18,10 @@ bv_plot(
 
 \item{bagging}{using bagging}
 
-\item{pruning}{using pruning}
+\item{pruning}{using pruning
+
+load("data/simul/bv_greedy_20200810-101102"); bv_plot(bv_data);}
 }
 \description{
 bias variance plot for CARTs for different depths
-}
-\examples{
-load("data/simul/bv_greedy_20200810-101102"); bv_plot(bv_data);
-
 }

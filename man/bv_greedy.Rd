@@ -13,11 +13,10 @@ bv_greedy(depths_list, sigma = 0.2, n = 150, reps = 400)
 
 \item{n}{number of generated data pairs}
 
-\item{reps}{rows of data}
+\item{reps}{rows of data
+
+bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)}
 }
 \description{
 generate test data for different depths values of the CART algorithm with 400 reps and 150 data points
-}
-\examples{
- bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
 }

@@ -7,7 +7,7 @@
 #' @param n number of generated data pairs
 #' @param reps rows of data
 #'
-#' @examples  bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
+#' bv_greedy(list(2L, 5L, 10L, 15L), n=150, reps=400, sigma=0.25)
 bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 
   predict <- function(x) {
@@ -48,7 +48,7 @@ bv_greedy <- function(depths_list, sigma=0.2, n=150, reps=400) {
 #' @param n number of generated data pairs
 #' @param reps rows of data
 #'
-#' @examples bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)
+#' bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)
 bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=50) {
 
   predict <- function(x) {
@@ -124,7 +124,7 @@ bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 #' @param bagging using bagging
 #' @param pruning using pruning
 #'
-#' @examples load("data/simul/bv_greedy_20200810-101102"); bv_plot(bv_data);
+#' load("data/simul/bv_greedy_20200810-101102"); bv_plot(bv_data);
 #'
 #' @import ggplot2
 #' @import bbplot

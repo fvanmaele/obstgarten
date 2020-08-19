@@ -38,7 +38,9 @@ for different datasets}
 
 \item{k}{integer specifying field of view in sine2D case}
 
-\item{grid}{}
+\item{grid}{specify data points on x axis}
+
+\item{random_forest}{TRUE: random forest, FALSE: bagging}
 }
 \value{
 print(plot)

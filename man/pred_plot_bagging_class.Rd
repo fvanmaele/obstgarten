@@ -7,9 +7,19 @@
 pred_plot_bagging_class(B, depth, sigma = 0.25, n = 150, random_forest = FALSE)
 }
 \arguments{
-\item{depth}{Integer depths of the bagging generated decision tree
-pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)}
+\item{B}{integer number of bootstrap samples}
+
+\item{depth}{The amount of steps before halting the algorithm}
+
+\item{sigma}{standard deviation of irreducible error in y}
+
+\item{n}{number of generated data pairs}
+
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
 }
 \description{
 plots prediction of Bagging generated decision tree
+}
+\examples{
+pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 }

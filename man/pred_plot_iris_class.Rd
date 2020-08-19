@@ -6,6 +6,11 @@
 \usage{
 pred_plot_iris_class(depth, B = 100L)
 }
+\arguments{
+\item{depth}{The amount of steps before halting the algorithm}
+
+\item{B}{integer number of bootstrap samples}
+}
 \description{
 Method to Plot the classifcation of iris test dataset
 }

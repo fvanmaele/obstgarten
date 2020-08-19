@@ -139,9 +139,9 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
 #'
 #' @description Method to quantitavely compare Prediction Quality of the four different methods for high dimensional data.
 #'
-#' @examples  compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
+#' CAUTION!! TAKES VERY LONG CPU EXPENSIVE
 #'
-#' TAKES VERY LONG CPU EXPENSIVE
+#' @examples  compare_methods_PE(d=4, n=1000L, B=25L, reps=100)
 #'
 #' @param d dimension
 #' @param n number of generated data pairs

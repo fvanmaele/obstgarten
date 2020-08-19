@@ -12,7 +12,9 @@ plot_3D_compare_m(path, render = FALSE, margin = 1)
 \item{path}{character specifying path to compare_RF_m file}
 
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
-if FALSE only 2D plots are returned
+if FALSE only 2D plots are returned}
+
+\item{margin}{margin of the scale
 
 plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")}
 }

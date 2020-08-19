@@ -16,11 +16,21 @@ pred_plot_bagging(
 )
 }
 \arguments{
+\item{depth}{The amount of steps before halting the algorithm}
+
 \item{B}{integer number of bootstrap samples}
+
+\item{sigma}{standard deviation of irreducible error in y}
+
+\item{n}{number of generated data pairs}
+
+\item{grid}{specify data points on x axis}
 
 \item{random_forest}{logical: TRUE: random forest, FALSE: bagging
 
 pred_plot_bagging(100, sigma=0.25, n=150)}
+
+\item{simul}{True: return data}
 }
 \description{
 plots prediction of Bagging generated regression tree with depth 5
