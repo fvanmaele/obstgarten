@@ -83,7 +83,17 @@ simul_plot_bagging <- function() {
 
 
 #' Method to test performance of quantiles
-#' compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
+#'
+#' @param depth The amount of steps before halting the algorithm
+#' @param n number of generated data pairs
+#' @param B number of bootstrap samples
+#' @param sd standard deviation of irreducible error in y
+#' @param k specifying field of view in sine2D case
+#' @param random_forest TRUE: random forest, FALSE: bagging
+#' @param reps rows of data
+#'
+#' @examples compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
+#'
 #' @import stringr
 compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=100) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)

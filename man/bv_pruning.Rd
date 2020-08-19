@@ -6,8 +6,18 @@
 \usage{
 bv_pruning(lambda_list, sigma = 0.2, n = 150, reps = 50)
 }
+\arguments{
+\item{lambda_list}{List of different double lambda parameters to be tested}
+
+\item{sigma}{standard deviation of irreducible error in y}
+
+\item{n}{number of generated data pairs}
+
+\item{reps}{rows of data}
+}
 \description{
-generate test data for different depths values of the CART algorithm with 400
-reps and 150 data points
+generate test data for different depths values of the CART algorithm with 400 reps and 150 data points
+}
+\examples{
 bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)
 }

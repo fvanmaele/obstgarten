@@ -20,7 +20,7 @@ test_that("as.list.Gabel", {
   G4$y <- rnorm(1)
   G5$y <- rnorm(1)
 
-  lst <- as.list(G1)
+  lst <- as_list(G1)
   expect_type(lst, "list")
   expect_equal(attr(lst, "label"), 1L)
   expect_equal(attr(lst, "s"), G1$s)

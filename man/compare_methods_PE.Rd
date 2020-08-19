@@ -2,18 +2,25 @@
 % Please edit documentation in R/simul.R
 \name{compare_methods_PE}
 \alias{compare_methods_PE}
-\title{Method to quantitavely compare Prediction
-Quality of the four different methods for
-high dimensional data.
-compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
-TAKES VERY LONG CPU EXPENSIVE}
+\title{compare_methods_PE}
 \usage{
 compare_methods_PE(d, n, B = 25L, reps = 400)
 }
+\arguments{
+\item{d}{dimension}
+
+\item{n}{number of generated data pairs}
+
+\item{B}{number of bootstrap samples}
+
+\item{reps}{rows of data}
+}
 \description{
-Method to quantitavely compare Prediction
-Quality of the four different methods for
-high dimensional data.
-compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
+Method to quantitavely compare Prediction Quality of the four different methods for high dimensional data.
+}
+\examples{
+ compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
+
 TAKES VERY LONG CPU EXPENSIVE
+
 }

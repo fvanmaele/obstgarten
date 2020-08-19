@@ -48,7 +48,12 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
 }
 
 #' Generate 2D sine data set
-#' According to model y = (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2)) + N(0, sigma)
+#'
+#' @param n number of generated data pairs
+#' @param sigma standard deviation of irreducible error in y
+#' @param k specifying field of view
+#'
+#' @examples According to model y = (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2)) + N(0, sigma)
 generate_sin_2D <- function(n, sigma=0.2, k=10) {
 
   eps <- rnorm(n, mean=0, sd=sigma)
@@ -67,10 +72,14 @@ generate_sin_2D <- function(n, sigma=0.2, k=10) {
 
 #' Generate Data from a multivariate Gaussian
 #' @param n dimensional vector with feature means
+#' @param d dimension
+#' @param sd standard deviation of irreducible error in y
 #' @param sigma positive definite square covariance matrix
+#' @param mu
+#'
 #' @return list(df of data, feature means vector, covariance matrix)
 #'
-#' generate_mult_data(n=1000, d=5)
+#' @examples generate_mult_data(n=1000, d=5)
 #' @import mvtnorm
 #' @export
 generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
@@ -101,49 +110,6 @@ generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
 #   geom_point()
 # print(gg)
 
-
-# test data for random forest with d = 3
-generate_sin_data2 <- function(n, sigma=0.2, reg=TRUE) {
-  if (sigma <= 0.) {
-    stop("Error: sigma has to be > 0")
-  }
-
-  eps <- rnorm(n, mean=0, sd=sigma)
-
-  if (reg) {
-    a <- sample(-0.01:0.01, 1)
-    b <- sample(-0.01:0.01, 1)
-    M <- matrix(runif(n, min=0, max=1))
-    M <- cbind(M, M[,1]+a, M[,1]+b)
-    for (j in 1:ncol(M)) {
-      for (i in 1:nrow(M)) {
-        if(M[i,j] > 1){
-          M[i,j] <- 1
-        }
-        if(M[i,j] < 0){
-          M[i,j] <- 0
-        }
-      }
-    }
-    y <- c()
-    for (i in 1:n) {
-      y <- c(y, sin(2 * pi * mean(M[[i,1]], M[[i,2]], M[[i,3]])) + eps[i])
-    }
-    ret <- cbind(M, y)
-    colnames(ret) <- c("x1", "x2", "x3", "y")
-    return(ret)
-  }
-  else {
-    x1 <- runif(n, min=0, max=1)
-    x2 <- runif(n, min=0, max=1)
-    k <- x2 - 0.5 - 0.3 * sin(2 * pi * x1)
-    y <- rep(1, times=n)
-    y[(k - eps) > 0.] <- 2
-    ret <- matrix(c(x1, x2, y), nrow=n, ncol=3)
-    colnames(ret) <- c("x1", "x2", "y")
-    return(ret)
-  }
-}
 
 #' Iris data set
 #'

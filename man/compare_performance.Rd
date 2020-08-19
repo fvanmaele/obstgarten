@@ -2,12 +2,29 @@
 % Please edit documentation in R/simul.R
 \name{compare_performance}
 \alias{compare_performance}
-\title{Method to test performance of quantiles
-compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)}
+\title{Method to test performance of quantiles}
 \usage{
 compare_performance(n, B, depth, sd, k = 10, random_forest = TRUE, reps = 100)
 }
+\arguments{
+\item{n}{number of generated data pairs}
+
+\item{B}{number of bootstrap samples}
+
+\item{depth}{The amount of steps before halting the algorithm}
+
+\item{sd}{standard deviation of irreducible error in y}
+
+\item{k}{specifying field of view in sine2D case}
+
+\item{random_forest}{TRUE: random forest, FALSE: bagging}
+
+\item{reps}{rows of data}
+}
 \description{
 Method to test performance of quantiles
+}
+\examples{
 compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
+
 }

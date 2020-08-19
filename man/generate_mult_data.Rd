@@ -9,13 +9,20 @@ generate_mult_data(n, d, sd = 0.01, mu = NULL, sigma = NULL)
 \arguments{
 \item{n}{dimensional vector with feature means}
 
+\item{d}{dimension}
+
+\item{sd}{standard deviation of irreducible error in y}
+
+\item{mu}{}
+
 \item{sigma}{positive definite square covariance matrix}
 }
 \value{
 list(df of data, feature means vector, covariance matrix)
-
-generate_mult_data(n=1000, d=5)
 }
 \description{
 Generate Data from a multivariate Gaussian
+}
+\examples{
+generate_mult_data(n=1000, d=5)
 }

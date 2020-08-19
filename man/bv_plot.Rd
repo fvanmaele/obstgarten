@@ -11,7 +11,19 @@ bv_plot(
   pruning = FALSE
 )
 }
+\arguments{
+\item{data}{data to be plotted}
+
+\item{plot_title}{title shown on the plot}
+
+\item{bagging}{using bagging}
+
+\item{pruning}{using pruning}
+}
 \description{
-load("data/simul/bv_greedy_20200810-101102")
-bv_plot(bv_data)
+bias variance plot for CARTs for different depths
+}
+\examples{
+load("data/simul/bv_greedy_20200810-101102"); bv_plot(bv_data);
+
 }

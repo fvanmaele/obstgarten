@@ -7,6 +7,8 @@
 cart_prune(node, mask)
 }
 \arguments{
+\item{node}{first call with root}
+
 \item{mask}{}
 }
 \value{

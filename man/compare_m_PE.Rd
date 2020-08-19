@@ -2,18 +2,27 @@
 % Please edit documentation in R/simul.R
 \name{compare_m_PE}
 \alias{compare_m_PE}
-\title{Method to quantitavely compare Prediction
-Quality of the Random Forests for
-different parameters m.
-compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
-CAUTION CPU EXPENSIVE TAKES LONG}
+\title{compare_m_PE}
 \usage{
 compare_m_PE(m_list, d, n, B, reps = 400)
 }
+\arguments{
+\item{m_list}{list of parameters m to compare}
+
+\item{d}{dimension}
+
+\item{n}{number of generated data pairs}
+
+\item{B}{number of bootstrap samples}
+
+\item{reps}{rows of data}
+}
 \description{
-Method to quantitavely compare Prediction
-Quality of the Random Forests for
-different parameters m.
-compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
+Method to quantitavely compare Prediction Quality of the Random Forests for different parameters m.
+
 CAUTION CPU EXPENSIVE TAKES LONG
+}
+\examples{
+compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
+
 }

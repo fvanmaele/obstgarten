@@ -6,6 +6,13 @@
 \usage{
 compare_classify_iris(depth = 5L, B = 10L, h = FALSE)
 }
+\arguments{
+\item{depth}{The amount of steps before halting the algorithm}
+
+\item{B}{number of bootstrap samples}
+
+\item{h}{if false, the generated dataset is saved}
+}
 \description{
 Function that performs classification with all 4 methods on
 }

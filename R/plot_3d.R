@@ -23,7 +23,7 @@ plot_3D <- function(df) {
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #' if FALSE only 2D plots are returned
 #'
-#' plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
+#' @examples plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 #' @import dplyr
 #' @import ggplot2
 #' @import rayshader

@@ -6,7 +6,9 @@
 \usage{
 calc_accuracy(ret)
 }
+\arguments{
+\item{ret}{data of iris classification dataset}
+}
 \description{
-Method that calculated the accuracy the different methods achieved in the iris classification
-dataset
+Method that calculated the accuracy the different methods achieved in the iris classification dataset
 }

@@ -25,10 +25,14 @@ bagging(
 
 \item{x_test}{data.frame: test data with labels of dimensions Number of Samples x Features + 1}
 
+\item{depth}{numeric: The amount of steps before halting the algorithm (defaults to 5)}
+
 \item{m}{Count of random dimensions in random forest. Is set on heuristically motivated values if m is NULL}
 
 \item{regression}{logical: specify whether tree is a decision (classification) or a
 regression tree. default=TRUE, TRUE for regression, FALSE for classification}
+
+\item{use_parallel}{logical: Whether to use parallel computation or not}
 
 \item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
 
@@ -40,8 +44,6 @@ defaults to \code{100L})}
 
 \item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
 set size. (\code{numeric}, defaults to \code{0.25})}
-
-\item{use_parallel:}{Whether to use parallel computation or not}
 }
 \value{
 vector: of size Number of Samples containing bagged predictions to dataset

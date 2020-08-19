@@ -12,6 +12,8 @@ R_min(A, d, mode = "regression", ...)
 \item{d}{dimension of the training data \eqn{X_{i_1}..X_{i_d}} (\code{integer})}
 
 \item{mode}{\code{regression} or \code{classification}}
+
+\item{...}{remaining arguments passed on to the next function}
 }
 \value{
 list containing optimal parameters \eqn{j}, \eqn{s}

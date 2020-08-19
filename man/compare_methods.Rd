@@ -2,16 +2,21 @@
 % Please edit documentation in R/simul.R
 \name{compare_methods}
 \alias{compare_methods}
-\title{Method to qualitatively compare Prediction
-Quality of the four different methods for
-high dimensional data.
-compare_methods(d=3, n=1000, B=100L)}
+\title{compare_methods}
 \usage{
 compare_methods(d, n, B = 100L)
 }
+\arguments{
+\item{d}{dimension}
+
+\item{n}{number of generated data pairs}
+
+\item{B}{number of bootstrap samples}
+}
 \description{
-Method to qualitatively compare Prediction
-Quality of the four different methods for
-high dimensional data.
-compare_methods(d=3, n=1000, B=100L)
+Method to qualitatively compare Prediction Quality of the four different methods for high dimensional data.
+}
+\examples{
+ compare_methods(d=3, n=1000, B=100L)
+
 }
