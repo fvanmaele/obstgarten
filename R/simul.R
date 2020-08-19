@@ -131,7 +131,7 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
 #' compare_methods_PE(d=4, n=1000L, B=25L, reps=100) CAUTION!!
 #' TAKES VERY LONG CPU EXPENSIVE
 #' @import stringr
-compare_methods_PE <- function(d, n, B=100L, reps=400) {
+compare_methods_PE <- function(d, n, B=25L, reps=400) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
 
   for (i in 1:reps) {

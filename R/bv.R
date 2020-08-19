@@ -177,22 +177,22 @@ bv_plot <- function(data, plot_title="Prediction CART Regression Tree", bagging=
       ylab("") +
       xlab("") +
       bbc_style()
-  }
+  }(0., 0.001, 0.01, 0.03)
   else if (pruning) {
     gg <- ggplot(df4, aes(x=grid, y=mean)) +
       scale_colour_manual("",
-                          breaks = c("Lambda = 0.01", "Lambda = 0.1", "Lambda = 1", "Lambda = 10"),
-                          values = c("Lambda = 0.01"="grey", "Lambda = 0.1"="blue", "Lambda = 1."="green",
-                                     "Lambda = 10"="red")) +
+                          breaks = c("lam = 0.", "lam = 0.001", "lam = 0.01", "lam = 0.03"),
+                          values = c("lam = 0."="grey", "lam = 0.001"="blue", "lam = 0.01"="green",
+                                     "lam = 0.03"="red")) +
       geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "red", data=df1, alpha=0.5, outline.type="both") +
       geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "green", data=df2, alpha=0.5, outline.type="both") +
       geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "blue", data=df3, alpha=0.5, outline.type="both") +
       geom_ribbon(aes(ymin = mean - std, ymax = mean + std), fill = "grey", alpha=0.5, outline.type="both") +
       geom_line(aes(x=grid, y=sin(2*pi*grid))) +
-      geom_line(aes(x=grid, y=mean, colour="Lambda = 10"), data=df1, alpha=1) +
-      geom_line(aes(x=grid, y=mean, colour="Lambda = 1"), data=df2, alpha=1) +
-      geom_line(aes(x=grid, y=mean, colour="Lambda = 0.1"), data=df3, alpha=1) +
-      geom_line(alpha=1, aes(colour="Lambda = 0.01")) +
+      geom_line(aes(x=grid, y=mean, colour="lam = 0.03"), data=df1, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="lam = 0.01"), data=df2, alpha=1) +
+      geom_line(aes(x=grid, y=mean, colour="lam = 0.001"), data=df3, alpha=1) +
+      geom_line(alpha=1, aes(colour="lam = 0.")) +
       ggtitle(plot_title) +
       ylab("") +
       xlab("") +

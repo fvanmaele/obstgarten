@@ -51,8 +51,8 @@ suppressMessages(simul_plot_pruning())
 The Bias-Variance tradeoff is displayed qualitatively in the next plot. 
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-#load("data/bv_pruning")
-#suppressMessages(bv_plot(bv_data, plot_title = "Pruning Bias-Variance Tradeoff", bagging = FALSE, pruning=TRUE))
+load("data/bv_pruning")
+suppressMessages(bv_plot(bv_data, plot_title = "Pruning Bias-Variance Tradeoff", bagging = FALSE, pruning=TRUE))
 ```
 
 ### Bootstrap Aggregating (Bagging)
