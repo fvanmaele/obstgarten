@@ -89,12 +89,12 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' pred_plot_greedy(5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
-pred_plot_pruning <- function(lambda, depth=5, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
+pred_plot_pruning <- function(lambda = 1/3, depth=5, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
 
   grid <- seq(0, 1, len=n)
 
   predict <- function(x) {
-    return(cart_predict(x, node=tree$root))
+    return(cart_predict_pruned(x, node=tree[[1]]$root, tree[[2]]))
   }
 
   x <- generate_sin_data(n, grid=grid, sigma=sigma)

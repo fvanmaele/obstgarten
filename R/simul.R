@@ -24,17 +24,17 @@ simul_plot_greedy <- function() {
 #' @import gridExtra
 #' @import ggplot2
 simul_plot_pruning <- function() {
-  lambda_list <- list(0.01, 0.1, 1., 10.)
+  lambda_list <- list(0.001, 0.005, .01, 0.02)
   plot_list <- list()
   count <- 1
-  for (depth in depth_list) {
-    plot_list[[count]] <- pred_plot_pruning(n = 100, depth=5, simul=TRUE)
+  for (lambda in lambda_list) {
+    plot_list[[count]] <- pred_plot_pruning(n = 100, depth=5, simul=TRUE, lambda = lambda)
     count <- count + 1
   }
-  grid.arrange(plot_list[[1]] + ggtitle("lambda = 0.01") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
-               plot_list[[2]] + ggtitle("lambda = 0.1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
-               plot_list[[3]] + ggtitle("lambda = 1") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
-               plot_list[[4]]  + ggtitle("lambda = 10") + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+  grid.arrange(plot_list[[1]] + ggtitle(paste("lambda =", lambda_list[[1]])) + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[2]] + ggtitle(paste("lambda =", lambda_list[[2]])) + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[3]] + ggtitle(paste("lambda =", lambda_list[[3]])) + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
+               plot_list[[4]]  + ggtitle(paste("lambda =", lambda_list[[4]])) + theme(plot.title = element_text(size=10)) + theme(legend.position="none"),
                nrow = 2,
                top = textGrob("Pruned Regression Tree Predictors",
                               gp=gpar(fontsize=14))
