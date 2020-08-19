@@ -407,7 +407,6 @@ calc_accuracy <- function(ret) {
 
   for (i in 1:4) {
     acc[[i]] <- sum(dat[, 1] == dat[, 1+i])/nrow(dat)
-    print(acc[[i]])
   }
 
   return(acc)
@@ -417,10 +416,10 @@ calc_accuracy <- function(ret) {
 calc_mean_accuracy <- function(reps=100) {
   mat <- matrix(0., nrow=reps, ncol=4)
   for (i in 1:reps) {
-    mat[i, ] <- calc_accuracy(compare_classify_iris(depth=5L, B=10L, h=TRUE))
-    print(mat[i, ])
+    mat[i, ] <- calc_accuracy(compare_classify_iris(depth=5L, B=3L, h=TRUE))
   }
-  ret <- apply(ret, MARGIN=2, mean)
+  ret <- apply(mat, MARGIN=2, mean)
+  print(ret)
   save("ret", file=str_c("data/simul/","iris_mean_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 

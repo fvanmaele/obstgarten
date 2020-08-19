@@ -117,24 +117,3 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
 
 }
 
-
-# ptm <- proc.time()
-# n <- 150
-# M <- generate_sin_data(n, sigma=0.2)
-# dimnames(M) <- list(NULL, c(1, "y"))
-# y <- bagging(100, x_train = M, x_test = M, use_parallel = TRUE)
-#
-# plot(M[, 1], M[, 2])
-# plot(M[, 1], y)
-# proc.time() - ptm
-#
-# ptm <- proc.time()
-# n <- 150
-# M <- generate_sin_data(n, sigma=0.2)
-# dimnames(M) <- list(NULL, c(1, "y"))
-# y <- bagging(100L, x_train = M, x_test = M, use_parallel = FALSE)
-
-# plot(M[, 1], M[, 2])
-# plot(M[, 1], y)
-# proc.time() - ptm
-
