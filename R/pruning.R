@@ -23,7 +23,7 @@ cart_predict_pruned <- function(x, node, mask) { # list or vector
   #  print("cart_predict2")
    # print(node)
   #  print(mask)
-    if (!is.na(node$y)) return(100000) # Wurzel. ToDo: Sollte mean oder majority ein
+    if (!is.na(node$y)) return(0) # Wurzel. ToDo: Sollte mean oder majority ein
     return(node$y)
   } else if (x[[node$j]] < node$s) {
     return(cart_predict_pruned(x, node$childL, mask))
@@ -129,7 +129,7 @@ cart_greedy_prune <-
 
     mLeafes <- function(tree, mask) {
       f <- function(node) {
-        if (!mask[node$label])
+        if (!mask[[node$label]])
           return(FALSE)
 
         if ((is.null(node$childL) && is.null(node$childR))) {
@@ -242,24 +242,31 @@ print("STARTwhile")
 print(p)
 print("Depth")
 print(mDepth(Cart, mT[[p]]))
-#print(mT[[p]])
-iNodesTp <- innerNodes(Cart, mT[[p]])
-cT[p] <- complexity(Cart, mT[[p]])
-      # Berechne den weakest link
+print("mTp")
+print(mT[[p]])
+
+      iNodesTp <- innerNodes(Cart, mT[[p]])
+      cT[p] <- complexity(Cart, mT[[p]])
+print("iNodesTp")
+print(sapply(iNodesTp, function(node) {`$`(node, "label")}))
+#print(!mLeafes(Cart, mT[p]))
+print("Berechne den weakest link")
       mT_test <- vector()
       wlp <- vector()
       i <- 0L
       for (node in iNodesTp ) {
         i <- i + 1
         mT_test <- pruneAt(node, mT[[p]])
-#print(mT_test)
+print(mT_test)
         wlp[i] <- (Risk(mT_test) + Risk(mT[[p]])) / (cT[p] - complexity(Cart, mT_test))
       }
 print("Finished wlp")
 print(wlp)
+#if(is.na(wlp)) break
+print(which.min(wlp))
 print("cT")
 print(cT)
-      pivot <- rank(min(wlp))
+      pivot <- which.min(wlp)
 print("Pivot")
 print(pivot)
 print("length leaves")
@@ -275,14 +282,17 @@ print(sum(mLeafes(Cart, mT[[p]])))
     print("Nearly FINISHED!")
     # Berechne den optimal geschnittenen Baum
     P <- p
+print(p)
     p_hat <- vector()
     for (p in 1:P) {
       p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
     } # p_hat <- R_hat(T) + lambda * complexity(T)
 
-    p_hat_min <- rank(min(p_hat))
+    p_hat_min <- which.min(p_hat)
 
     print("FINISHED!")
+    print(p_hat_min)
 
+print(mT)
     return(list(Cart, mT[[p_hat_min]]))
   }
