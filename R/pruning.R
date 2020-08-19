@@ -262,11 +262,15 @@ print(mT_test)
       }
 print("Finished wlp")
 print(wlp)
-#if(is.na(wlp)) break
+
 print(which.min(wlp))
 print("cT")
 print(cT)
+if((length(wlp) < 2) && is.na(wlp)) {
+  pivot <- 1
+} else {
       pivot <- which.min(wlp)
+    }
 print("Pivot")
 print(pivot)
 print("length leaves")
@@ -287,11 +291,11 @@ print(p)
     for (p in 1:P) {
       p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
     } # p_hat <- R_hat(T) + lambda * complexity(T)
-
+print("p_hat")
+print(p_hat)
     p_hat_min <- which.min(p_hat)
-
-    print("FINISHED!")
-    print(p_hat_min)
+print("FINISHED!")
+print(p_hat_min)
 
 print(mT)
     return(list(Cart, mT[[p_hat_min]]))
