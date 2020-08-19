@@ -89,7 +89,7 @@ bv_pruning <- function(lambda_list, sigma=0.2, n=150, reps=50) {
 #'
 #' @description generate test date for different depths values of the CART algorithm with 400 reps and 150 data points
 #'
-#' @examples bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
+#' bv_bagging(list(1L, 5L, 25L, 100L), n=150, reps=400, sigma=0.25)
 bv_bagging <- function(bs_list, sigma=0.2, n=150, reps=400) {
 
   params_list <- list()

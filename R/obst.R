@@ -123,7 +123,7 @@ Gabel <- R6::R6Class("Gabel",
 #' @return a list of lists representing the tree structure and attributes of
 #' `node` (see Details).
 #' @export
-as_list.Gabel <- function(node) {
+as_list_Gabel <- function(node) {
   if (is.null(node$childL) && is.null(node$childR)) {
     return(structure(
       list(), y = node$y, s = NA, j = NA, depth = node$depth,
@@ -131,7 +131,7 @@ as_list.Gabel <- function(node) {
     )
   } else if (!is.null(node$childL) && !is.null(node$childR)) {
     return(structure(
-      list(as_list.Gabel(node$childL), as_list.Gabel(node$childR)),
+      list(as_list_Gabel(node$childL), as_list_Gabel(node$childR)),
       y = NA, s = node$s, j = node$j, depth = node$depth,
       label = node$label, parent = node$parent$label, leaf = node$isObst())
     )

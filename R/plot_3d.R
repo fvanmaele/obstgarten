@@ -22,6 +22,7 @@ plot_3D <- function(df) {
 #' @param path character specifying path to compare_plot_data file
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #' if FALSE only 2D plots are returned
+#' @param margin margin of the scale
 #'
 #' @examples plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 #' @import dplyr
@@ -69,6 +70,7 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 #' @param path character specifying path to compare_RF_m file
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #'  if FALSE only 2D plots are returned
+#' @param margin margin of the scale
 #'
 #' plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
 #' @import dplyr
@@ -119,6 +121,7 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 #' @param path character specifying path to compare_RF_m file
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #' if FALSE only 2D plots are returned
+#' @param margin margin of the scale
 #'
 #' plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
 #' @import dplyr
@@ -171,6 +174,7 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 #' @param path character specifying path to compare_RF_m file
 #' @param render logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 #'  if FALSE only 2D plots are returned
+#' @param margin margin of the scale
 #'
 #' plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
 #' @import dplyr

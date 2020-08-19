@@ -11,7 +11,8 @@
 #' @param display_d integer dimension displayed in multivariate case gaussian
 #' @param sd double > 0 inherent noise in the generated data
 #' @param k integer specifying field of view in sine2D case
-#' @param grid
+#' @param grid specify data points on x axis
+#' @param random_forest TRUE: random forest, FALSE: bagging
 #'
 #' @return print(plot)
 rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
@@ -44,22 +45,22 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
 
 #' Starts the Shiny App
 #'
-#' @description All arguments are selectable in the App
-#'
-#' @param Datatype choose a datatype (Dropdown menu)
-#' @param Number_of_obs number of generated data rows (numeric)
-#' @param Dimension dimension of the record (numeric)
-#' @param Display_dimension number of shown dimensions (numeric)
-#' @param m count of random dimensions (numeric)
-#' @param Sigma standard deviation of irreducible error in y (numeric)
-#' @param Random_forest TRUE: random forest, FALSE: bagging (logical)
-#' @param Depth depths of the CART generated regression tree (numeric)
-#' @param Bootstrap_samples number of bootstrap samples (numeric)
-#' @param k borders of the sine2D plot (numeric)
-#' @param Simulate starts the calculation with the given parameters (button)
+#' Datatype choose a datatype (Dropdown menu)
+#' Number_of_obs number of generated data rows (numeric)
+#' Dimension dimension of the record (numeric)
+#' Display_dimension number of shown dimensions (numeric)
+#' m count of random dimensions (numeric)
+#' Sigma standard deviation of irreducible error in y (numeric)
+#' Random_forest TRUE: random forest, FALSE: bagging (logical)
+#' Depth depths of the CART generated regression tree (numeric)
+#' Bootstrap_samples number of bootstrap samples (numeric)
+#' k borders of the sine2D plot (numeric)
+#' Simulate starts the calculation with the given parameters (button)
 #'
 #' @return
 #' @import shiny
+#' @import shinydashboard
+#' @import shinyjs
 #' @export
 start_shiny_app <- function(){
   ui <- fluidPage(
