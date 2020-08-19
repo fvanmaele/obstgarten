@@ -103,7 +103,7 @@ In this section the prediction performance of the methods are compared. To do so
 When looking at the figures below one the fact gets apparent that the Random Forest again models the true probability distribution the most accurate. In contrast, the CART predictor shows some distinct vertical boundaries on regression values where the values suddenly jump. The Bagging algorithm does better in that regard. Nevertheless, all methods fail to capture the more extreme values around the mean of the gaussian. This is probably due to the inherent problem, that if one projects the other dimensions onto this one dimension and fits a regression tree on it, the majority of samples will be close to zero as they are far away from the gaussian mean in one or more of the other dimensions. Thus, the predictor of the trees is drawn downwards. The higher the dimensionality of the multivariate gaussia the bigger this inherent problem becomes. 
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-suppressMessages(plot_3D_compare("data/compare_methods_4d_wp", margin=.5, render = FALSE))
+suppressMessages(plot_3D_compare("data/compare_methods_4d_wp", margin=.3, render = FALSE))
 ```
 This time, the actual predicted densities seem to be more expressive than the squared differences in the next figure. 
 
@@ -115,7 +115,7 @@ As can be seen in the quantitative analysis below where the prediction error was
 
 |                  | CART | Pruning | Bagging | Random Forest |
 |:-----------------:|:------:|:-----:|:---------:|:------:|
-| Prediction Error |   1.44  |  1.43  |    1.35   |    1.27  |
+| Prediction Error |   1.44  |  1.44  |    1.35   |    1.27  |
 
 ## A Small Real Data Application: The Iris Classification Problem
 In the following part of the study the methods are applied to real data. The Iris Dataset is used here. Which is a 4-dimensional supervised classification problem. The 4-dimensional feature vectors describe the measures of three different flowers including sepal length/width and petal length/width. The task is to learn to correctly classify the feature vectors as either the type "setosa", "versicolor" or "virginica". The distributions of the features is displayed in the following plot.
