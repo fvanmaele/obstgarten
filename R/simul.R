@@ -153,7 +153,7 @@ compare_methods_PE <- function(d, n, B=100L, reps=400) {
 
     # predicting with CART and pruning
     # yet to implement
-    tree <- cart_greedy_prune(lambda=0.001, xy, depth=5, random=FALSE, quantile = TRUE)
+    tree <- cart_greedy_prune(lambda=0.0001, xy, depth=5, random=FALSE, quantile = TRUE)
     pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                   function(x) cart_predict_pruned(x, node=tree[[1]]$root, tree[[2]]))
     pe_mat[i, 2] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
@@ -291,10 +291,9 @@ compare_methods <- function(d, n, B=100L) {
 
   # predicting with CART and pruning
   # yet to implement
-  tree <- cart_greedy_prune(lambda=0.001, xy, depth=5, random=FALSE, quantile = TRUE)
+  tree <- cart_greedy_prune(lambda=0.0001, xy, depth=5, random=FALSE, quantile = TRUE)
   pred <- apply(xy_test[, -ncol(xy_test), drop=FALSE], MARGIN=1,
                 function(x) cart_predict_pruned(x, node=tree[[1]]$root, tree[[2]]))
-  pe_mat[i, 2] <- 1/n * sum((pred - xy_test[, ncol(xy_test)])**2)
   ret$pruning <- pred
 
   # predicting with Bagging alg
