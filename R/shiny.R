@@ -63,8 +63,8 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
 #' Simulate starts the calculation with the given parameters (button)
 #'
 #' @return
-#' @import shiny
-#' @import shinyjs
+#' @rawNamespace import(shiny, except = runExample)
+#' @rawNamespace import(shinyjs, except = runExample)
 #' @import shinydashboard
 #' @export
 start_shiny_app <- function(){
