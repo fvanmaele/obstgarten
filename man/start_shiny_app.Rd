@@ -20,5 +20,6 @@ Random_forest TRUE: random forest, FALSE: bagging (logical)
 Depth depths of the CART generated regression tree (numeric)
 Bootstrap_samples number of bootstrap samples (numeric)
 k borders of the sine2D plot (numeric)
+lambda Cost weight
 Simulate starts the calculation with the given parameters (button)
 }
