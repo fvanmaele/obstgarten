@@ -47,6 +47,7 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
 #' @param k specifying field of view
 #'
 #' @description According to model y = (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2)) + N(0, sigma)
+#' @export
 generate_sin_2D <- function(n, sigma=0.2, k=10) {
 
   eps <- rnorm(n, mean=0, sd=sigma)
@@ -62,13 +63,12 @@ generate_sin_2D <- function(n, sigma=0.2, k=10) {
 }
 
 
-
 #' Generate Data from a multivariate Gaussian
 #' @param n dimensional vector with feature means
 #' @param d dimension
 #' @param sd standard deviation of irreducible error in y
 #' @param sigma positive definite square covariance matrix
-#' @param mu
+#' @param mu mean for the multivariate normal distribution
 #'
 #' @return list(df of data, feature means vector, covariance matrix)
 #'
@@ -128,6 +128,7 @@ load_iris <- function() {
 #'
 #' @return Classification Training and Classification Test Set
 #' @import dplyr
+#' @export
 prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) {
   iris <- load_iris()
 
