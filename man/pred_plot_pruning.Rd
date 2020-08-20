@@ -27,5 +27,5 @@ pred_plot_pruning(
 \item{simul}{True: return data}
 }
 \description{
-pred_plot_greedy(5, sigma=0.25, n=150)
+plots prediction of pruned CART generated regression tree
 }

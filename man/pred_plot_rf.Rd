@@ -21,11 +21,9 @@ pred_plot_rf(n, d, sd, B, depth, m, display_d = 1L, simul = FALSE)
 
 \item{display_d}{integer dimension displayed in multivariate case gaussian}
 
-\item{simul}{True: return data
-
-Method plotting one dimension of a multidimensional regression
-problem of a multicariate gaussian using a random forest.}
+\item{simul}{True: return data}
 }
 \description{
-pred_plot_rf
+Method plotting one dimension of a multidimensional regression
+problem of a multicariate gaussian using a random forest.
 }

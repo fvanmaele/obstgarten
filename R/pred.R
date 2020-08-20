@@ -1,5 +1,5 @@
 #' plots prediction of CART generated regression tree
-#' @description pred_plot_greedy(5, sigma=0.25, n=150)
+#'
 #' @param depth The amount of steps before halting the algorithm
 #' @param sigma standard deviation of irreducible error in y
 #' @param n number of generated data pairs
@@ -46,10 +46,8 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simu
   else print(gg)
 }
 
-
-#' pred_plot_greedy_class
-#' @description plots prediction of CART generated decision tree
-#' pred_plot_greedy_class(5, sigma=0.25, n=150)
+#' plots prediction of CART generated decision tree
+#'
 #' @param depth The amount of steps before halting the algorithm
 #' @param sigma standard deviation of irreducible error in y
 #' @param n number of generated data pairs
@@ -93,7 +91,6 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 
 #' plots prediction of pruned CART generated regression tree
 #'
-#' @description pred_plot_greedy(5, sigma=0.25, n=150)
 #' @param lambda Cost weight
 #' @param depth The amount of steps before halting the algorithm
 #' @param sigma standard deviation of irreducible error in y
@@ -140,6 +137,9 @@ pred_plot_pruning <- function(lambda = 1/3, depth=5, sigma=0.25, n=150, random_f
 }
 
 
+#' pred_plot_bagging
+#'
+#' @description
 #' plots prediction of Bagging generated regression tree with depth 5
 #' and specified number of bootstrap samples B
 #'
@@ -151,7 +151,6 @@ pred_plot_pruning <- function(lambda = 1/3, depth=5, sigma=0.25, n=150, random_f
 #' @param simul True: return data
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
-#' pred_plot_bagging(100, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_forest=FALSE, simul=FALSE) {
@@ -193,7 +192,6 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_for
 #' @param sigma standard deviation of irreducible error in y
 #' @param n number of generated data pairs
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
-#' pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -234,10 +232,11 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 #' @param k integer specifying field of view in sine2D case
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
+#' @description
 #' Method to Plot Predicted Density of a Random Forest
 #' for a two dimensional case for a sine generated dataset
 #' (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
-#' pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)
+#'
 #' @import ggplot2
 pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
   data <- generate_sin_2D(n=n, sigma=sd, k=k)
@@ -297,8 +296,10 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
 #' @param display_d integer dimension displayed in multivariate case gaussian
 #' @param simul True: return data
 #'
+#' @description
 #' Method plotting one dimension of a multidimensional regression
 #' problem of a multicariate gaussian using a random forest.
+#'
 #' @import ggplot2
 #' @import bbplot
 pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L, simul=FALSE) {

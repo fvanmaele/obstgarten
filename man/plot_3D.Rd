@@ -2,9 +2,7 @@
 % Please edit documentation in R/plot_3d.R
 \name{plot_3D}
 \alias{plot_3D}
-\title{CPU Heavy!!!
-Method to 3D render Gaussian Multivariates estimates coming from
-generated samples or predicted values}
+\title{plot_3D}
 \usage{
 plot_3D(df)
 }

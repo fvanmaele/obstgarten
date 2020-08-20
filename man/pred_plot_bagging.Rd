@@ -2,8 +2,7 @@
 % Please edit documentation in R/pred.R
 \name{pred_plot_bagging}
 \alias{pred_plot_bagging}
-\title{plots prediction of Bagging generated regression tree with depth 5
-and specified number of bootstrap samples B}
+\title{pred_plot_bagging}
 \usage{
 pred_plot_bagging(
   depth,
@@ -26,9 +25,7 @@ pred_plot_bagging(
 
 \item{grid}{specify data points on x axis}
 
-\item{random_forest}{logical: TRUE: random forest, FALSE: bagging
-
-pred_plot_bagging(100, sigma=0.25, n=150)}
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
 
 \item{simul}{True: return data}
 }

@@ -49,6 +49,7 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
 
 #' Starts the Shiny App
 #'
+#' @description
 #' Datatype choose a datatype (Dropdown menu)
 #' Number_of_obs number of generated data rows (numeric)
 #' Dimension dimension of the record (numeric)

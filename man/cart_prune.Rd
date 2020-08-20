@@ -13,8 +13,6 @@ cart_prune(node, mask)
 }
 \value{
 mask (\code{vector(logical)}) mask for the pruned CART in dfs-order
-
-mRoot <- cart_prune(Cart$root, mask)
 }
 \description{
 returns a mask of the CART with subtree pruned at given node

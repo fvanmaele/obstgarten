@@ -92,8 +92,6 @@ simul_plot_bagging <- function() {
 #' @param random_forest TRUE: random forest, FALSE: bagging
 #' @param reps rows of data
 #'
-#' compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
-#'
 #' @import stringr
 compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=100) {
   pe_mat <- matrix(0., nrow=reps, ncol=4)
@@ -141,7 +139,6 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
 #'
 #' CAUTION!! TAKES VERY LONG CPU EXPENSIVE
 #'
-#' compare_methods_PE(d=4, n=1000L, B=25L, reps=100)
 #'
 #' @param d dimension
 #' @param n number of generated data pairs
@@ -205,8 +202,6 @@ compare_methods_PE <- function(d, n, B=25L, reps=400) {
 #' @param B number of bootstrap samples
 #' @param reps rows of data
 #'
-#' compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)
-#'
 #' @import stringr
 compare_m_PE <- function(m_list, d, n, B, reps=400) {
   for (m in m_list) {
@@ -260,8 +255,6 @@ compare_m_PE <- function(m_list, d, n, B, reps=400) {
 #' @param n number of generated data pairs
 #' @param B number of bootstrap samples
 #'
-#' compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)
-#'
 #' @import stringr
 compare_m <- function(m_list, d, n, B) {
   for (m in m_list) {
@@ -306,8 +299,6 @@ compare_m <- function(m_list, d, n, B) {
 #' @param d dimension
 #' @param n number of generated data pairs
 #' @param B number of bootstrap samples
-#'
-#' compare_methods(d=3, n=1000, B=100L)
 #'
 #' @import stringr
 compare_methods <- function(d, n, B=100L) {

@@ -13,9 +13,7 @@ bv_pruning(lambda_list, sigma = 0.2, n = 150, reps = 50)
 
 \item{n}{number of generated data pairs}
 
-\item{reps}{rows of data
-
-bv_pruning(list(0., 0.001, 0.01, 0.03), n=150, reps=50, sigma=0.25)}
+\item{reps}{rows of data}
 }
 \description{
 generate test data for different depths values of the CART algorithm with 400 reps and 150 data points

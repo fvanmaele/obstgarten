@@ -13,9 +13,7 @@ compare_m(m_list, d, n, B)
 
 \item{n}{number of generated data pairs}
 
-\item{B}{number of bootstrap samples
-
-compare_m(m_list = list(1L, 3L, 5L, 10L) ,d=20, n=100, B=100L)}
+\item{B}{number of bootstrap samples}
 }
 \description{
 Method to qualitatively compare Prediction Quality of the Random Forests for different parameters m.

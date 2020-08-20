@@ -2,9 +2,7 @@
 % Please edit documentation in R/plot_3d.R
 \name{plot_3D_compare_m}
 \alias{plot_3D_compare_m}
-\title{Method to plot 3D comparisons of prediction SQUARED DIFFERENCES
-between ground truth and Random Forest Predictions for
-different m}
+\title{plot_3D_compare_m}
 \usage{
 plot_3D_compare_m(path, render = FALSE, margin = 1)
 }
@@ -14,9 +12,7 @@ plot_3D_compare_m(path, render = FALSE, margin = 1)
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 if FALSE only 2D plots are returned}
 
-\item{margin}{margin of the scale
-
-plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")}
+\item{margin}{margin of the scale}
 }
 \description{
 Method to plot 3D comparisons of prediction SQUARED DIFFERENCES
