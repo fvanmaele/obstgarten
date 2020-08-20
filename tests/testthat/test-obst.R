@@ -90,3 +90,9 @@ test_that("Baum$validate", {
   T2$root$childR$label <- 0L
   expect_error(T2$validate())
 })
+
+test_that("Baum$depth", {
+  depth <- 6
+  T3 <- cart_greedy(generate_sin_data(100, sigma=0.2), depth=depth, threshold=1)
+  expect_equal(T3$depth(), depth)
+})
