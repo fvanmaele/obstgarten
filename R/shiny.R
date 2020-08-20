@@ -124,7 +124,7 @@ start_shiny_app <- function(){
         ),
         box(id = "pruning", width = '800px',
             numericInput('n_pruning', 'Number of obs', 200),
-            sliderInput('lambda_pruning', 'Lambda', 0, 0.01, 0.002, 0.001),
+            sliderInput('lambda_pruning', 'Lambda', 0, 0.1, 0.002, 0.001),
             sliderInput('depth_pruning', 'Tree depth', 1, 10, 3, 1),
             sliderInput('sigma_pruning', 'Sigma', 0, 0.5, 0.2, 0.05),
             checkboxInput("random_pruning", "Random forest", value=FALSE),
