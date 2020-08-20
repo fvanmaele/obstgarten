@@ -250,7 +250,7 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
         leaves <- append(leaves, c(childL, childR))
       } else {
         stopifnot(length(node$points) > 0)
-        message("threshold not reached for node ", node$label)
+        #message("threshold not reached for node ", node$label)
       }
     }
 
