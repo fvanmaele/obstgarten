@@ -30,6 +30,8 @@
 #'   set size. (`numeric`, defaults to `0.25`)
 #' @return vector: of size Number of Samples containing bagged predictions to dataset
 #' character vector for classification case and double vector for regression case
+#' @export
+#' @import parallel
 bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_parallel=FALSE, random_forest = FALSE, quantile = FALSE, q_threshold = 100L, q_pct = 0.25) {
   stopifnot("B needs to be an integer." = is.integer(B))
   stopifnot("regression needs to be logical" = is.logical(regression))
@@ -93,18 +95,8 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
 
   if (use_parallel) {
     # set up parallel
-#   nb_cores <- detectCores() - 1
-#   cluster_pred <- parallel::makeCluster(nb_cores)
-#    parallel::clusterEvalQ(cluster_pred, {
-#      library(obstgarten)})
-
-#    predictions <- matrix(unlist(parallel::parLapply(
-#      cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
-
-#    parallel::stopCluster(cluster_pred) # close cluster
-
     nb_cores <- detectCores()
-    predictions <- matrix(unlist(parallel::mclapply(
+    predictions <- matrix(unlist(mclapply(
          cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B)
   }
   else {
