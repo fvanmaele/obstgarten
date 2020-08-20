@@ -15,7 +15,7 @@ cart_greedy_prune(
   quantile = FALSE,
   q_threshold = 100L,
   q_pct = 0.25,
-  lambda = 0.3
+  lambda = 0.01
 )
 }
 \arguments{
@@ -46,18 +46,23 @@ defaults to \code{100L})}
 \item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
 set size. (\code{numeric}, defaults to \code{0.25})}
 
-\item{lambda}{Cost weight.}
+\item{lambda}{weight for complexity-cost}
 }
 \value{
 A regression or classification tree modeled after the training data
 (\code{Baum}), pruned according to Cost-Complexity
 }
 \description{
-Create a regression or classification tree tree greedily based
-on training data.
+Create a regression or classification tree greedily based
+on training data. Then prune it according to cost-complexity trade-off
 }
 \details{
 Unless \code{sample} is set to \code{TRUE}, it is required that there are no observations
 \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
 X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
+}
+\examples{
+XY <- generate_sin_data(150, sigma=0.2)
+dimnames(XY) <- list(NULL, c(1, "y"))
+T2 <- cart_greedy(XY, depth=20, threshold=1, lambda = 0.01)
 }

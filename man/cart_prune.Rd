@@ -2,18 +2,21 @@
 % Please edit documentation in R/pruning.R
 \name{cart_prune}
 \alias{cart_prune}
-\title{Title}
+\title{Prune a CART}
 \usage{
 cart_prune(node, mask)
 }
 \arguments{
-\item{node}{first call with root}
+\item{node}{(\code{Gabel}) node below whitch the mask will be set to FALSE}
 
-\item{mask}{}
+\item{mask}{(\code{vector(logical)}) mask for the CART in dfs-order}
 }
 \value{
-
+mask (\code{vector(logical)}) mask for the pruned CART in dfs-order
 }
 \description{
-Title
+returns a mask of the CART with subtree pruned at given node
+}
+\examples{
+mRoot <- cart_prune(Cart$root, mask)
 }

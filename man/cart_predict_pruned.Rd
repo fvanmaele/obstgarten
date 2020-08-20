@@ -2,20 +2,24 @@
 % Please edit documentation in R/pruning.R
 \name{cart_predict_pruned}
 \alias{cart_predict_pruned}
-\title{cart_predict_pruned}
+\title{Prediction for pruned CARTs}
 \usage{
 cart_predict_pruned(x, node, mask)
 }
 \arguments{
-\item{x}{one col of XY except y}
+\item{x}{(\code{vector}) one col of XY except y}
 
-\item{node}{first call with root}
+\item{node}{(\code{Gabel}) first call with root}
 
-\item{mask}{}
+\item{mask}{(\code{vector(logical)}) mask for the CART in dfs-order}
 }
 \value{
-
+y prediction node$y of appropriate sub-node
 }
 \description{
-cart_predict_pruned
+returns y of leaf nodes, but considers only parts of the CART not masked
+}
+\examples{
+y <- cart_predict_pruned(X, Cart$root, mask)
+
 }
