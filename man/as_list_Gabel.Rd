@@ -25,7 +25,7 @@ The following attributes are set:
 \item \code{depth} (\code{Gabel$depth});
 \item \code{label} (\code{Gabel$label});
 \item \code{parent} (\code{Gabel$parent$label});
-\item \code{leaf} (the value from \code{Gabel$isObst()}).
+\item \code{leaf} (the value from \code{Gabel$isObst}).
 }
 
 It is assumed there are no cycles in the argument node. A node should either

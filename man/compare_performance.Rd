@@ -19,12 +19,10 @@ compare_performance(n, B, depth, sd, k = 10, random_forest = TRUE, reps = 100)
 
 \item{random_forest}{TRUE: random forest, FALSE: bagging}
 
-\item{reps}{rows of data}
+\item{reps}{rows of data
+
+compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)}
 }
 \description{
 Method to test performance of quantiles
-}
-\examples{
-compare_performance(n=1000, B=10L, depth=5, sd=0.1, k=10, random_forest=TRUE, reps=100)
-
 }

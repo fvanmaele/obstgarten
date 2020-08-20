@@ -4,16 +4,14 @@
 #' @param sigma standard deviation of irreducible error in y
 #' @param reg logical TRUE for regression data FALSE for classification data
 #' @param grid specify data points on x axis only works for reg == TRUE
-#' @return if reg TRUE: n x 2 matrix [x_i, y_i] of generated data set
-#' @return if reg FALSE: n x 3 matrix [x_1i, x_2i, y_i] of generated data set
+#' @return if reg TRUE: n x 2 matrix (x_i, y_i) of generated data set
+#' @return if reg FALSE: n x 3 matrix (x_1i, x_2i, y_i) of generated data set
 #'
 #' regression:
 #' dat <- generate_sin_data(100, sigma=0.2)
-#' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(-1, 1))
 #'
 #' classification:
 #' dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
-#' plot(dat[, 1], dat[, 2], xlim=c(0, 1), ylim = c(0, 1), col=dat[, 3])
 #' @export
 generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
   if (sigma <= 0.) {
@@ -53,7 +51,7 @@ generate_sin_data <- function(n, sigma=0.2, reg=TRUE, grid=NULL) {
 #' @param sigma standard deviation of irreducible error in y
 #' @param k specifying field of view
 #'
-#' @examples According to model y = (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2)) + N(0, sigma)
+#' According to model y = (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2)) + N(0, sigma)
 generate_sin_2D <- function(n, sigma=0.2, k=10) {
 
   eps <- rnorm(n, mean=0, sd=sigma)

@@ -11,12 +11,10 @@ compare_methods(d, n, B = 100L)
 
 \item{n}{number of generated data pairs}
 
-\item{B}{number of bootstrap samples}
+\item{B}{number of bootstrap samples
+
+compare_methods(d=3, n=1000, B=100L)}
 }
 \description{
 Method to qualitatively compare Prediction Quality of the four different methods for high dimensional data.
-}
-\examples{
- compare_methods(d=3, n=1000, B=100L)
-
 }

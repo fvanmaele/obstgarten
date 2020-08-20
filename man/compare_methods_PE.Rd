@@ -19,8 +19,6 @@ compare_methods_PE(d, n, B = 25L, reps = 400)
 Method to quantitavely compare Prediction Quality of the four different methods for high dimensional data.
 
 CAUTION!! TAKES VERY LONG CPU EXPENSIVE
-}
-\examples{
- compare_methods_PE(d=4, n=1000L, B=25L, reps=100)
 
+compare_methods_PE(d=4, n=1000L, B=25L, reps=100)
 }

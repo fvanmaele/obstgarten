@@ -114,7 +114,7 @@ Gabel <- R6::R6Class("Gabel",
 #' - `depth` (`Gabel$depth`);
 #' - `label` (`Gabel$label`);
 #' - `parent` (`Gabel$parent$label`);
-#' - `leaf` (the value from `Gabel$isObst()`).
+#' - `leaf` (the value from `Gabel$isObst`).
 #'
 #' It is assumed there are no cycles in the argument node. A node should either
 #' have none or both of `childL` and `childR` set.

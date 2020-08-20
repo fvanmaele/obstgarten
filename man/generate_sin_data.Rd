@@ -16,17 +16,15 @@ generate_sin_data(n, sigma = 0.2, reg = TRUE, grid = NULL)
 \item{grid}{specify data points on x axis only works for reg == TRUE}
 }
 \value{
-if reg TRUE: n x 2 matrix \link{x_i, y_i} of generated data set
+if reg TRUE: n x 2 matrix (x_i, y_i) of generated data set
 
-if reg FALSE: n x 3 matrix \link{x_1i, x_2i, y_i} of generated data set
+if reg FALSE: n x 3 matrix (x_1i, x_2i, y_i) of generated data set
 
 regression:
 dat <- generate_sin_data(100, sigma=0.2)
-plot(dat\link{, 1}, dat\link{, 2}, xlim=c(0, 1), ylim = c(-1, 1))
 
 classification:
 dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
-plot(dat\link{, 1}, dat\link{, 2}, xlim=c(0, 1), ylim = c(0, 1), col=dat\link{, 3})
 }
 \description{
 Generate data set like in Example 6.3 of Richter19.pdf
