@@ -24,5 +24,5 @@ pred_plot_greedy(
 \item{simul}{True: return data}
 }
 \description{
-pred_plot_greedy(5, sigma=0.25, n=150)
+plots prediction of CART generated regression tree
 }

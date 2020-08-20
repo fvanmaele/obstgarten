@@ -2,8 +2,7 @@
 % Please edit documentation in R/data.R
 \name{prepare_iris}
 \alias{prepare_iris}
-\title{Method that prepares Iris dataset for classification with Tree-Methods.
-setosa == 1, versicolor == 2, virginica == 3}
+\title{prepare_iris}
 \usage{
 prepare_iris(training_set_ratio = 0.8, training_split_indices = NULL)
 }

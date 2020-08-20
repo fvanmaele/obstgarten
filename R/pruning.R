@@ -9,8 +9,6 @@
 #'
 #' @return y prediction node$y of appropriate sub-node
 #'
-#' y <- cart_predict_pruned(X, Cart$root, mask)
-#'
 #' @export
 cart_predict_pruned <- function(x, node, mask) {
 
@@ -44,7 +42,6 @@ cart_predict_pruned <- function(x, node, mask) {
 #'
 #' @return mask (`vector(logical)`) mask for the pruned CART in dfs-order
 #'
-#' mRoot <- cart_prune(Cart$root, mask)
 #' @export
 #'
 cart_prune <- function(node, mask) {

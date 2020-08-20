@@ -2,8 +2,7 @@
 % Please edit documentation in R/plot_3d.R
 \name{plot_3D_compare}
 \alias{plot_3D_compare}
-\title{Method to plot 3D comparisons of predictions
-for different methods}
+\title{plot_3D_compare}
 \usage{
 plot_3D_compare(path, render = FALSE, margin = 1)
 }
@@ -13,9 +12,7 @@ plot_3D_compare(path, render = FALSE, margin = 1)
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 if FALSE only 2D plots are returned}
 
-\item{margin}{margin of the scale
-
-plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)}
+\item{margin}{margin of the scale}
 }
 \description{
 Method to plot 3D comparisons of predictions

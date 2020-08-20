@@ -2,17 +2,14 @@
 % Please edit documentation in R/plot_3d.R
 \name{plot_3D_compare_m_DIFF}
 \alias{plot_3D_compare_m_DIFF}
-\title{Method to plot 3D comparisons of prediction DIFFERENCES
-between ground truth and Random Forest for different m}
+\title{plot_3D_compare_m_DIFF}
 \usage{
 plot_3D_compare_m_DIFF(path, margin = 0.01, render = FALSE)
 }
 \arguments{
 \item{path}{character specifying path to compare_RF_m file}
 
-\item{margin}{margin of the scale
-
-plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)}
+\item{margin}{margin of the scale}
 
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 if FALSE only 2D plots are returned}

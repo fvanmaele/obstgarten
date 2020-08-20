@@ -19,12 +19,6 @@ generate_sin_data(n, sigma = 0.2, reg = TRUE, grid = NULL)
 if reg TRUE: n x 2 matrix (x_i, y_i) of generated data set
 
 if reg FALSE: n x 3 matrix (x_1i, x_2i, y_i) of generated data set
-
-regression:
-dat <- generate_sin_data(100, sigma=0.2)
-
-classification:
-dat <- generate_sin_data(100, sigma=0.2, reg=FALSE)
 }
 \description{
 Generate data set like in Example 6.3 of Richter19.pdf

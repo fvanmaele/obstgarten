@@ -17,13 +17,10 @@ pred_plot_sine2D(n, B, depth, sd, k = 10, random_forest = TRUE)
 
 \item{k}{integer specifying field of view in sine2D case}
 
-\item{random_forest}{logical: TRUE: random forest, FALSE: bagging
-
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
+}
+\description{
 Method to Plot Predicted Density of a Random Forest
 for a two dimensional case for a sine generated dataset
 (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
-pred_plot_sine2D(n=1000, B=10L, depth=5, sd=0.1, k=10)}
-}
-\description{
-pred_plot_sine2D
 }

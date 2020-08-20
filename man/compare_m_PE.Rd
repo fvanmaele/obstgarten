@@ -15,9 +15,7 @@ compare_m_PE(m_list, d, n, B, reps = 400)
 
 \item{B}{number of bootstrap samples}
 
-\item{reps}{rows of data
-
-compare_m_PE(list(1L, 3L, 5L, 10L), d=20, n=1000, B=100L, reps=1)}
+\item{reps}{rows of data}
 }
 \description{
 Method to quantitavely compare Prediction Quality of the Random Forests for different parameters m.

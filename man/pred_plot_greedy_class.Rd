@@ -2,7 +2,7 @@
 % Please edit documentation in R/pred.R
 \name{pred_plot_greedy_class}
 \alias{pred_plot_greedy_class}
-\title{pred_plot_greedy_class}
+\title{plots prediction of CART generated decision tree}
 \usage{
 pred_plot_greedy_class(depth, sigma = 0.25, n = 150, random_forest = FALSE)
 }
@@ -17,7 +17,4 @@ pred_plot_greedy_class(depth, sigma = 0.25, n = 150, random_forest = FALSE)
 }
 \description{
 plots prediction of CART generated decision tree
-}
-\examples{
-pred_plot_greedy_class(5, sigma=0.25, n=150)
 }

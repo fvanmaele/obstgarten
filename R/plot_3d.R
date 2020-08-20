@@ -1,3 +1,6 @@
+#' plot_3D
+#'
+#' @description
 #' CPU Heavy!!!
 #' Method to 3D render Gaussian Multivariates estimates coming from
 #' generated samples or predicted values
@@ -17,6 +20,9 @@ plot_3D <- function(df) {
 }
 
 
+#' plot_3D_compare
+#'
+#' @description
 #' Method to plot 3D comparisons of predictions
 #' for different methods
 #' @param path character specifying path to compare_plot_data file
@@ -24,7 +30,6 @@ plot_3D <- function(df) {
 #' if FALSE only 2D plots are returned
 #' @param margin margin of the scale
 #'
-#' plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 #' @import dplyr
 #' @import ggplot2
 #' @import rayshader
@@ -64,6 +69,9 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 }
 
 
+#' plot_3D_compare_DIFF
+#'
+#' @description
 #' Method to plot 3D comparisons of prediction DIFFERENCES
 #' between ground truth and model for different methods
 #' @param path character specifying path to compare_RF_m file
@@ -71,7 +79,6 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 #'  if FALSE only 2D plots are returned
 #' @param margin margin of the scale
 #'
-#' plot_3D_compare_DIFF("data/simul/compare_plot_data_20200812-113504", render=FALSE)
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer
@@ -114,6 +121,9 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 }
 
 
+#' plot_3D_compare_m
+#'
+#' @description
 #' Method to plot 3D comparisons of prediction SQUARED DIFFERENCES
 #' between ground truth and Random Forest Predictions for
 #' different m
@@ -122,7 +132,6 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 #' if FALSE only 2D plots are returned
 #' @param margin margin of the scale
 #'
-#' plot_3D_compare_m("data/simul/compare_RF_m_20200812-175425")
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer
@@ -167,6 +176,9 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 }
 
 
+#' plot_3D_compare_m_DIFF
+#'
+#' @description
 #' Method to plot 3D comparisons of prediction DIFFERENCES
 #' between ground truth and Random Forest for different m
 #' @param path character specifying path to compare_RF_m file
@@ -174,7 +186,6 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 #'  if FALSE only 2D plots are returned
 #' @param margin margin of the scale
 #'
-#' plot_3D_compare_m_DIFF("data/simul/compare_RF_m_...", render=FALSE)
 #' @import dplyr
 #' @import ggplot2
 #' @import RColorBrewer

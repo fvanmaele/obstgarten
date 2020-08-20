@@ -167,11 +167,7 @@ R_min <- function(A, d, mode = "regression", ...) {
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`)
 #'
-#' n <- 150
-#' M <- generate_sin_data(n, sigma=0.2)
-#' dimnames(M) <- list(NULL, c(1, "y"))
-#' T2 <- cart_greedy(M, depth=20, threshold=1)
-#' T2$validate()
+#' @examples cart_greedy(generate_sin_data(100) , depth=5, threshold=1)
 #' @export
 cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
                         sample = FALSE, random = FALSE, m = 0L,
