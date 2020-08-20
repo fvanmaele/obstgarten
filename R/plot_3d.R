@@ -7,6 +7,7 @@
 #' @param df data.frame with columns x, y and z. samples are in the rows
 #' @import ggplot2
 #' @import rayshader
+#' @importFrom grDevices colorRampPalette
 #' @export
 plot_3D <- function(df) {
   myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
@@ -36,6 +37,7 @@ plot_3D <- function(df) {
 #' @import rayshader
 #' @import RColorBrewer
 #' @import tidyr
+#' @importFrom grDevices colorRampPalette
 #' @export
 plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
   stopifnot("Path should be a character specifying path to compare_plot_data file!" =
@@ -85,6 +87,7 @@ plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import rayshader
+#' @importFrom grDevices colorRampPalette
 #' @export
 plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
@@ -140,6 +143,7 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 #' @import RColorBrewer
 #' @import rayshader
 #' @import tidyr
+#' @importFrom grDevices colorRampPalette
 #' @export
 plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
@@ -194,6 +198,7 @@ plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import rayshader
+#' @importFrom grDevices colorRampPalette
 #' @export
 plot_3D_compare_m_DIFF <- function(path, margin=0.01, render=FALSE) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =

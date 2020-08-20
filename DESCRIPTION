@@ -22,7 +22,7 @@ Authors@R:
              role = c("aut"),
              email = "Falk.Loewner@urz.uni-hd.de",
              comment = c(ORCID = "YOUR-ORCID-ID")))
-Description: Verfahren zur Klassifikation und Regression
+Description: Verfahren zur Klassifikation und Regression mittels Baueme und Waelder.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
