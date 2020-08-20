@@ -19,11 +19,10 @@ pred_plot_greedy(
 
 \item{n}{number of generated data pairs}
 
-\item{random_forest}{logical: TRUE: random forest, FALSE: bagging
-pred_plot_greedy(5, sigma=0.25, n=150)}
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
 
 \item{simul}{True: return data}
 }
 \description{
-plots prediction of CART generated regression tree
+pred_plot_greedy(5, sigma=0.25, n=150)
 }

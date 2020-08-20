@@ -2,7 +2,7 @@
 % Please edit documentation in R/pred.R
 \name{pred_plot_greedy_class}
 \alias{pred_plot_greedy_class}
-\title{plots prediction of CART generated decision tree}
+\title{pred_plot_greedy_class}
 \usage{
 pred_plot_greedy_class(depth, sigma = 0.25, n = 150, random_forest = FALSE)
 }
@@ -13,9 +13,11 @@ pred_plot_greedy_class(depth, sigma = 0.25, n = 150, random_forest = FALSE)
 
 \item{n}{number of generated data pairs}
 
-\item{random_forest}{logical: TRUE: random forest, FALSE: bagging
-pred_plot_greedy_class(5, sigma=0.25, n=150)}
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
 }
 \description{
 plots prediction of CART generated decision tree
+}
+\examples{
+pred_plot_greedy_class(5, sigma=0.25, n=150)
 }

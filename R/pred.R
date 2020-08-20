@@ -1,10 +1,11 @@
 #' plots prediction of CART generated regression tree
+#' @description pred_plot_greedy(5, sigma=0.25, n=150)
 #' @param depth The amount of steps before halting the algorithm
 #' @param sigma standard deviation of irreducible error in y
 #' @param n number of generated data pairs
 #' @param simul True: return data
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
-#' pred_plot_greedy(5, sigma=0.25, n=150)
+#'
 #' @import ggplot2
 #' @import bbplot
 pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
@@ -46,13 +47,14 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simu
 }
 
 
-#' plots prediction of CART generated decision tree
-#'
+#' pred_plot_greedy_class
+#' @description plots prediction of CART generated decision tree
+#' pred_plot_greedy_class(5, sigma=0.25, n=150)
 #' @param depth The amount of steps before halting the algorithm
 #' @param sigma standard deviation of irreducible error in y
 #' @param n number of generated data pairs
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
-#' pred_plot_greedy_class(5, sigma=0.25, n=150)
+#'
 #' @import dplyr
 #' @import ggplot2
 pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -91,6 +93,7 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 
 #' plots prediction of pruned CART generated regression tree
 #'
+#' @description pred_plot_greedy(5, sigma=0.25, n=150)
 #' @param lambda Cost weight
 #' @param depth The amount of steps before halting the algorithm
 #' @param sigma standard deviation of irreducible error in y
@@ -98,7 +101,7 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' @param simul True: return data
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
-#' pred_plot_greedy(5, sigma=0.25, n=150)
+#'
 #' @import ggplot2
 #' @import bbplot
 pred_plot_pruning <- function(lambda = 1/3, depth=5, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
