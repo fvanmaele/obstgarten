@@ -97,7 +97,7 @@ cart_prune <- function(node, mask) {
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`), pruned according to Cost-Complexity
 #'
-#' @examples cart_greedy_prune(generate_sin_data(150, sigma=0.2), depth=20, threshold=1, lambda = 0.01)
+#' @examples cart_greedy_prune(generate_sin_data(100, sigma=0.2), depth=5, threshold=1, lambda = 0.01)
 #' @export
 #'
 cart_greedy_prune <-
