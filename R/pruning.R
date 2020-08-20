@@ -12,17 +12,17 @@
 #' y <- cart_predict_pruned(X, Cart$root, mask)
 #'
 #' @export
+#'
 cart_predict_pruned <- function(x, node, mask) {
-
   stopifnot(length(x) == (ncol(node$points) - 1))
   stopifnot(is.vector(mask, mode = "logical"))
+  stopifnot(mask[[node$label]])
 
-  if (!mask[[node$label]] ||
-      (is.null(node$childR) && is.null(node$childL))) {
+  if ((is.null(node$childL) && is.null(node$childR))) {
     # leaf node found -> return value
     return(node$y)
-  } else if (!mask[[node$childR$label]] &&
-             !mask[[node$childL$label]]) {
+  } else if (!mask[[node$childL$label]] &&
+             !mask[[node$childR$label]]) {
     # "virtual" leaf node found -> return value
     if (!is.na(node$y))
       return(0) # problem at root. TODO: Should be mean or majority or better not happening at all
@@ -50,9 +50,9 @@ cart_predict_pruned <- function(x, node, mask) {
 cart_prune <- function(node, mask) {
 
   stopifnot(is.vector(mask, mode = "logical"))
+  stopifnot(mask[[node$label]])
 
-  if (!mask[[node$label]] ||
-      (is.null(node$childL) && is.null(node$childR))) { # not in mask or already pruned
+  if ((is.null(node$childL) && is.null(node$childR))) { # not in mask or already pruned
     return(mask)
   } else if (!mask[[node$childL$label]] &&
              !mask[[node$childR$label]]) { # already virtually pruned
@@ -242,9 +242,14 @@ cart_greedy_prune <-
     P <- p # save the reached p = P
     # calculate cost-complexity trade-off
     p_hat <- vector()
-    for (p in 1:P) {
+    if (parallel){
+      p_hat <- mclapply(1:P, fp, mc.cores = numCores)
+    } else {
+      for (p in 1:P) {
       p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
     } # p_hat <- R_hat(T) + lambda * complexity(T)
+    }
+
 
     p_hat_min <- which.min(p_hat)
     return(list(Cart, mT[[p_hat_min]])) #return list of CART and cost-complexity pruned mask
