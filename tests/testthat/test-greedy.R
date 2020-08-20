@@ -4,7 +4,7 @@ test_that("cart_greedy: all arguments except XY", {
   expect_error(cart_greedy(XY, depth = "a"))
   expect_error(cart_greedy(XY, threshold = 0))
   expect_error(cart_greedy(XY, threshold = F))
-  expect_error(cart_greedy(XY, samle = "True"))
+  expect_error(cart_greedy(XY, sample = "True"))
   expect_error(cart_greedy(XY, random = "True"))
 })
 
