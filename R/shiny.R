@@ -132,7 +132,7 @@ start_shiny_app <- function(){
         actionButton("simulate", "Simulate CART!")
       ),
       mainPanel(
-        plotOutput('plot', width = "100%", height = "600px")
+        plotOutput('plot', width = "100%", height = "850px")
       )
     )
   )
