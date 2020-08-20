@@ -9,7 +9,7 @@
 #'
 #' @return y prediction node$y of appropriate sub-node
 #'
-#' @examples y <- cart_predict_pruned(X, Cart$root, mask)
+#' y <- cart_predict_pruned(X, Cart$root, mask)
 #'
 #' @export
 cart_predict_pruned <- function(x, node, mask) {
@@ -45,7 +45,7 @@ cart_predict_pruned <- function(x, node, mask) {
 #'
 #' @return mask (`vector(logical)`) mask for the pruned CART in dfs-order
 #'
-#' @examples mRoot <- cart_prune(Cart$root, mask)
+#' mRoot <- cart_prune(Cart$root, mask)
 #' @export
 #'
 cart_prune <- function(node, mask) {
@@ -101,10 +101,7 @@ cart_prune <- function(node, mask) {
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`), pruned according to Cost-Complexity
 #'
-#' @examples
-#' XY <- generate_sin_data(150, sigma=0.2)
-#' dimnames(XY) <- list(NULL, c(1, "y"))
-#' T2 <- cart_greedy(XY, depth=20, threshold=1, lambda = 0.01)
+#' @examples cart_greedy_prune(generate_sin_data(150, sigma=0.2), depth=20, threshold=1, lambda = 0.01)
 #' @export
 #'
 cart_greedy_prune <-

@@ -48,5 +48,6 @@ Imports:
     grid,
     gridExtra,
     rayshader,
-    RColorBrewer
+    RColorBrewer,
+    shinydashboard
 VignetteBuilder: knitr

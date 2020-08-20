@@ -15,11 +15,9 @@ cart_predict_pruned(x, node, mask)
 }
 \value{
 y prediction node$y of appropriate sub-node
+
+y <- cart_predict_pruned(X, Cart$root, mask)
 }
 \description{
 returns y of leaf nodes, but considers only parts of the CART not masked
-}
-\examples{
-y <- cart_predict_pruned(X, Cart$root, mask)
-
 }

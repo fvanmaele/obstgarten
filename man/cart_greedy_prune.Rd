@@ -62,7 +62,5 @@ Unless \code{sample} is set to \code{TRUE}, it is required that there are no obs
 X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
 }
 \examples{
-XY <- generate_sin_data(150, sigma=0.2)
-dimnames(XY) <- list(NULL, c(1, "y"))
-T2 <- cart_greedy(XY, depth=20, threshold=1, lambda = 0.01)
+cart_greedy_prune(generate_sin_data(150, sigma=0.2), depth=20, threshold=1, lambda = 0.01)
 }
