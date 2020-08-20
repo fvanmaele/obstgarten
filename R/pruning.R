@@ -25,7 +25,6 @@ cart_predict_pruned <- function(x, node, mask) {
              !mask[[node$childL$label]]) {
     # "virtual" leaf node found -> return value
     if (!is.na(node$y))
-      #print("Root")
       return(0) # problem at root. TODO: Should be mean or majority or better not happening at all
     return(node$y)
   } else if (x[[node$j]] < node$s) {
@@ -53,10 +52,10 @@ cart_prune <- function(node, mask) {
   stopifnot(is.vector(mask, mode = "logical"))
 
   if (!mask[[node$label]] ||
-      (is.null(node$childR) && is.null(node$childL))) { # not in mask or already pruned
+      (is.null(node$childL) && is.null(node$childR))) { # not in mask or already pruned
     return(mask)
-  } else if (!mask[[node$childR$label]] &&
-             !mask[[node$childL$label]]) { # already virtually pruned
+  } else if (!mask[[node$childL$label]] &&
+             !mask[[node$childR$label]]) { # already virtually pruned
     return(mask)
   } else {
     mask <- cart_prune(node$childL, mask) # recurse to left child
@@ -131,7 +130,7 @@ cart_greedy_prune <-
         q_threshold = q_threshold,
         q_pct = q_pct
       )
-    stopifnot("lambda is not numeric and greateror equal than 0"= is.numeric(lambda) & lambda >= 0L)
+    stopifnot("lambda is not numeric and greater or equal to 0"= is.numeric(lambda) & lambda >= 0L)
 
     # internal helper for generating a mask of leafes
     mLeafes <- function(tree, mask) {
@@ -180,23 +179,7 @@ cart_greedy_prune <-
       return(sum(mLeafes(tree, mask), na.rm = TRUE))
     }
 
-    # internal helper for pruning given masked tree at given node
-    pruneAt  <- function(node, mask) {
-      stopifnot(is.vector(mask, mode = "logical"))
-      if (!mask[[node$label]] ||
-          (is.null(node$childR) && is.null(node$childL)) ||
-          !mask[[node$childR$label]] &&
-          !mask[[node$childL$label]]) {
-        return(mask)
-      } else {
-        mask <- pruneAt(node$childL, mask)
-        mask[[node$childL$label]] <- FALSE
 
-        mask <- pruneAt(node$childR, mask)
-        mask[[node$childR$label]] <- FALSE
-        return(mask)
-      }
-    }
 
     # internal helper for calculating the risk estimation according to [Richter, p. 174, Eqs.(6.6)+(6.7)]
     Risk <- function(mask)  {
@@ -240,7 +223,7 @@ cart_greedy_prune <-
       i <- 0L
       for (node in iNodesTp) {
         i <- i + 1
-        mT_test <- pruneAt(node, mT[[p]])
+        mT_test <- cart_prune(node, mT[[p]])
         wlp[i] <-
           (Risk(mT_test) + Risk(mT[[p]])) / (cT[p] - complexity(Cart, mT_test))
       }
@@ -252,7 +235,7 @@ cart_greedy_prune <-
         pivot <- which.min(wlp) # determine actual weakest link
       }
 
-      mT[[p + 1]] <- pruneAt(iNodesTp[[pivot]], mT[[p]]) # next mask for T^(p)
+      mT[[p + 1]] <- cart_prune(iNodesTp[[pivot]], mT[[p]]) # next mask for T^(p)
       p = p + 1
     } # END while
 
