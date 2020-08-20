@@ -8,6 +8,7 @@
 #'
 #' @import ggplot2
 #' @import bbplot
+#' @export
 pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
   if (random_forest == TRUE & depth <= 2) {
     stop("Random Forest require depth > 1!")
@@ -55,6 +56,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simu
 #'
 #' @import dplyr
 #' @import ggplot2
+#' @export
 pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
   if (random_forest == TRUE & depth <= 2) {
     stop("Random Forest require depth > 1!")
@@ -101,6 +103,7 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #'
 #' @import ggplot2
 #' @import bbplot
+#' @export
 pred_plot_pruning <- function(lambda = 1/3, depth=5, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
 
   grid <- seq(0, 1, len=n)
@@ -153,6 +156,7 @@ pred_plot_pruning <- function(lambda = 1/3, depth=5, sigma=0.25, n=150, random_f
 #'
 #' @import ggplot2
 #' @import bbplot
+#' @export
 pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_forest=FALSE, simul=FALSE) {
 
   if (is.null(grid)) grid <- seq(0, 1, len=n)
@@ -194,6 +198,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_for
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #' @import ggplot2
 #' @import bbplot
+#' @export
 pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=FALSE) {
 
   grid <- seq(0, 1, len=n)
@@ -238,6 +243,7 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 #' (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2))
 #'
 #' @import ggplot2
+#' @export
 pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
   data <- generate_sin_2D(n=n, sigma=sd, k=k)
 
@@ -302,6 +308,7 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
 #'
 #' @import ggplot2
 #' @import bbplot
+#' @export
 pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L, simul=FALSE) {
   data <- generate_mult_data(n=n, d=d, sigma=diag(d), mu=rep(0., d))
   x <- data[[1]]
@@ -358,6 +365,7 @@ pred_plot_rf <- function(n, d, sd, B, depth, m, display_d=1L, simul=FALSE) {
 #' @import dplyr
 #' @import ggplot2
 #' @import bbplot
+#' @export
 pred_plot_iris_class <- function(depth, B=100L) {
 
   data <- prepare_iris()

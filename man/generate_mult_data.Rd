@@ -13,7 +13,7 @@ generate_mult_data(n, d, sd = 0.01, mu = NULL, sigma = NULL)
 
 \item{sd}{standard deviation of irreducible error in y}
 
-\item{mu}{}
+\item{mu}{mean for the multivariate normal distribution}
 
 \item{sigma}{positive definite square covariance matrix}
 }
