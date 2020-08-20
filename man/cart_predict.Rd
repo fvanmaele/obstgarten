@@ -2,18 +2,26 @@
 % Please edit documentation in R/greedy.R
 \name{cart_predict}
 \alias{cart_predict}
-\title{cart_predict}
+\title{CART decision rule}
 \usage{
 cart_predict(x, node)
 }
 \arguments{
-\item{x}{(\code{vector})}
+\item{x}{data point to evaluate (\code{vector})}
 
-\item{node}{(\code{Gabel})}
+\item{node}{entry point (\code{Gabel}), typically the CART root (\code{Baum$root})}
 }
 \value{
-
+The predicted \code{y} value (\code{numeric} for regression, \code{integer} for
+classification)
 }
 \description{
-returns y of leaf nodes
+evaluate the CART decision rule
+}
+\details{
+The decision rule is given by
+\deqn{f(x)\sum{m=1}{#T}y(w_m)*I_{A_m}(x)} where \eqn{A_m} is the CART
+induced partition and \eqn{y(w_m)} the weights for the leaves \eqn{w_1,
+  ..., w_{#T}}. The evaluation of \eqn{f} is done recursively by checking the
+split points and split indices of the tree nodes.
 }

@@ -1,10 +1,12 @@
 #' Cart partition
-#' @description seperates the data A at s
-#' @param s point at which the data is separated (numeric)
-#' @param j dimension of the data (numeric)
-#' @param A data (data.frame or matrix)
+#' @description partition data at a given split point and index
+#' @param s split point at which the data is separated (`numeric`)
+#' @param j dimension at which the data is separated (`numeric`)
+#' @param A data (`data.frame` or `matrix`)
 #'
-#' @return seperated data A as list
+#' @return `list` with the following elements:
+#' - `$A1`: The rows `A[, j] < s`
+#' - `$A2`: The rows `A[, j] >= s` (taken by complment)
 #' @export
 #'
 #' @examples cart_part(0.5,1,generate_sin_data(10))
@@ -17,18 +19,20 @@ cart_part <- function(s, j, A) {
 }
 
 #' cart_grid
-#' @description calculates all possible s and R
-#' @param A data (data.frame or matrix)
+#' @description computes risk R for data points
+#' @details
+#' @param A data (`data.frame` or `matrix`)
 #' @param d dimensions (numeric)
-#' @param f R_hat or C_hat (function)
-#' @param quantile whether to use quantiles for computing the optimal
-#'   subdivision (`logical`, defaults to `FALSE`)
-#' @param q_threshold minimal of data points for using quantiles (`integer`,
-#'   defaults to `100L`)
+#' @param f Minimizer `R_hat` or `C_hat` for regression and classification,
+#'   respectively (`closure`)
+#' @param quantile use `quantile()` instead of data points to compute the risk.
+#'   (`logical`, defaults to `FALSE`)
+#' @param q_threshold minimal amount of data points for using quantiles.
+#'   (`integer`, defaults to `100L`)
 #' @param q_pct amount of probabilities for `quantile()`, in pct. of the data
-#'   set size. (`numeric`, defaults to `0.25`)
+#'   set size, generated with `seq()`. (`numeric`, defaults to `0.25`)
 #'
-#' @return
+#' @return A 3D `array` with dimensions (`j`, `s`, `R`).
 #' @export
 #'
 #' @examples cart_grid(generate_sin_data(100), 1, R_hat)
@@ -265,13 +269,17 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
   return(Cart)
 }
 
-#' cart_predict
-#'
-#' @description returns y of leaf nodes
-#'
-#' @param x (`vector`)
-#' @param node (`Gabel`)
-#' @return
+#' CART decision rule
+#' @description evaluate the CART decision rule
+#' @details The decision rule is given by
+#'   \deqn{f(x)\sum{m=1}{#T}y(w_m)*I_{A_m}(x)} where \eqn{A_m} is the CART
+#'   induced partition and \eqn{y(w_m)} the weights for the leaves \eqn{w_1,
+#'   ..., w_{#T}}. The evaluation of \eqn{f} is done recursively by checking the
+#'   split points and split indices of the tree nodes.
+#' @param x data point to evaluate (`vector`)
+#' @param node entry point (`Gabel`), typically the CART root (`Baum$root`)
+#' @return The predicted `y` value (`numeric` for regression, `integer` for
+#'   classification)
 #' @export
 #'
 cart_predict <- function(x, node) { # list or vector

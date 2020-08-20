@@ -7,26 +7,27 @@
 cart_grid(A, d, f, quantile = FALSE, q_threshold = 100L, q_pct = 0.25)
 }
 \arguments{
-\item{A}{data (data.frame or matrix)}
+\item{A}{data (\code{data.frame} or \code{matrix})}
 
 \item{d}{dimensions (numeric)}
 
-\item{f}{R_hat or C_hat (function)}
+\item{f}{Minimizer \code{R_hat} or \code{C_hat} for regression and classification,
+respectively (\code{closure})}
 
-\item{quantile}{whether to use quantiles for computing the optimal
-subdivision (\code{logical}, defaults to \code{FALSE})}
+\item{quantile}{use \code{quantile()} instead of data points to compute the risk.
+(\code{logical}, defaults to \code{FALSE})}
 
-\item{q_threshold}{minimal of data points for using quantiles (\code{integer},
-defaults to \code{100L})}
+\item{q_threshold}{minimal amount of data points for using quantiles.
+(\code{integer}, defaults to \code{100L})}
 
 \item{q_pct}{amount of probabilities for \code{quantile()}, in pct. of the data
-set size. (\code{numeric}, defaults to \code{0.25})}
+set size, generated with \code{seq()}. (\code{numeric}, defaults to \code{0.25})}
 }
 \value{
-
+A 3D \code{array} with dimensions (\code{j}, \code{s}, \code{R}).
 }
 \description{
-calculates all possible s and R
+computes risk R for data points
 }
 \examples{
 cart_grid(generate_sin_data(100), 1, R_hat)

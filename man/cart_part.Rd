@@ -7,17 +7,21 @@
 cart_part(s, j, A)
 }
 \arguments{
-\item{s}{point at which the data is separated (numeric)}
+\item{s}{split point at which the data is separated (\code{numeric})}
 
-\item{j}{dimension of the data (numeric)}
+\item{j}{dimension at which the data is separated (\code{numeric})}
 
-\item{A}{data (data.frame or matrix)}
+\item{A}{data (\code{data.frame} or \code{matrix})}
 }
 \value{
-seperated data A as list
+\code{list} with the following elements:
+\itemize{
+\item \verb{$A1}: The rows \code{A[, j] < s}
+\item \verb{$A2}: The rows \code{A[, j] >= s} (taken by complment)
+}
 }
 \description{
-seperates the data A at s
+partition data at a given split point and index
 }
 \examples{
 cart_part(0.5,1,generate_sin_data(10))
