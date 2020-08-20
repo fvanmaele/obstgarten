@@ -20,9 +20,10 @@ cart_part <- function(s, j, A) {
 
 #' cart_grid
 #' @description computes risk R for data points
-#' @details
+#' @details The data is partitioned with `cart_part()`. If `$A1` (the partition
+#' `A[, j] < s`) is empty, the corresponding risk is set to `NA`
 #' @param A data (`data.frame` or `matrix`)
-#' @param d dimensions (numeric)
+#' @param d dimensions (`numeric`)
 #' @param f Minimizer `R_hat` or `C_hat` for regression and classification,
 #'   respectively (`closure`)
 #' @param quantile use `quantile()` instead of data points to compute the risk.
@@ -33,6 +34,7 @@ cart_part <- function(s, j, A) {
 #'   set size, generated with `seq()`. (`numeric`, defaults to `0.25`)
 #'
 #' @return A 3D `array` with dimensions (`j`, `s`, `R`).
+#' @seealso \link{cart_part}, \link{R_hat}, \link{C_hat}
 #' @export
 #'
 #' @examples cart_grid(generate_sin_data(100), 1, R_hat)

@@ -9,7 +9,7 @@ cart_grid(A, d, f, quantile = FALSE, q_threshold = 100L, q_pct = 0.25)
 \arguments{
 \item{A}{data (\code{data.frame} or \code{matrix})}
 
-\item{d}{dimensions (numeric)}
+\item{d}{dimensions (\code{numeric})}
 
 \item{f}{Minimizer \code{R_hat} or \code{C_hat} for regression and classification,
 respectively (\code{closure})}
@@ -29,7 +29,14 @@ A 3D \code{array} with dimensions (\code{j}, \code{s}, \code{R}).
 \description{
 computes risk R for data points
 }
+\details{
+The data is partitioned with \code{cart_part()}. If \verb{$A1} (the partition
+\code{A[, j] < s}) is empty, the corresponding risk is set to \code{NA}
+}
 \examples{
 cart_grid(generate_sin_data(100), 1, R_hat)
 
+}
+\seealso{
+\link{cart_part}, \link{R_hat}, \link{C_hat}
 }
