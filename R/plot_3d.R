@@ -29,7 +29,6 @@ plot_3D <- function(df) {
 #' @import ggplot2
 #' @import rayshader
 #' @import RColorBrewer
-#' @import tidyverse
 #' @import tidyr
 plot_3D_compare <- function(path, render=FALSE, margin=1.0) {
   stopifnot("Path should be a character specifying path to compare_plot_data file!" =
@@ -128,7 +127,6 @@ plot_3D_compare_DIFF <- function(path, margin=1, render=FALSE) {
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import rayshader
-#' @import tidyverse
 #' @import tidyr
 plot_3D_compare_m <- function(path, render=FALSE, margin=1) {
   stopifnot("Path should be a character specifying path to compare_RF_m file!" =
