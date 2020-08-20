@@ -11,11 +11,12 @@
 #' @param display_d integer dimension displayed in multivariate case gaussian
 #' @param sd double > 0 inherent noise in the generated data
 #' @param k integer specifying field of view in sine2D case
+#' @param lambda Cost weight
 #' @param grid specify data points on x axis
 #' @param random_forest TRUE: random forest, FALSE: bagging
 #'
 #' @return print(plot)
-rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, grid=NULL, random_forest=FALSE) {
+rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1, k=10, lambda=0.001, grid=NULL, random_forest=FALSE) {
   if (datatype == "gaussian") {
     pred_plot_rf(n=n, d=d, m=m, B=B, depth=depth, display_d=display_d, sd=sd)
   }
@@ -37,6 +38,9 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
   else if (datatype == "iris") {
     pred_plot_iris_class(depth=depth, B=B)
   }
+  else if (datatype == "pruning") {
+    pred_plot_pruning(lambda = lambda, depth=depth, sigma=sd, n=n, random_forest=random_forest, simul=FALSE)
+  }
 }
 
 # rf_plot(datatype="sine", n=1000, d=5, m=3, B=10L, depth=3, display_d = 1, sd=0.25)
@@ -55,6 +59,7 @@ rf_plot <- function(datatype, n, d=5, m=1, B=10L, depth=3, display_d=1L, sd=0.1,
 #' Depth depths of the CART generated regression tree (numeric)
 #' Bootstrap_samples number of bootstrap samples (numeric)
 #' k borders of the sine2D plot (numeric)
+#' lambda Cost weight
 #' Simulate starts the calculation with the given parameters (button)
 #'
 #' @return
@@ -67,7 +72,7 @@ start_shiny_app <- function(){
     sidebarLayout(
       sidebarPanel(
         shinyjs::useShinyjs(),
-        selectInput("datatype", "Datatype", choices=c("sine_CART", "sineclass_CART", "sine_bagging", "sineclass_bagging", "sine2D", "gaussian", "iris")),
+        selectInput("datatype", "Datatype", choices=c("sine_CART", "sineclass_CART", "sine_bagging", "sineclass_bagging", "pruning", "sine2D", "gaussian", "iris")),
 
         box(id = "sine_CART", width = '800px',
             numericInput('n_sine_CART', 'Number of obs', 200),
@@ -116,11 +121,18 @@ start_shiny_app <- function(){
             sliderInput('B_iris', 'Number of bootstrap samples', 10, 100, 10, 10),
             sliderInput('depth_iris', 'Tree depth', 1, 10, 3, 1),
         ),
+        box(id = "pruning", width = '800px',
+            numericInput('n_pruning', 'Number of obs', 200),
+            sliderInput('lambda_pruning', 'Lambda', 0, 0.01, 0.002, 0.001),
+            sliderInput('depth_pruning', 'Tree depth', 1, 10, 3, 1),
+            sliderInput('sigma_pruning', 'Sigma', 0, 0.5, 0.2, 0.05),
+            checkboxInput("random_pruning", "Random forest", value=FALSE),
+        ),
 
         actionButton("simulate", "Simulate CART!")
       ),
       mainPanel(
-        plotOutput('plot', width = "100%", height = "600px")
+        plotOutput('plot', width = "100%", height = "850px")
       )
     )
   )
@@ -164,6 +176,11 @@ start_shiny_app <- function(){
         shinyjs::hide(id = "iris")
       }else{
         shinyjs::show(id = "iris")
+      }
+      if(input$datatype != "pruning"){
+        shinyjs::hide(id = "pruning")
+      }else{
+        shinyjs::show(id = "pruning")
       }
     })
 
@@ -214,6 +231,13 @@ start_shiny_app <- function(){
     B_iris <- eventReactive(input$simulate, {input$B_iris})
     depth_iris <- eventReactive(input$simulate, {input$depth_iris})
 
+    #pruning
+    n_pruning <- eventReactive(input$simulate, {input$n_pruning})
+    lambda_pruning <- eventReactive(input$simulate, {input$lambda_pruning})
+    depth_pruning <- eventReactive(input$simulate, {input$depth_pruning})
+    sigma_pruning <- eventReactive(input$simulate, {input$sigma_pruning})
+    random_pruning <- eventReactive(input$simulate, {input$random_pruning})
+
     output$plot <- renderPlot({
       if(datatype() == "sine_CART"){
         rf_plot(datatype=datatype(), n=n_sine_CART(), depth=depth_sine_CART(), sd=sigma_sine_CART(), random_forest=random_sine_CART())
@@ -236,9 +260,11 @@ start_shiny_app <- function(){
       else if(datatype() == "iris"){
         rf_plot(datatype=datatype(), B=B_iris(), depth=depth_iris())
       }
+      else if(datatype() == "pruning"){
+        rf_plot(datatype=datatype(), n=n_pruning(), lambda=lambda_pruning(), depth=depth_pruning(), sd=sigma_pruning(), random_forest=random_pruning())
+      }
       else{
         stop("invalid datatype")
-        #rf_plot(datatype=datatype(), n=n(), d=d(), m=m(), B=B(), depth=depth(), display_d=display_d(), sd=sigma(), k=k(), random_forest=random())
       }
     })
 

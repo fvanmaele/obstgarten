@@ -14,6 +14,7 @@ rf_plot(
   display_d = 1L,
   sd = 0.1,
   k = 10,
+  lambda = 0.001,
   grid = NULL,
   random_forest = FALSE
 )
@@ -37,6 +38,8 @@ for different datasets}
 \item{sd}{double > 0 inherent noise in the generated data}
 
 \item{k}{integer specifying field of view in sine2D case}
+
+\item{lambda}{Cost weight}
 
 \item{grid}{specify data points on x axis}
 
