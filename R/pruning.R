@@ -134,7 +134,6 @@ cart_greedy_prune <-
         q_threshold = q_threshold,
         q_pct = q_pct
       )
-
     stopifnot("lambda is not numeric and greater than 0"= is.numeric(lambda) & lambda > 0L)
 
     # internal helper for generating a mask of leafes
