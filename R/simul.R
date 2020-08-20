@@ -1,5 +1,5 @@
 #' @import grid
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 #' @import ggplot2
 simul_plot_greedy <- function() {
   depth_list <- list(2L, 5L, 10L, 15L)
@@ -21,7 +21,7 @@ simul_plot_greedy <- function() {
 
 
 #' @import grid
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 #' @import ggplot2
 simul_plot_pruning <- function() {
   lambda_list <- list(0., 0.001, 0.01, 0.03)
@@ -43,7 +43,7 @@ simul_plot_pruning <- function() {
 
 
 #' @import grid
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 #' @import ggplot2
 simul_plot_bagging <- function() {
   B_list <- list(1L, 5L, 25L, 100L)
@@ -353,7 +353,7 @@ compare_methods <- function(d, n, B=100L) {
 #' Adapted from Antonio Lopez
 #' @import ggplot2
 #' @import grid
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 visualize_iris_feature_distr <- function() {
   iris <- load_iris()
 
