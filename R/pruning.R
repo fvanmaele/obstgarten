@@ -1,15 +1,19 @@
-#' cart_predict_pruned
+#' Prediction for pruned CARTs
 #'
-#' @param x one col of XY except y
-#' @param node first call with root
-#' @param mask
+#' @description
+#' returns y of leaf nodes, but considers only parts of the CART not masked
 #'
-#' @return
+#' @param x (`vector`) one col of XY except y
+#' @param node (`Gabel`) first call with root
+#' @param mask (`vector(logical)`) mask for the CART in dfs-order
+#'
+#' @return y prediction node$y of appropriate sub-node
+#'
+#' @examples y <- cart_predict_pruned(X, Cart$root, mask)
+#'
 #' @export
-#'
-#' @examples
 cart_predict_pruned <- function(x, node, mask) {
-  # list or vector
+
   stopifnot(length(x) == (ncol(node$points) - 1))
   stopifnot(is.vector(mask, mode = "logical"))
 
@@ -22,39 +26,43 @@ cart_predict_pruned <- function(x, node, mask) {
     # "virtual" leaf node found -> return value
     if (!is.na(node$y))
       #print("Root")
-      return(0) # Wurzel. TODO: Sollte mean oder majority sein oder besser gar nicht vorkommen
+      return(0) # problem at root. TODO: Should be mean or majority or better not happening at all
     return(node$y)
   } else if (x[[node$j]] < node$s) {
-    return(cart_predict_pruned(x, node$childL, mask))
+    return(cart_predict_pruned(x, node$childL, mask)) #recurse to left subnode
   } else {
-    return(cart_predict_pruned(x, node$childR, mask))
+    return(cart_predict_pruned(x, node$childR, mask)) #recurse to right subnode
   }
 }
 
-#' Title
+#' Prune a CART
 #'
-#' @param node first call with root
-#' @param mask
+#' @description
+#' returns a mask of the CART with subtree pruned at given node
 #'
-#' @return
+#' @param node (`Gabel`) node below whitch the mask will be set to FALSE
+#' @param mask (`vector(logical)`) mask for the CART in dfs-order
+#'
+#' @return mask (`vector(logical)`) mask for the pruned CART in dfs-order
+#'
+#' @examples mRoot <- cart_prune(Cart$root, mask)
 #' @export
 #'
-#' @examples
 cart_prune <- function(node, mask) {
-  # list or vector
+
   stopifnot(is.vector(mask, mode = "logical"))
 
   if (!mask[[node$label]] ||
-      (is.null(node$childR) && is.null(node$childL))) {
+      (is.null(node$childR) && is.null(node$childL))) { # not in mask or already pruned
     return(mask)
   } else if (!mask[[node$childR$label]] &&
-             !mask[[node$childL$label]]) {
+             !mask[[node$childL$label]]) { # already virtually pruned
     return(mask)
   } else {
-    mask <- cart_prune(node$childL, mask)
+    mask <- cart_prune(node$childL, mask) # recurse to left child
     mask[[node$childL$label]] <- FALSE
 
-    mask <- cart_prune(node$childR, mask)
+    mask <- cart_prune(node$childR, mask) # recurse to right child
     mask[[node$childR$label]] <- FALSE
 
     return(mask)
@@ -62,12 +70,15 @@ cart_prune <- function(node, mask) {
 }
 
 #' Cost-Complexity pruning of greedy CART
-#' @description Create a regression or classification tree tree greedily based
-#' on training data.
+#'
+#' @description Create a regression or classification tree greedily based
+#' on training data. Then prune it according to cost-complexity trade-off
+#'
 #' @details
 #' Unless `sample` is set to `TRUE`, it is required that there are no observations
 #' \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
 #' X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
+#'
 #' @param XY matrix with columns \eqn{1..d} (representing the training data
 #'   \eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}).
 #' @param depth The amount of steps before halting the algorithm (defaults to
@@ -85,11 +96,17 @@ cart_prune <- function(node, mask) {
 #'   defaults to `100L`)
 #' @param q_pct amount of probabilities for `quantile()`, in pct. of the data
 #'   set size. (`numeric`, defaults to `0.25`)
-#' @param lambda Cost weight.
+#' @param lambda weight for complexity-cost
+#'
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`), pruned according to Cost-Complexity
+#'
 #' @examples
+#' XY <- generate_sin_data(150, sigma=0.2)
+#' dimnames(XY) <- list(NULL, c(1, "y"))
+#' T2 <- cart_greedy(XY, depth=20, threshold=1, lambda = 0.01)
 #' @export
+#'
 cart_greedy_prune <-
   function(XY,
            depth = 10L,
@@ -101,9 +118,9 @@ cart_greedy_prune <-
            quantile = FALSE,
            q_threshold = 100L,
            q_pct = 0.25,
-           lambda = 0.3) {
-    # TODO besserer Wert für lambda oder CV
+           lambda = 0.01) { # TODO CrossValidation
 
+  #generate CART based on greedy algorithm
     Cart <-
       cart_greedy(
         XY,
@@ -118,12 +135,12 @@ cart_greedy_prune <-
         q_pct = q_pct
       )
 
-
+    # internal helper for generating a mask of leafes
     mLeafes <- function(tree, mask) {
       f <- function(node) {
+
         if (!mask[[node$label]])
           return(FALSE)
-
         if ((is.null(node$childL) && is.null(node$childR))) {
           return(TRUE)
         } else if ((!mask[[node$childL$label]] &&
@@ -133,45 +150,39 @@ cart_greedy_prune <-
                    mask[[node$childR$label]]) {
           return(FALSE)
         } else {
-          # print(node)
-          # print(node$childL)
-          # print(node$childR)
-          # print(mask)
           stop("malformed tree")
         }
       }
-
       sapply(tree$nodes, f, simplify = TRUE)
     }
 
+    # internal helper for generating a list of leafes
+    Leafes <- function(tree, mask) {
+      tree$nodes[mLeafes(tree, mask)]
+    }
+    # internal helper for generating a mask of inner Nodes
     mInnerNodes <- function(tree, mask) {
       !mLeafes(tree, mask) & mask
     }
 
+    # internal helper for generating a list of inner Nodes
     innerNodes <- function(tree, mask) {
       tree$nodes[mInnerNodes(tree, mask)]
     }
 
-    Leafes <- function(tree, mask) {
-      tree$nodes[mLeafes(tree, mask)]
-    }
-
-    #    mDepthL <- function(tree, Leafmask) {
-    #      max(sapply(tree$nodes[Leafmask], function(node) {`$`(node, "depth")}))
-    #    }
-
-
+    # internal helper for calculating the (virtual) depth of the given masked tree
     mDepth <- function(tree, mask) {
       max(sapply(tree$nodes[mask], function(node) {
         `$`(node, "depth")
       }))
     }
 
+    # internal helper for counting the number of leafes of given masked tree
     complexity <- function(tree, mask) {
-      # return(length(tree$obstkorb()[tree$obstkorb() == TRUE]))
       return(sum(mLeafes(tree, mask), na.rm = TRUE))
     }
 
+    # internal helper for pruning given masked tree at given node
     pruneAt  <- function(node, mask) {
       stopifnot(is.vector(mask, mode = "logical"))
       if (!mask[[node$label]] ||
@@ -189,28 +200,23 @@ cart_greedy_prune <-
       }
     }
 
-
-
+    # internal helper for calculating the risk estimation according to [Richter, p. 174, Eqs.(6.6)+(6.7)]
     Risk <- function(mask)  {
-      predict <- function(x, b, m) {
-        return(cart_predict_pruned(x, b$root, m))
-      }
-      #   Cart$validate()
-      n <- nrow(XY) # Anzahl Beobachtungen
 
+      n <- nrow(XY) # count of observations
       pred <-
         apply(
           XY[, -ncol(XY), drop = FALSE],
           MARGIN = 1,
-          FUN = predict,
-          m = mask,
-          b = Cart
-        ) #, par(mask = mask) predicting with current tree
+          FUN = cart_predict_pruned,
+          mask = mask,
+          node = Cart$root
+        ) # predicting with current tree
 
       if (mode == "regression") {
-        R <- 1 / n * sum((pred - XY[, ncol(XY), drop = FALSE]) ** 2) #, na.rm = TRUE
+        R <- 1 / n * sum((pred - XY[, ncol(XY), drop = FALSE]) ** 2)
       } else if (mode == "classification") {
-        R <- 1 / n * sum((pred != XY[, ncol(XY), drop = FALSE])) #, na.rm = TRUE
+        R <- 1 / n * sum((pred != XY[, ncol(XY), drop = FALSE]))
       } else {
         stop("Invalid mode in Risk(). Must be regression or classification")
       }
@@ -219,77 +225,46 @@ cart_greedy_prune <-
 
     p <- 1
     mT <- list()
-    mT[[1]] <- rep(TRUE, times = length(Cart$nodes))
+    mT[[1]] <- rep(TRUE, times = length(Cart$nodes)) # initial mask for the unpruned CART
 
-    iNodesTp <- list()
-    cT <- vector()
+    iNodesTp <- list() # list of inner Nodes of T^(p)
+    cT <- vector() # number of leafes of T^(p)
 
-    while (mDepth(Cart, mT[[p]]) > 0) {
-      #print("STARTwhile")
-      #print(p)
-      #print("Depth")
-      #print(mDepth(Cart, mT[[p]]))
-      #print("mTp")
-      #print(mT[[p]])
+    while (mDepth(Cart, mT[[p]]) > 0) { # iterate so long as virtual tree is more than just root
 
       iNodesTp <-
         innerNodes(Cart, mT[[p]]) #mask of Nodes without those being Leaves
       cT[p] <- complexity(Cart, mT[[p]])
-      #print("iNodesTp")
-      #print(sapply(iNodesTp, function(node) {`$`(node, "label")}))
-      #print(!mLeafes(Cart, mT[p]))
-      #print("Berechne den weakest link")
+
+      # calculate weakest link according to [Richter, p.179, eqn(6.15)]
       mT_test <- vector()
       wlp <- vector()
       i <- 0L
       for (node in iNodesTp) {
         i <- i + 1
         mT_test <- pruneAt(node, mT[[p]])
-        #print(mT_test)
         wlp[i] <-
           (Risk(mT_test) + Risk(mT[[p]])) / (cT[p] - complexity(Cart, mT_test))
       }
-      #print("Finished wlp")
-      #print(wlp)
-      #print(which.min(wlp))
-      #print("cT")
-      #print(cT)
+
+      # handle edge case where greedyCART gives back NA
       if ((length(wlp) < 2) && is.na(wlp)) {
         pivot <- 1
       } else {
-        pivot <- which.min(wlp)
+        pivot <- which.min(wlp) # determine actual weakest link
       }
-      #print("Pivot")
-      #print(pivot)
-      #print("length leaves")
-      #print(sum(mLeafes(Cart, mT[[p]])))
-      #print("iNodesTp")
-      #print(sapply(iNodesTp, function(node) {`$`(node, "label")}))
-      #print("mTp+1")
-      mT[[p + 1]] <- pruneAt(iNodesTp[[pivot]], mT[[p]])
-      #print(mT[[p+1]])
 
+      mT[[p + 1]] <- pruneAt(iNodesTp[[pivot]], mT[[p]]) # next mask for T^(p)
       p = p + 1
-
     } # END while
-    #print("Nearly FINISHED!")
-    # Berechne den optimal geschnittenen Baum
-    P <- p
-   # lambda <- 0.01
-    # print("lambda")
-    # print(lambda)
+
+    P <- p # save the reached p = P
+    # calculate cost-complexity trade-off
     p_hat <- vector()
     for (p in 1:P) {
       p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
-      #print(p)
-      # print(Risk(mT[[p]]))
-
     } # p_hat <- R_hat(T) + lambda * complexity(T)
-    # print("p_hat")
-    # print(p_hat)
+
     p_hat_min <- which.min(p_hat)
-    #print("FINISHED!")
-    # print(p_hat[p_hat_min])
-    #print(mT[[p_hat_min]])
-    return(list(Cart, mT[[p_hat_min]]))
+    return(list(Cart, mT[[p_hat_min]])) #return list of CART and cost-complexity pruned mask
   }
