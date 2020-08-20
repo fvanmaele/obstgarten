@@ -11,11 +11,10 @@ generate_sin_2D(n, sigma = 0.2, k = 10)
 
 \item{sigma}{standard deviation of irreducible error in y}
 
-\item{k}{specifying field of view}
+\item{k}{specifying field of view
+
+According to model y = (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2)) + N(0, sigma)}
 }
 \description{
 Generate 2D sine data set
-}
-\examples{
-According to model y = (sin(sqrt(x^2+y^2)))/(sqrt(x^2+y^2)) + N(0, sigma)
 }

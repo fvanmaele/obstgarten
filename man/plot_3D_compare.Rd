@@ -13,12 +13,11 @@ plot_3D_compare(path, render = FALSE, margin = 1)
 \item{render}{logical should 3D plots be rendered? if TRUE HIGH CPU LOAD!!
 if FALSE only 2D plots are returned}
 
-\item{margin}{margin of the scale}
+\item{margin}{margin of the scale
+
+plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)}
 }
 \description{
 Method to plot 3D comparisons of predictions
 for different methods
-}
-\examples{
-plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 }

@@ -22,13 +22,12 @@ pred_plot_pruning(
 
 \item{n}{number of generated data pairs}
 
-\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging
+
+pred_plot_greedy(5, sigma=0.25, n=150)}
 
 \item{simul}{True: return data}
 }
 \description{
 plots prediction of pruned CART generated regression tree
-}
-\examples{
-pred_plot_greedy(5, sigma=0.25, n=150)
 }

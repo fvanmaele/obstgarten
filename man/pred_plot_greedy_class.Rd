@@ -13,11 +13,9 @@ pred_plot_greedy_class(depth, sigma = 0.25, n = 150, random_forest = FALSE)
 
 \item{n}{number of generated data pairs}
 
-\item{random_forest}{logical: TRUE: random forest, FALSE: bagging}
+\item{random_forest}{logical: TRUE: random forest, FALSE: bagging
+pred_plot_greedy_class(5, sigma=0.25, n=150)}
 }
 \description{
 plots prediction of CART generated decision tree
-}
-\examples{
-pred_plot_greedy_class(5, sigma=0.25, n=150)
 }

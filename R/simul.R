@@ -251,6 +251,8 @@ compare_m_PE <- function(m_list, d, n, B, reps=400) {
 }
 
 
+#' compare_m
+#'
 #' @description Method to qualitatively compare Prediction Quality of the Random Forests for different parameters m.
 #'
 #' @param m_list list of parameters m to compare
@@ -454,6 +456,8 @@ calc_accuracy <- function(ret) {
   return(acc)
 }
 
+#' calc_mean_accuracy
+#'
 #' @description Calculate Mean Accuracy of Iris Dataset
 #'
 #' @param reps rows of data

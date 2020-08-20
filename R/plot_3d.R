@@ -24,7 +24,7 @@ plot_3D <- function(df) {
 #' if FALSE only 2D plots are returned
 #' @param margin margin of the scale
 #'
-#' @examples plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
+#' plot_3D_compare("data/simul/compare_plot_data_20200812-113504", render=TRUE)
 #' @import dplyr
 #' @import ggplot2
 #' @import rayshader

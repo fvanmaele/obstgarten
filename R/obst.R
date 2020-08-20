@@ -174,8 +174,7 @@ Baum <- R6::R6Class("Baum",
 
     #' @description
     #' Return leaf nodes in the tree.
-    #' @seealso
-    #' \link{Gabel$isObst()}
+    #'
     #' @return logical vector with TRUE for leaf nodes, and FALSE otherwise. As
     #' `$nodes`, this vector is in BFS order.
     obstkorb = function() {

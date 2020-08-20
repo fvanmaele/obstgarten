@@ -19,9 +19,6 @@ As \code{Gabel}, data is stored in environments (\code{R6}, reference semantics)
 T1 <- Baum$new()
 T1$root$label # 1L
 }
-\seealso{
-\link{Gabel$isObst()}
-}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{

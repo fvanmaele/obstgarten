@@ -4,7 +4,7 @@
 #' @param n number of generated data pairs
 #' @param simul True: return data
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
-#' @examples pred_plot_greedy(5, sigma=0.25, n=150)
+#' pred_plot_greedy(5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
@@ -52,7 +52,7 @@ pred_plot_greedy <- function(depth, sigma=0.25, n=150, random_forest=FALSE, simu
 #' @param sigma standard deviation of irreducible error in y
 #' @param n number of generated data pairs
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
-#' @examples pred_plot_greedy_class(5, sigma=0.25, n=150)
+#' pred_plot_greedy_class(5, sigma=0.25, n=150)
 #' @import dplyr
 #' @import ggplot2
 pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -98,7 +98,7 @@ pred_plot_greedy_class <- function(depth, sigma=0.25, n=150, random_forest=FALSE
 #' @param simul True: return data
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
 #'
-#' @examples pred_plot_greedy(5, sigma=0.25, n=150)
+#' pred_plot_greedy(5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_pruning <- function(lambda = 1/3, depth=5, sigma=0.25, n=150, random_forest=FALSE, simul=FALSE) {
@@ -190,7 +190,7 @@ pred_plot_bagging <- function(depth, B, sigma=0.25, n=150, grid=NULL, random_for
 #' @param sigma standard deviation of irreducible error in y
 #' @param n number of generated data pairs
 #' @param random_forest logical: TRUE: random forest, FALSE: bagging
-#' @examples pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
+#' pred_plot_bagging_class(B=10L, depth=5, sigma=0.25, n=150)
 #' @import ggplot2
 #' @import bbplot
 pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=FALSE) {
@@ -222,6 +222,8 @@ pred_plot_bagging_class <- function(B, depth, sigma=0.25, n=150, random_forest=F
 
 # pred_plot_bagging_class(B=10L, depth = 50, n=100)
 
+#' pred_plot_sine2D
+#'
 #' @param B integer number of bootstrap samples
 #' @param depth The amount of steps before halting the algorithm
 #' @param sd standard deviation of irreducible error in y
@@ -281,12 +283,13 @@ pred_plot_sine2D <- function(n, B, depth, sd, k=10, random_forest=TRUE) {
 # pred_plot_sine2D(n=1000, B=5L, depth=5, sd=0.1, k=10)
 
 
+#' pred_plot_rf
+#'
 #' @param B integer number of bootstrap samples
 #' @param d dimension
 #' @param depth The amount of steps before halting the algorithm
 #' @param sd standard deviation of irreducible error in y
 #' @param n number of generated data pairs
-#' @param k integer specifying field of view in sine2D case
 #' @param m RF parameter: count of chosen dimension
 #' @param display_d integer dimension displayed in multivariate case gaussian
 #' @param simul True: return data
