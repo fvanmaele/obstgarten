@@ -85,9 +85,15 @@ Richter, Definition 6.25, 6.26, 6.28
 #### 2.1.2 pruning.R
 
 Cost-complexity pruning of a greedily generated CART, according to a given complexity weight. 
-Richter, Definition 6.18
-Pruning presents a way to decrease computational complexity of empirical estimators as well as simple generalization for overfitting-prone approaches
+Pruning is a regularization technique which presents a way to decrease computational complexity of empirical estimators as well as simple generalization for overfitting-prone approaches. The cost-complexity parameter lambda controls the amount of regularization.
 
+```{r, warning=FALSE, fig.width=7.25, fig.height=5}
+suppressMessages(simul_plot_pruning())
+```
+```{r, warning=FALSE, fig.width=7.25, fig.height=5}
+load("data/bv_pruning")
+suppressMessages(bv_plot(bv_data, plot_title = "Pruning Bias-Variance Tradeoff", bagging = FALSE, pruning=TRUE))
+```
 
 ## 3 Simulationsstudie
 
