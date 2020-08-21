@@ -10,17 +10,17 @@
 #' @return y prediction node$y of appropriate sub-node
 #'
 #' @export
+#'
 cart_predict_pruned <- function(x, node, mask) {
-
   stopifnot(length(x) == (ncol(node$points) - 1))
   stopifnot(is.vector(mask, mode = "logical"))
+  stopifnot(mask[[node$label]])
 
-  if (!mask[[node$label]] ||
-      (is.null(node$childR) && is.null(node$childL))) {
+  if ((is.null(node$childL) && is.null(node$childR))) {
     # leaf node found -> return value
     return(node$y)
-  } else if (!mask[[node$childR$label]] &&
-             !mask[[node$childL$label]]) {
+  } else if (!mask[[node$childL$label]] &&
+             !mask[[node$childR$label]]) {
     # "virtual" leaf node found -> return value
     if (!is.na(node$y))
       return(0) # problem at root. TODO: Should be mean or majority or better not happening at all
@@ -45,14 +45,16 @@ cart_predict_pruned <- function(x, node, mask) {
 #' @export
 #'
 cart_prune <- function(node, mask) {
-
   stopifnot(is.vector(mask, mode = "logical"))
+  stopifnot(mask[[node$label]])
 
-  if (!mask[[node$label]] ||
-      (is.null(node$childL) && is.null(node$childR))) { # not in mask or already pruned
+  if ((is.null(node$childL) &&
+       is.null(node$childR))) {
+    # not in mask or already pruned
     return(mask)
   } else if (!mask[[node$childL$label]] &&
-             !mask[[node$childR$label]]) { # already virtually pruned
+             !mask[[node$childR$label]]) {
+    # already virtually pruned
     return(mask)
   } else {
     mask <- cart_prune(node$childL, mask) # recurse to left child
@@ -93,12 +95,14 @@ cart_prune <- function(node, mask) {
 #' @param q_pct amount of probabilities for `quantile()`, in pct. of the data
 #'   set size. (`numeric`, defaults to `0.25`)
 #' @param lambda weight for complexity-cost
+#' @param use_parallel logical: whether to use parallel computation or not
 #'
 #' @return A regression or classification tree modeled after the training data
 #'   (`Baum`), pruned according to Cost-Complexity
 #'
 #' @examples cart_greedy_prune(generate_sin_data(100, sigma=0.2), depth=5, threshold=1, lambda = 0.01)
 #' @export
+#' @import parallel
 #'
 cart_greedy_prune <-
   function(XY,
@@ -111,9 +115,10 @@ cart_greedy_prune <-
            quantile = FALSE,
            q_threshold = 100L,
            q_pct = 0.25,
-           lambda = 0.01) { # TODO CrossValidation
-
-  #generate CART based on greedy algorithm
+           lambda = 0.01,
+           # TODO CrossValidation
+           use_parallel = TRUE) {
+    #generate CART based on greedy algorithm
     Cart <-
       cart_greedy(
         XY,
@@ -127,12 +132,15 @@ cart_greedy_prune <-
         q_threshold = q_threshold,
         q_pct = q_pct
       )
-    stopifnot("lambda is not numeric and greater or equal to 0"= is.numeric(lambda) & lambda >= 0L)
+    stopifnot("lambda is not numeric and greater or equal to 0" = is.numeric(lambda) &
+                lambda >= 0L)
+    # set up parallel
+    if (use_parallel)
+      nbCores <- detectCores() - 1
 
     # internal helper for generating a mask of leafes
     mLeafes <- function(tree, mask) {
       f <- function(node) {
-
         if (!mask[[node$label]])
           return(FALSE)
         if ((is.null(node$childL) && is.null(node$childR))) {
@@ -180,7 +188,6 @@ cart_greedy_prune <-
 
     # internal helper for calculating the risk estimation according to [Richter, p. 174, Eqs.(6.6)+(6.7)]
     Risk <- function(mask)  {
-
       n <- nrow(XY) # count of observations
       pred <-
         apply(
@@ -203,12 +210,14 @@ cart_greedy_prune <-
 
     p <- 1
     mT <- list()
-    mT[[1]] <- rep(TRUE, times = length(Cart$nodes)) # initial mask for the unpruned CART
+    mT[[1]] <-
+      rep(TRUE, times = length(Cart$nodes)) # initial mask for the unpruned CART
 
     iNodesTp <- list() # list of inner Nodes of T^(p)
     cT <- vector() # number of leafes of T^(p)
 
-    while (mDepth(Cart, mT[[p]]) > 0) { # iterate so long as virtual tree is more than just root
+    while (mDepth(Cart, mT[[p]]) > 0) {
+      # iterate so long as virtual tree is more than just root
 
       iNodesTp <-
         innerNodes(Cart, mT[[p]]) #mask of Nodes without those being Leaves
@@ -217,12 +226,19 @@ cart_greedy_prune <-
       # calculate weakest link according to [Richter, p.179, eqn(6.15)]
       mT_test <- vector()
       wlp <- vector()
-      i <- 0L
-      for (node in iNodesTp) {
-        i <- i + 1
-        mT_test <- cart_prune(node, mT[[p]])
-        wlp[i] <-
+      if (use_parallel) {
+        wlp <- mclapply(seq_along(iNodesTp), function(i) {
+          mT_test <- cart_prune(iNodesTp[[i]], mT[[p]])
           (Risk(mT_test) + Risk(mT[[p]])) / (cT[p] - complexity(Cart, mT_test))
+        }, mc.cores = nbCores)
+      } else {
+        i <- 0L
+        for (node in iNodesTp) {
+          i <- i + 1
+          mT_test <- cart_prune(node, mT[[p]])
+          wlp[i] <-
+            (Risk(mT_test) + Risk(mT[[p]])) / (cT[p] - complexity(Cart, mT_test))
+        }
       }
 
       # handle edge case where greedyCART gives back NA
@@ -232,16 +248,24 @@ cart_greedy_prune <-
         pivot <- which.min(wlp) # determine actual weakest link
       }
 
-      mT[[p + 1]] <- cart_prune(iNodesTp[[pivot]], mT[[p]]) # next mask for T^(p)
+      mT[[p + 1]] <-
+        cart_prune(iNodesTp[[pivot]], mT[[p]]) # next mask for T^(p)
       p = p + 1
     } # END while
 
     P <- p # save the reached p = P
     # calculate cost-complexity trade-off
     p_hat <- vector()
-    for (p in 1:P) {
-      p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
-    } # p_hat <- R_hat(T) + lambda * complexity(T)
+    if (use_parallel) {
+      p_hat <- mclapply(1:P, function(p) {
+        p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
+      }, mc.cores = nbCores)
+    } else {
+      for (p in 1:P) {
+        p_hat[p] <- Risk(mT[[p]]) + lambda * complexity(Cart, mT[[p]])
+      } # p_hat <- R_hat(T) + lambda * complexity(T)
+    }
+
 
     p_hat_min <- which.min(p_hat)
     return(list(Cart, mT[[p_hat_min]])) #return list of CART and cost-complexity pruned mask
