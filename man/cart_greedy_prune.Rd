@@ -15,7 +15,8 @@ cart_greedy_prune(
   quantile = FALSE,
   q_threshold = 100L,
   q_pct = 0.25,
-  lambda = 0.01
+  lambda = 0.01,
+  use_parallel = TRUE
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ defaults to \code{100L})}
 set size. (\code{numeric}, defaults to \code{0.25})}
 
 \item{lambda}{weight for complexity-cost}
+
+\item{use_parallel}{logical: whether to use parallel computation or not}
 }
 \value{
 A regression or classification tree modeled after the training data
