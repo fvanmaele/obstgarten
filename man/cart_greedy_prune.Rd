@@ -15,7 +15,7 @@ cart_greedy_prune(
   q_threshold = 100L,
   q_pct = 0.25,
   lambda = 0.01,
-  use_parallel = TRUE
+  use_parallel = FALSE
 )
 }
 \arguments{
