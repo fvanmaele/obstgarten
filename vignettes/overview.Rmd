@@ -21,8 +21,63 @@ The given functions are sufficiently fast and versatile to enable the user to ex
 
 ### 1.1 obst.R 
 
-    Gabel
-    Baum
+Data structure (recursive) representing regression and classification trees (CART). Edges are bi-directional (inspired from `data.tree::Node`). Data is stored in environments (`R6`, reference semantics).
+
+## Attributes
+The following attributes are included for a node v:
+
+- `childL`, `childR` for the left and right child node, respectively;
+- `parent`, for the parent node;
+- `label`, the unique labeling of the node;
+- `depth`, the node depth (the length of the chain `v_0`, `v_1` ... `v`);
+- `points`, the intersection of the training data and partition A(v);
+  + **TODO**: Storing (subsets of) the training data in nodes is an inefficient use of space. An alternative (for high dimensional data specifically) is to only store the indices of the partition of the training data in every node.
+- `s`, the split point (for an inner node);
+- `j`, the split index (for an inner node);
+- `y`, value (for a leaf; numeric for a regression tree, integer for a classification tree)
+
+## Methods
+The following methods are included:
+
+- `isObst()`: determines if the node is a leaf (`TRUE`) or not (`FALSE`).
+- `print()`: print common attributes (all except `points`); attributes set to `NULL` are not printed.
+
+
+
+A helper class to build a CART based on `Gabel` nodes. Nodes are accessible through a list for easy introspection with `apply`. Nodes are labeled in BFS order.
+
+As `Gabel`, data is stored in environments (`R6`, reference semantics).
+
+## Attributes
+
+- `nodes`: list of `Gabel` nodes. It is assumed that the label of a node in `Baum` matches its index in this list.
+- `root`: the root node of tree.
+
+## Methods
+
+- `initialize()`: create a new `Baum` object with a single root node (label `1L`, depth `0L`)
+- `obstkorb()`: returns a logical vector, with `TRUE` for leaves and `FALSE` otherwise.
+- `append(label, Child1, Child2)`: appends the argument nodes `Child1`, `Child2` to the node in the tree with `label` (the parent). Attributes for the parent, `Child1` and `Child2` are updated accordingly (`parent`, `depth`, `childL`, `childR`). Labels are assigned in a breadth-first-search manner. 
+*Note*: When only using this method to construct the tree, no cycles are possible.
+- `partition(node, d)`: Creates a partition of d-dimensional space based on the split points and indices in the tree nodes. Returns a matrix with the split indices as columns, and the split points as rows.
+- `predict(x)`: Predict the value of a datum `x`, based on the split points and indices in the tree nodes. Complexity: `O(log n)` in the amount of nodes.
+- `validate()`: Ensures that the following criteria are fulfilled:
+*Note*: Cycles are not checked in this method.
+  * all node labels are unique (integers);
+  * all leaves have `j`, `s` unset (`NA`) and `y` set;
+  * all inner nodes have `j`, `s` set (`integer` and `numeric`, respectively) and `y` unset (`NA`)
+  * ensure all leaves have at least a single data point.
+- `depth()`: Return the depth of the tree (the maximum of the depth of leaves in the tree)
+
+## Notes
+In implementing this class, we found the following difficulties:
+
+- Decide on the most suitable data structure to represent binary trees in general, and CARTs specifically.
+- Create an interface that is reasonably easy to use for package users.
+- Find a suitable scheme for labeling tree nodes (`append()`, `self$nodes`)
+- Find a suitable way to represent the subdivision of d-dimensional space, in particular for `d > 1`
+
+
 
 ## 2 Algorithmen
 
@@ -33,10 +88,17 @@ Generating a single CART using the greedy algorithm, optional sampling. Beiing u
 #### 2.1.1 bagging.R 
  
 Generating random forests, with or without sampling.
+The bootstrap aggregating (Bagging) procedure is an ensemble method from statistical machine learning. It can reduce the model's variance, enhance the accuracy and has a regularization effect. The Bagging procedure adds randomness to the model by averaging (regression) or majority-voting (classification) the prediction for samples $x_i$ over the different models that were fitted on the bootstrap samples. The bootstrap samples are created by randomly drawing n samples from the dataset of size n with replacement. The number of bootstrap samples B is a hyperparameter of the model.
+
+Richter, Definition 6.25, 6.26, 6.28
+
 
 #### 2.1.2 pruning.R
 
 Cost-complexity pruning of a greedily generated CART, according to a given complexity weight. 
+Richter, Definition 6.18
+Pruning presents a way to decrease computational complexity of empirical estimators as well as simple generalization for overfitting-prone approaches
+
 
 ## 3 Simulationsstudie
 
@@ -60,11 +122,43 @@ lots and simulation study
 
 3D plotting methods
 
-## 5 Shiny
+## 4 Shiny
 
-### 5.1 shiny.R
+### 4.1 shiny.R
 
 Interactive shiny app, sporting all the algorithms above.
+
+## 5 Performance considerations
+
+Zur Verbesserung der Performance des Greedy-Algorithmus (insbesondere für Zwecke von Bagging und Random Forests) gibt es die folgenden Ansätze:
+
+* Dynamic programming (*top-down*): Speichern von Zwischenresultaten
+* Dynamic programming (*bottum-up*): Baum "von unten" aufbauen
+* Parallelisierung: Bäume parallel erzeugen
+* Quantile: Reduzieren der Menge an Datenpunkte für das Minimierungsproblem
+
+**Dynamic programming** hat sich zunächst als problematisch erwiesen; insbesondere das Paket *memoize* hat in einfachen Tests zu enormen (bis zu -700%) Einbussen in der Performance geführt. 
+
+**Parallelisierung** ist für random forests bzw. bagging einfach durchführbar, da die benötigten Bäume unabhängig von einander erzeugt werden können. In R kann dazu das `parallel` (Teil von R) verwendet werden. Meist werden dazu parallelisierte Versionen von `sapply`, `apply` oder `lapply` verwendet. (`for` schleifen können mit `foreach %dopar%` parallelisiert werden, was aber wiederum zu hohen Einbussen führt).
+
+* Unter *Windows* muss für parallele Prozesse ("clusters") jede Funktion und jede Variable explizit deklariert werden. Deshalb ist die Parallelisierung hier nur bedingt verwendbar.
+* Unter *Linux* wird `fork()` für parallele Prozesse verwendet, insbesondere werden jegliche Funktionen und Variablen vererbt und müssen nicht explizit deklariert werden.
+
+**Idee für Quantile:** ab einer gewissen Anzahl an Datenpunkte werden Quantile (`quantile()`) mit einer %-Anzahl an Wahrscheinlichkeiten verwendet für das Minimierungsproblem, anstatt die Datenpunkte selbst.
+
+`cart_greedy` wird demnach mit folgenden Parametern ergänzt:
+
+* `q_threshold`: minimal amount of data points to use quantiles.
+* `q_pct`: amount of probabilities for `quantile()`, in pct. of the data set size.
+* `type`: `quantile(..., type)`, type of quantile algorithm
+
+Bei Anwenden der `quantile()` Funktion muss weiter beachtet werden, dass diese auf (1-dimensionale) Vektoren gerichtet ist und es muss z.B. `sapply` verwendet werden im höher-dimensionalen Fall.
+
+
+
+
+
+
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
