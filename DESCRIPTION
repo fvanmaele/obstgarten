@@ -41,7 +41,7 @@ Imports:
     shiny,
     shinyjs,
     parallel,
-    bbplot,
+    bbplot (>= 0.2),
     stringr,
     tidyr,
     grid,
@@ -50,3 +50,5 @@ Imports:
     RColorBrewer,
     shinydashboard
 VignetteBuilder: knitr
+Remotes:  
+    bbc/bbplot
