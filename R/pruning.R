@@ -110,7 +110,7 @@ cart_greedy_prune <-
            q_pct = 0.25,
            lambda = 0.01,
            # TODO CrossValidation
-           use_parallel = TRUE) {
+           use_parallel = FALSE) {
     #generate CART based on greedy algorithm
     Cart <-
       cart_greedy(
