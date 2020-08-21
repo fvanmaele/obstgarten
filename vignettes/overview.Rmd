@@ -20,7 +20,7 @@ The given functions are sufficiently fast and versatile to enable the user to ex
 
 ```{r setup}
 # library(obstgarten)
-#suppressMessages(devtools::load_all())
+suppressMessages(devtools::load_all())
 suppressMessages(library(obstgarten))
 ```
 

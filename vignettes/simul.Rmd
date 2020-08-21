@@ -24,7 +24,7 @@ In this section the induced predictor of the CART generated regression tree is a
 
 ```{r setup}
 # library(obstgarten)
-#suppressMessages(devtools::load_all())
+suppressMessages(devtools::load_all())
 suppressMessages(library(obstgarten))
 ```
 
