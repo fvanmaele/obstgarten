@@ -59,13 +59,9 @@ T1$nodes
 
 ### Greedy generation of CARTs
 
-<<<<<<< HEAD
-### 2.1 greedy.R 
- 
-Generating a single CART using the greedy algorithm, optional sampling. Being used in random forests. At the random forest the parameter m is selectable here to determine the number of randomly chosen dimensions. In addition, the algorithm always aborts at a random number of created leaves in the tree. This results in a CART that uses only a part of the given knowledge.
 
-Richter, Definition 6.15, 6.16, 6.52
-=======
+### 2.1 greedy.R 
+
 CARTs are generated using the greedy algorithm from [Richter, Definition 6.15]. Sampling of dimensions `d` and amount of leaves in the tree `t` is supported for use with Random Forests.
 
 To implement the CART algorithm, the following functions are used:
@@ -84,18 +80,23 @@ dimnames(M) <- list(NULL, c(1, "y"))
 T2 <- cart_greedy(M, depth=5, threshold=1)
 ```
 
-<<<<<<< HEAD
+At the random forest the parameter m is selectable here to determine the number of randomly chosen dimensions. In addition, the algorithm always aborts at a random number of created leaves in the tree. This results in a CART that uses only a part of the given knowledge.
+
+```{r}
+n <- 150
+d <- 4
+m <- 2
+XY <- generate_mult_data(n, d)[[1]]
+cart_greedy(XY, depth=5, random=T, m=m)
+```
+
+Richter, Definition 6.15, 6.16, 6.52
+
 #### Mean Square Error
 
 Prediction/MSE of CARTs
 
-```{r}
->>>>>>> 7b8070c4c157b7bf319731a7aa42adaa3ec8dd85
-
-```
-=======
 **Note**: The `pred` methods allow for computing the MSE of these algorithms and are used for the Shiny app.
->>>>>>> 6cbedb695ed43112fe5cd170dee62a9213b81b38
 
 
 ### Bagging
@@ -104,13 +105,9 @@ Generate random forests, with or without sampling. This algorithm uses the `cart
 
 The bootstrap aggregating (Bagging) procedure is an ensemble method from statistical machine learning. It can reduce the model's variance, enhance the accuracy and has a regularization effect. The Bagging procedure adds randomness to the model by averaging (regression) or majority-voting (classification) the prediction for samples `x_i` over the different models that were fitted on the bootstrap samples. The bootstrap samples are created by randomly drawing n samples from the dataset of size `n` with replacement. The number of bootstrap samples B is a hyperparameter of the model.
 
-<<<<<<< HEAD
 Random forest works basically like bagging but it uses the modified greedy algorithm with the extra parameter m. This is used to select the number of randomly selected dimensions from the data set. If you don't define m yourself, the heuristically motivated value from the given source is used automatically. With random forest the transitions in the generated CART are usually softer than with bagging, because m generates CARTs with only a part of the knowledge.
 
-Richter, Definition 6.52
-=======
-See: [Richter, Definition 6.25, 6.26, 6.28]
->>>>>>> 7b8070c4c157b7bf319731a7aa42adaa3ec8dd85
+See: [Richter, Definition 6.25, 6.26, 6.28, 6.52]
 
 ```{r, warning=FALSE, fig.width=7.25, fig.height=5}
 x1 <- generate_sin_data(500)
