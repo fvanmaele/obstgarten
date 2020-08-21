@@ -95,9 +95,7 @@ Richter, Definition 6.15, 6.16, 6.52
 
 #### Mean Square Error
 
-Prediction/MSE of CARTs
-
-**Note**: The `pred` methods allow for computing the MSE of these algorithms and are used for the Shiny app.
+The `pred` methods allow for computing the MSE of these algorithms and are used for the Shiny app.
 
 ### Bagging
  
