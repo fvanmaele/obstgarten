@@ -93,6 +93,10 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
     }
   }
 
+  if (Sys.info()["sysname"] == "Windows") {
+    message("parallel not supported on windows, setting parallel to FALSE")
+    use_parallel <- FALSE
+  }
   if (use_parallel) {
     # set up parallel
     nb_cores <- detectCores() - 1
