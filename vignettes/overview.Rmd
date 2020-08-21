@@ -63,3 +63,51 @@ Also a quote using `>`:
 
 > "He who gives up [code] safety for [code] speed deserves neither."
 ([via](https://twitter.com/hadleywickham/status/504368538874703872))
+
+
+# Overview
+## Contents
+## Introduction
+### Why?
+## What for?
+### How?
+
+
+1 Datenstrukturen
+1.1 obst.R [@export]
+
+    Gabel
+    Baum
+
+2 Algorithmen
+2.1 greedy.R [@export]
+
+Erzeugen eines einzelnen CARTs (gierig), mit oder ohne sampling (Anw. in Random Forests)
+2.1.1 bagging.R [@export]
+
+Erzeugen mehrerer Bäume ("Wälder"), mit oder ohne sampling (Random Forests)
+2.1.2 pruning.R [@export]
+
+Zurückschneiden
+3 Simulationsstudie
+3.1 bv.R
+
+Bias-Variance
+3.2 data.R [@export]
+
+Erzeugung von zufallsgenerierten Daten
+3.3 pred.R [@export]
+
+Prediction/MSE von CARTs
+3.3.1 simul.R
+
+Visueller Abgleich (Plots) und Simulationsstudie
+3.3.2 shiny.R
+3.4 plot3d.R [@export]
+
+3D plotting methods
+4 Shiny
+4.1 shiny.R
+
+
+
