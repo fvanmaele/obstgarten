@@ -63,7 +63,7 @@ T1$append(G1, G2, G3)
 str(as.list(T1$root))
 
 # view nodes of tree as list
-T1$nodes()
+T1$nodes
 ```
 
 Data structure (recursive) representing regression and classification trees (CART). Edges are bi-directional (inspired from `data.tree::Node`). Data is stored in environments (`R6`, reference semantics).
@@ -111,7 +111,7 @@ Prediction/MSE of CARTs
 
 ### 3.4 simul.R
 
-lots and simulation study
+Plots and simulation study
 
 ### 3.5 plot3d.R 
 
