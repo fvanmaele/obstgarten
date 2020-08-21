@@ -72,7 +72,9 @@ Data structure (recursive) representing regression and classification trees (CAR
 
 ### 2.1 greedy.R 
  
-Generating a single CART using the greedy algorithm, optional sampling. Beiing used in random forests.
+Generating a single CART using the greedy algorithm, optional sampling. Being used in random forests. At the random forest the parameter m is selectable here to determine the number of randomly chosen dimensions. In addition, the algorithm always aborts at a random number of created leaves in the tree. This results in a CART that uses only a part of the given knowledge.
+
+Richter, Definition 6.15, 6.16, 6.52
 
 #### 2.1.1 bagging.R 
  
@@ -81,6 +83,9 @@ The bootstrap aggregating (Bagging) procedure is an ensemble method from statist
 
 Richter, Definition 6.25, 6.26, 6.28
 
+Random forest works basically like bagging but it uses the modified greedy algorithm with the extra parameter m. This is used to select the number of randomly selected dimensions from the data set. If you don't define m yourself, the heuristically motivated value from the given source is used automatically. With random forest the transitions in the generated CART are usually softer than with bagging, because m generates CARTs with only a part of the knowledge.
+
+Richter, Definition 6.52
 
 #### 2.1.2 pruning.R
 
@@ -121,7 +126,7 @@ Plots and simulation study
 
 ### 4.1 shiny.R
 
-Interactive shiny app, sporting all the algorithms above.
+Interactive shiny app, sporting all the algorithms above. The parameters for the corresponding algorithms, which can be selected via a menu, are always displayed on the left side for the currently selected algorithm. The corresponding plot on the right hand side is displayed when the "Simulate" button is pressed.
 
 ## 5 Performance considerations
 
