@@ -12,6 +12,12 @@ vignette: >
 # Overview
 ## Contents
 ## Introduction
+
+Estimation algorithms using trees are a popular class of simple regression and classification estimators, due to their simple tractable structure and comparatively fast evaluation.
+This package aims to provide the most popular of these estimators in an easy-to-use implementation.
+
+The given functions are sufficiently fast and versatile to enable the user to explore their behaviour and to experience the effect of their respective hyperparameters. A multitude of visualization methods and an easy to use shiny app leave the user with little to ask for in their quest of evaluating tree-based regression and classification estimators.
+
 #### Why?
 #### What for?
 #### How?
