@@ -127,6 +127,10 @@ cart_greedy_prune <-
     stopifnot("lambda is not numeric and greater or equal to 0" = is.numeric(lambda) &
                 lambda >= 0L)
     # set up parallel
+    if (Sys.info()["sysname"] == "Windows") {
+      message("parallel not supported on windows, setting parallel to FALSE")
+      use_parallel <- FALSE
+    }
     if (use_parallel)
       nbCores <- detectCores() - 1
 
