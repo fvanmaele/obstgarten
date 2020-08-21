@@ -10,6 +10,23 @@ vignette: >
 ---
 
 ## Contents
+1. Introduction
+1. Datenstrukturen
+    1. obst.R 
+1. Algorithmen
+    1. greedy.R 
+    1. bagging.R
+    1. pruning.R
+1. Simulationsstudie
+    1. bv.R
+    1. data.R
+    1. pred.R
+    1. simul.R
+    1. plot3d.R
+1. Shiny
+    1. shiny.R
+1. Performance considerations
+
 ## Introduction
 
 Estimation algorithms using trees are a popular class of simple regression and classification estimators, due to their simple tractable structure and comparatively fast evaluation.
