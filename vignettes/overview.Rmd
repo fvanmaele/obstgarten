@@ -4,12 +4,11 @@ author: "Obstgarten team"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Obstgarten Overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# Overview
 ## Contents
 ## Introduction
 
@@ -18,57 +17,54 @@ This package aims to provide the most popular of these estimators in an easy-to-
 
 The given functions are sufficiently fast and versatile to enable the user to explore their behaviour and to experience the effect of their respective hyperparameters. A multitude of visualization methods and an easy to use shiny app leave the user with little to ask for in their quest of evaluating tree-based regression and classification estimators.
 
-#### Why?
-#### What for?
-#### How?
-
 ## 1 Datenstrukturen
 
-### 1.1 obst.R [@export]
+### 1.1 obst.R 
 
     Gabel
     Baum
 
 ## 2 Algorithmen
 
-### 2.1 greedy.R [@export]
+### 2.1 greedy.R 
+ 
+Generating a single CART using the greedy algorithm, optional sampling. Beiing used in random forests.
 
-Erzeugen eines einzelnen CARTs (gierig), mit oder ohne sampling (Anw. in Random Forests)
+#### 2.1.1 bagging.R 
+ 
+Generating random forests, with or without sampling.
 
-#### 2.1.1 bagging.R [@export]
+#### 2.1.2 pruning.R
 
-Erzeugen mehrerer Bäume ("Wälder"), mit oder ohne sampling (Random Forests)
-
-#### 2.1.2 pruning.R [@export]
-
-Zurückschneiden
+Cost-complexity pruning of a greedily generated CART, according to a given complexity weight. 
 
 ## 3 Simulationsstudie
 
 ### 3.1 bv.R
 
-Bias-Variance
+Bias-variance
 
-### 3.2 data.R [@export]
+### 3.2 data.R 
 
-Erzeugung von zufallsgenerierten Daten
+Generating random data conforming to diverse demands.
 
-### 3.3 pred.R [@export]
+### 3.3 pred.R 
 
-Prediction/MSE von CARTs
+Prediction/MSE of CARTs
 
 ### 3.4 simul.R
 
-Visueller Abgleich (Plots) und Simulationsstudie
+lots and simulation study
 
-### 3.5 plot3d.R [@export]
+### 3.5 plot3d.R 
 
-## 4 3D plotting methods
+3D plotting methods
 
 ## 5 Shiny
 
 ### 5.1 shiny.R
 
+Interactive shiny app, sporting all the algorithms above.
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
