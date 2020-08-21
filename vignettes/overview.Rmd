@@ -165,16 +165,17 @@ In order to improve the performance of the greedy-algorithm (which is beeing cal
 
 In the end, those approaches didn lead to noticable gains, mostly the opposite.
 
-**Idea for quantiles:** ab einer gewissen Anzahl an Datenpunkte werden Quantile (`quantile()`) mit einer %-Anzahl an Wahrscheinlichkeiten verwendet für das Minimierungsproblem, anstatt die Datenpunkte selbst.
+**Idea for quantiles:** in order to reduce the complexity-increase associated with the number of observations, one can use quantiles. This means basic pooling of observations into classes which then constitute the elements of further computation. This allows for a flexible reduction of the data-set to manageable sizes. 
 
-`cart_greedy` wird demnach mit folgenden Parametern ergänzt:
+since most other algorithms base on cart-greedy, we implemented this there, leading to great reductions in computational cost while maintaining accuracy as needed.
+
+`cart_greedy` was extended with the following parameters:
 
 * `q_threshold`: minimal amount of data points to use quantiles.
 * `q_pct`: amount of probabilities for `quantile()`, in pct. of the data set size.
 * `type`: `quantile(..., type)`, type of quantile algorithm
 
-Bei Anwenden der `quantile()` Funktion muss weiter beachtet werden, dass diese auf (1-dimensionale) Vektoren gerichtet ist und es muss z.B. `sapply` verwendet werden im höher-dimensionalen Fall.
-
+Using the `quantile()`-function needs heeding of the fact, that it is only applicable to 1-dimensional vectors. For higher dimensions, one can use for example `sapply`. 
 
 
 
