@@ -10,7 +10,8 @@ vignette: >
 ---
 
 ## Contents
-1. Introduction
+Introduction
+
 1. Datenstrukturen
     1. obst.R 
 1. Algorithmen
@@ -147,21 +148,24 @@ Interactive shiny app, sporting all the algorithms above.
 
 ## 5 Performance considerations
 
-Zur Verbesserung der Performance des Greedy-Algorithmus (insbesondere für Zwecke von Bagging und Random Forests) gibt es die folgenden Ansätze:
 
-* Dynamic programming (*top-down*): Speichern von Zwischenresultaten
-* Dynamic programming (*bottum-up*): Baum "von unten" aufbauen
-* Parallelisierung: Bäume parallel erzeugen
-* Quantile: Reduzieren der Menge an Datenpunkte für das Minimierungsproblem
+In order to improve the performance of the greedy-algorithm (which is beeing called repeatedly in bagging, pruning an random forests), there are the following approaches:
 
-**Dynamic programming** hat sich zunächst als problematisch erwiesen; insbesondere das Paket *memoize* hat in einfachen Tests zu enormen (bis zu -700%) Einbussen in der Performance geführt. 
+* Dynamic programming (*top-down*): memorization of intermediate results
+* Dynamic programming (*bottum-up*): build up the tree from below
+* Parallelization: split the algorithms at the highest sensible layer into parallel threads
+* Quantiles: reduce the amount of data-points for the minimization-problem 
 
-**Parallelisierung** ist für random forests bzw. bagging einfach durchführbar, da die benötigten Bäume unabhängig von einander erzeugt werden können. In R kann dazu das `parallel` (Teil von R) verwendet werden. Meist werden dazu parallelisierte Versionen von `sapply`, `apply` oder `lapply` verwendet. (`for` schleifen können mit `foreach %dopar%` parallelisiert werden, was aber wiederum zu hohen Einbussen führt).
+**Dynamic programming** proved to be problematic. The package *memoize* showed in preliminary tests to lead to enormous (up to 700%) losses in performance.
 
-* Unter *Windows* muss für parallele Prozesse ("clusters") jede Funktion und jede Variable explizit deklariert werden. Deshalb ist die Parallelisierung hier nur bedingt verwendbar.
-* Unter *Linux* wird `fork()` für parallele Prozesse verwendet, insbesondere werden jegliche Funktionen und Variablen vererbt und müssen nicht explizit deklariert werden.
+**Parallelization** easy to implement, since the costly loops are generally over the whole tree and can be simply split. The package `parallel` provides derivatives of the `apply`-method. But this works easily only on Linux-systems and has a huge overhead, significantly diminishing the craved results.
 
-**Idee für Quantile:** ab einer gewissen Anzahl an Datenpunkte werden Quantile (`quantile()`) mit einer %-Anzahl an Wahrscheinlichkeiten verwendet für das Minimierungsproblem, anstatt die Datenpunkte selbst.
+* On *Windows*-machines, there are no child-processes as under Linux, necessitating the usage of a cluster-scheme, which leads to difficulties in actually using functions and variables defined elsewhere, especially in other packages.
+* On *Linux*-machines there is `fork()` for parallel processes, which inherit all data obliviating the need for explicit exportation. But GUI-systems (commonly found on workstations) prohibit the usage of these, since they interfere with their inner workings (leading to frequent but intractabel errors)
+
+In the end, those approaches didn lead to noticable gains, mostly the opposite.
+
+**Idea for quantiles:** ab einer gewissen Anzahl an Datenpunkte werden Quantile (`quantile()`) mit einer %-Anzahl an Wahrscheinlichkeiten verwendet für das Minimierungsproblem, anstatt die Datenpunkte selbst.
 
 `cart_greedy` wird demnach mit folgenden Parametern ergänzt:
 
@@ -171,66 +175,6 @@ Zur Verbesserung der Performance des Greedy-Algorithmus (insbesondere für Zweck
 
 Bei Anwenden der `quantile()` Funktion muss weiter beachtet werden, dass diese auf (1-dimensionale) Vektoren gerichtet ist und es muss z.B. `sapply` verwendet werden im höher-dimensionalen Fall.
 
-
-
-
-
-
-
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
 
 
 
