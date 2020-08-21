@@ -20,7 +20,7 @@ The given functions are sufficiently fast and versatile to enable the user to ex
 
 ```{r setup}
 # library(obstgarten)
-suppressMessages(devtools::load_all())
+#suppressMessages(devtools::load_all())
 suppressMessages(library(obstgarten))
 ```
 
@@ -55,6 +55,7 @@ lst <- as.list(T1$root)
 T1$nodes
 ```
 
+
 ## Algorithms
 
 ### Greedy generation of CARTs
@@ -79,7 +80,6 @@ T2 <- cart_greedy(M, depth=5, threshold=1)
 
 **Note**: The `pred` methods allow for computing the MSE of these algorithms and are used for the Shiny app.
 
-
 ### Bagging
  
 Generate random forests, with or without sampling. This algorithm uses the `cart_greedy` and `cart_predict` methods from the greedy algorithm described above.
@@ -100,13 +100,12 @@ res <- bagging(B=B, x_train=x1, x_test=x2)
 Cost-complexity pruning of a greedily generated CART, according to a given complexity weight. 
 Pruning is a regularization technique which presents a way to decrease computational complexity of empirical estimators as well as simple generalization for overfitting-prone approaches. The cost-complexity parameter lambda controls the amount of regularization.
 
-```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-suppressMessages(simul_plot_pruning())
+```{r}
+XY <- generate_sin_data(100)
+Tp <- cart_greedy_prune(XY, depth = 5, lambda = 0.01)
+res <- cart_prune(Tp[[1]]$root, Tp[[2]])
 ```
-```{r, warning=FALSE, fig.width=7.25, fig.height=5}
-load("data/bv_pruning")
-suppressMessages(bv_plot(bv_data, plot_title = "Pruning Bias-Variance Tradeoff", bagging = FALSE, pruning=TRUE))
-```
+
 
 ## Generation of data 
 
@@ -134,9 +133,11 @@ In the simulation study, the four main methods of this package are compared qual
 
 See [Simulation study](simul.Rmd)
 
+
 ## Shiny application
 
 Interactive shiny app, sporting all the algorithms above.
+
 
 ## Performance considerations
 
@@ -171,8 +172,3 @@ Algorithms such as bagging and random forests generate a large sequence of CARTs
 * On *Linux*-machines there is `fork()` for parallel processes, which inherit all data obliviating the need for explicit exportation. But GUI-systems (commonly found on workstations) prohibit the usage of these, since they interfere with their inner workings (leading to frequent but intractabel errors)
 
 In the end, those approaches did not lead to noticable gains, mostly the opposite.
-
-
-
-
-
