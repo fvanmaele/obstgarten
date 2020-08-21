@@ -95,9 +95,9 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
 
   if (use_parallel) {
     # set up parallel
-    nb_cores <- detectCores()
+    nb_cores <- detectCores() - 1
     predictions <- matrix(unlist(mclapply(
-         cluster_pred, X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B, mc.cores = nbCores)
+      X_B, fit_tree, random_forest, m)), nrow=dim(x_test)[[1]], ncol=B, mc.cores = nb_cores)
   }
   else {
     predictions <- matrix(unlist(lapply(
