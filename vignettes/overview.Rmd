@@ -113,7 +113,12 @@ See: [Richter, Definition 6.25, 6.26, 6.28, 6.52]
 x1 <- generate_sin_data(500)
 x2 <- generate_sin_data(100)
 B <- sample(1:10, 1)
-res <- bagging(B=B, x_train=x1, x_test=x2)
+res_bagging <- bagging(B=B, x_train=x1, x_test=x2)
+
+x1 <- generate_sin_2D(500)
+x2 <- generate_sin_2D(100)
+B <- sample(1:10, 1)
+res_random_forest <- bagging(B=B, x_train=x1, x_test=x2, random_forest = T)
 ```
 
 ### Pruning
