@@ -9,7 +9,6 @@ cart_greedy_prune(
   depth = 10L,
   mode = "regression",
   threshold = 1L,
-  sample = FALSE,
   random = FALSE,
   m = 0L,
   quantile = FALSE,
@@ -30,8 +29,6 @@ cart_greedy_prune(
 a regression or classification tree, respectively. Default is "regression"}
 
 \item{threshold}{The minimum amount of data points for dividing a leaf (\code{integer})}
-
-\item{sample}{Use \code{sample()} to (\code{logical})}
 
 \item{random}{generates CART for random forest (\code{logical}, default \code{FALSE})}
 
@@ -58,11 +55,6 @@ A regression or classification tree modeled after the training data
 \description{
 Create a regression or classification tree greedily based
 on training data. Then prune it according to cost-complexity trade-off
-}
-\details{
-Unless \code{sample} is set to \code{TRUE}, it is required that there are no observations
-\eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
-X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
 }
 \examples{
 cart_greedy_prune(generate_sin_data(100, sigma=0.2), depth=5, threshold=1, lambda = 0.01)

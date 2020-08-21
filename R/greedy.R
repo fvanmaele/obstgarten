@@ -143,16 +143,11 @@ R_min <- function(A, d, mode = "regression", ...) {
 #' Greedy algorithm for CART
 #' @description Create a regression or classification tree tree greedily based
 #' on training data.
-#' @details
-#' Unless `sample` is set to `TRUE`, it is required that there are no observations
-#' \eqn{(X_{i_1}, Y_{i_1})} and \eqn{(X_{i_2}, Y_{i_2})} with \eqn{X_{i_1} =
-#' X_{i_2}}, but \eqn{Y_{i_1} \neq Y_{i_2}}.
 #' @param XY matrix with columns \eqn{1..d} (representing the training data
 #'   \eqn{X_i}) and column \eqn{y} (for the values \eqn{Y_i}).
 #' @param depth The amount of steps before halting the algorithm (defaults to
 #'   10)
 #' @param threshold The minimum amount of data points for dividing a leaf (`integer`)
-#' @param sample Use `sample()` to (`logical`)
 #' @param mode `regression` or `classification` specifies whether to train
 #'   a regression or classification tree, respectively. Default is "regression"
 #' @param random generates CART for random forest (`logical`, default `FALSE`)
@@ -170,12 +165,11 @@ R_min <- function(A, d, mode = "regression", ...) {
 #' @examples cart_greedy(generate_sin_data(100) , depth=5, threshold=1)
 #' @export
 cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
-                        sample = FALSE, random = FALSE, m = 0L,
-                        quantile = FALSE, q_threshold = 100L, q_pct = 0.25) {
+                        random = FALSE, m = 0L, quantile = FALSE,
+                        q_threshold = 100L, q_pct = 0.25) {
   stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
   stopifnot("depth is not numeric and greater than 0"= is.numeric(depth) & depth > 0L)
   stopifnot("threshold is not numeric and greater than 0"= is.numeric(threshold) & threshold > 0L)
-  stopifnot("sample is not logical"= is.logical(sample))
   stopifnot("random is not logical"= is.logical(random))
   d <- ncol(XY) - 1L
 
@@ -184,14 +178,6 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
     # random number of leaves
     t <- sample((n/2):n, 1) # TODO: not sure if t is defined correctly
     # print(str_c("t ", t))
-  }
-
-  # Check data for duplicates (cf. [Richter 1.2, p.9])
-  # TODO: add test for this case
-  if (sample == TRUE) {
-    stop("function not implemented")
-  } else {
-
   }
 
   # Initialize regression tree
