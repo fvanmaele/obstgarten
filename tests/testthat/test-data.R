@@ -50,12 +50,12 @@ test_that("generate_mult_data", {
   expect_length(data[[3]], d*d)
 })
 
-# TODO: test fails for certain values of tsr, unsure why...
-# test_that("prepare_iris", {
-#   tsr <- sample(1:9,1)/10
-#   data <- prepare_iris(training_set_ratio=tsr)
-#   expect_length(data[[1]][[1]], tsr*150)
-#   expect_length(data[[2]][[1]], (1-tsr)*150)
-# })
-
+test_that("prepare_iris", {
+  for (tsr in (1:9)/10) {
+    data <- prepare_iris(training_set_ratio=tsr)
+    tsr_c <- 1-tsr
+    expect_length(data[[1]][[1]], as.integer(round(tsr*150)))
+    expect_length(data[[2]][[1]], as.integer(round(tsr_c*150)))
+  }
+})
 
