@@ -199,6 +199,8 @@ Using the `quantile()`-function needs heeding of the fact, that it is only appli
 Algorithms such as pruning, bagging and random forests generate a large sequence of CARTs. These trees are independent, and can thus be generated in an independent manner. The package `parallel` provides derivatives of the `apply`-method.  But this works easily only on Linux-systems and has a huge overhead, significantly diminishing the craved results.
 
 * On *Windows*-machines, there are no child-processes as under Linux, necessitating the usage of a cluster-scheme, which leads to difficulties in actually using functions and variables defined elsewhere, especially in other packages.
-* On *Linux*-machines there is `fork()` for parallel processes, which inherit all data obliviating the need for explicit exportation. But GUI-systems (commonly found on workstations) prohibit the usage of these, since they interfere with their inner workings (leading to frequent but intractabel errors)
+* On *Linux*-machines there is `fork()` for parallel processes, which inherit all data obliviating the need for explicit exportation. But GUI-systems (commonly found on workstations) prohibit the usage of these, since they interfere with their inner workings (leading to frequent but intractable errors)
 
-In the end, those approaches did not lead to noticable gains, mostly the opposite.
+In the end, those approaches did not lead to noticeable gains, mostly the opposite.
+
+In the case of pruning, adapting the basic data-structure Baum so as to use logical lists to mask the pruned subtrees reduced memory bandwidth and thereby led to a significant gain in speed.
