@@ -194,9 +194,9 @@ since most other algorithms base on cart-greedy, we implemented this there, lead
 
 Using the `quantile()`-function needs heeding of the fact, that it is only applicable to 1-dimensional vectors. For higher dimensions, one can use for example `sapply`. 
 
-### Random Forests
+### Pruning, Bagging and Random Forests
 
-Algorithms such as bagging and random forests generate a large sequence of CARTs. These trees are independent, and can thus be generated in an independent manner. The package `parallel` provides derivatives of the `apply`-method.  But this works easily only on Linux-systems and has a huge overhead, significantly diminishing the craved results.
+Algorithms such as pruning, bagging and random forests generate a large sequence of CARTs. These trees are independent, and can thus be generated in an independent manner. The package `parallel` provides derivatives of the `apply`-method.  But this works easily only on Linux-systems and has a huge overhead, significantly diminishing the craved results.
 
 * On *Windows*-machines, there are no child-processes as under Linux, necessitating the usage of a cluster-scheme, which leads to difficulties in actually using functions and variables defined elsewhere, especially in other packages.
 * On *Linux*-machines there is `fork()` for parallel processes, which inherit all data obliviating the need for explicit exportation. But GUI-systems (commonly found on workstations) prohibit the usage of these, since they interfere with their inner workings (leading to frequent but intractabel errors)
