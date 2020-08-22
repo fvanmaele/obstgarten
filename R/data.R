@@ -111,8 +111,7 @@ generate_mult_data <- function(n, d, sd=0.01, mu=NULL, sigma=NULL) {
 #' @return 150 x 5 data.frame
 #' @export
 load_iris <- function() {
-  data("iris")
-  return(iris)
+  datasets::iris
 }
 
 #' prepare_iris
