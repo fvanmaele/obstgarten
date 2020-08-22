@@ -121,13 +121,17 @@ res_random_forest <- bagging(B=B, x_train=x1, x_test=x2, random_forest = T)
 
 ### Pruning
 
-Cost-complexity pruning of a greedily generated CART, according to a given complexity weight. 
-Pruning is a regularization technique which presents a way to decrease computational complexity of empirical estimators as well as simple generalization for overfitting-prone approaches. The cost-complexity parameter lambda controls the amount of regularization.
+Creates a CART with the geedy algorithm and prunes it according to the Cost-complexity algorithm with a given complexity weight.
 
-```{r}
+Pruning is a regularization technique which presents a way to decrease computational complexity of empirical estimators as well as simple generalization for overfitting-prone approaches. 
+
+The cost-complexity parameter lambda controls the amount of regularization.
+
+See: [Richter, Definitions 6.18, 6.19, 6.20]
+
+```{r, warning=FALSE}
 XY <- generate_sin_data(100)
-Tp <- cart_greedy_prune(XY, depth = 5, lambda = 0.01)
-res <- cart_prune(Tp[[1]]$root, Tp[[2]])
+cart_greedy_prune(XY, depth = 5, lambda = 0.01)
 ```
 
 
