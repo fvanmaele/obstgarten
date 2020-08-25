@@ -125,11 +125,13 @@ load_iris <- function() {
 #' @param training_split_indices Vector of Integers specifying which rows of the
 #' full set should be taken to be in the training set. Default is NULL. If default
 #' rows are chosen randomly
+#' @param sigma positive double vector: Specifying the amount of N(0, sigma) noise
+#' each feature is noised with
 #'
 #' @return Classification Training and Classification Test Set
 #' @import dplyr
 #' @export
-prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) {
+prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL, sigma=0.0001) {
   iris <- load_iris()
 
   iris$Species <- as.integer(iris$Species)
@@ -138,6 +140,11 @@ prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL) 
   iris$Species[iris$Species == "setosa"] <- 1L
   iris$Species[iris$Species == "versicolor"] <- 2L
   iris$Species[iris$Species == "virginica"] <- 3L
+
+  # noising the data
+  eps <- matrix(rnorm(nrow(iris)*(ncol(iris)-1), mean=0, sd=sigma),
+                nrow=nrow(iris), ncol=ncol(iris)-1)
+  iris[1:4] <- iris[1:4] + eps
 
   rename(iris, y=Species) -> iris
 
