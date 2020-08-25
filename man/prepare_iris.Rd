@@ -4,7 +4,11 @@
 \alias{prepare_iris}
 \title{prepare_iris}
 \usage{
-prepare_iris(training_set_ratio = 0.8, training_split_indices = NULL)
+prepare_iris(
+  training_set_ratio = 0.8,
+  training_split_indices = NULL,
+  sigma = NULL
+)
 }
 \arguments{
 \item{training_set_ratio}{double between 0 and 1 specifies the training test
@@ -13,6 +17,9 @@ set ratio}
 \item{training_split_indices}{Vector of Integers specifying which rows of the
 full set should be taken to be in the training set. Default is NULL. If default
 rows are chosen randomly}
+
+\item{sigma}{positive double vector: Specifying the amount of N(0, sigma) noise
+each feature is noised with}
 }
 \value{
 Classification Training and Classification Test Set

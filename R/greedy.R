@@ -164,7 +164,7 @@ R_min <- function(A, d, mode = "regression", ...) {
 #'
 #' @examples cart_greedy(generate_sin_data(100) , depth=5, threshold=1)
 #' @export
-#' @importFrom utils tail
+#' @importFrom utils tail head
 cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
                         random = FALSE, m = 0L, quantile = FALSE,
                         q_threshold = 100L, q_pct = 0.25) {
@@ -200,15 +200,28 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
         S <- 1:(d+1)
         m <- d
       }
+      # remove last column (U = X_i1..X_im)
+      U <- head(S, -1)
       # optimal subdivision
-      if(nrow(unique(node$points[, S, drop=FALSE])) > threshold) {
+      if(nrow(unique(node$points[, U, drop=FALSE])) > threshold) {
+        # XXX: workaround for non-well defined data: (Richter, p.9) pairs
+        # (X, Y_i), (X, Y_j) with i \neq j, Y_i \neq Y_j and X equal
+        # in this case, take a single row (X, Y_i)
+        # https://i.imgur.com/3vYGLzP.jpg
+        nrow_Y <- nrow(unique(node$points[, S, drop=FALSE])) # nrow(unique(X_i1..X_im))
+        nrow_X <- nrow(unique(node$points[, U, drop=FALSE])) # nrow(unique(Y))
+        if (nrow_X < nrow_Y) {
+          # XXX: sample rows for R_min function (here: first row)
+          warning("data not well defined, choosing unique rows")
+          node$points <- node$points[row.names(unique(node$points[, U, drop=FALSE])),]
+        }
         # TODO: pass correct range to R_min (instead of d -> 1:d)
         # minimize with j out of S
         params <- R_min(node$points[, S, drop=FALSE], m, mode = mode,
                         quantile = quantile, q_threshold = q_threshold, q_pct = q_pct)
+        #params$j <- S[params$j]
         stopifnot(all(!is.na(params$j), !is.infinite(params$j)))
         stopifnot(all(!is.na(params$s), !is.infinite(params$s)))
-        #params$j <- S[params$j]
 
         # update attributes of parent
         # TODO: pass correct range to R_min (instead of S[params$j])

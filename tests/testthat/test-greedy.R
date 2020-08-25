@@ -116,3 +116,9 @@ test_that("cart_predict", {
   }
   expect_equal(res, M[, "y"])
 })
+
+test_that("cart_greedy, malformed data", {
+  XY <- data.frame(x1 = c(1.5, 1.5, 2), x2 = c(2.2, 2.2, 3), y = c(2, 3, 2))
+  T2 <- cart_greedy(XY, depth=5, threshold=1)
+  expect_null(T2$validate())
+})
