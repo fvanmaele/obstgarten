@@ -164,6 +164,7 @@ R_min <- function(A, d, mode = "regression", ...) {
 #'
 #' @examples cart_greedy(generate_sin_data(100) , depth=5, threshold=1)
 #' @export
+#' @importFrom utils tail
 cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
                         random = FALSE, m = 0L, quantile = FALSE,
                         q_threshold = 100L, q_pct = 0.25) {
