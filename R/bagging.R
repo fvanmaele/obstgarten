@@ -47,7 +47,6 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
   nb_samples <- dim(x_train)[1]
   nb_test_samples <- dim(x_test)[1]
   predictions <- matrix(rep(0., nb_test_samples * B), nrow=nb_test_samples, ncol=B)
-  trees <- list()
 
   majorityVote <- function(vector) {
     return (names(which.max(table(vector))))
@@ -57,12 +56,12 @@ bagging <- function(B, x_train, x_test, depth=5, m=NULL, regression=TRUE, use_pa
   fit_tree <- function(x_b, random, m) {
     # (over-)fitting tree to bootstrap sample via CART algorithm
     # dimnames(x_b) <- list(NULL, c(1, "y"))
-    trees[[i]] <- cart_greedy(x_b, depth=depth, mode = mode, threshold=1, random = random,
+    tree <- cart_greedy(x_b, depth=depth, mode = mode, threshold=1, random = random,
                               m = m, quantile = quantile, q_threshold = q_threshold, q_pct = q_pct) # return cart for x_b
-    trees[[i]]$validate()
+    tree$validate()
 
     predict <- function(x) {
-      return(cart_predict(x, node=trees[[i]]$root))
+      return(cart_predict(x, node=tree$root))
     }
 
     if (regression) return(apply(x_test[, -ncol(x_test), drop=FALSE], MARGIN=1, predict))
