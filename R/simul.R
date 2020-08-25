@@ -126,7 +126,7 @@ compare_performance <- function(n, B, depth, sd, k=10, random_forest=TRUE, reps=
   }
 
   ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat)
-  save("ret", file=str_c("data/simul/","performance_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+   # save("ret", file=str_c("data/simul/","performance_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
@@ -185,7 +185,7 @@ compare_methods_PE <- function(d, n, B=25L, reps=400) {
   }
 
   ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat)
-  save("ret", file=str_c("data/simul/","pe_compare_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  # save("ret", file=str_c("data/simul/","pe_compare_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
@@ -241,7 +241,7 @@ compare_m_PE <- function(m_list, d, n, B, reps=400) {
   }
 
   ret <- list(apply(pe_mat, MARGIN=2, mean), pe_mat, params_list)
-  save("ret", file=str_c("data/simul/","pe_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  # save("ret", file=str_c("data/simul/","pe_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
@@ -287,7 +287,7 @@ compare_m <- function(m_list, d, n, B) {
   ret[(ncol(ret)+1):(ncol(ret)+length(m_list))] <- pred_mat
 
   names(ret)[(length(names(ret))-3):length(names(ret))] <- str_c("m", 1:length(m_list))
-  save("ret", file=str_c("data/simul/","compare_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  # save("ret", file=str_c("data/simul/","compare_RF_m_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
@@ -335,7 +335,8 @@ compare_methods <- function(d, n, B=100L) {
   pred <- bagging(B=B, x_train=xy, x_test=xy_test, random_forest=TRUE, regression=TRUE, use_parallel=FALSE, quantile=TRUE)
   ret$rf <- pred
 
-  save("ret", file=str_c("data/simul/","compare_methods_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  ret
+  # save("ret", file=str_c("data/simul/","compare_methods_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 
 }
 
@@ -425,8 +426,10 @@ compare_classify_iris <- function(depth=5L, B=10L, h=FALSE) {
   ret$rf <- pred
 
   if (h) return(ret)
-  else save("ret", file=str_c("data/simul/","compare_iris_", format(Sys.time(), "%Y%m%d-%H%M%S")))
-
+  else {
+    ret
+    # save("ret", file=str_c("data/simul/","compare_iris_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  }
 }
 
 #' Calculate Accuracy
@@ -460,7 +463,7 @@ calc_mean_accuracy <- function(reps=100) {
   }
   ret <- apply(mat, MARGIN=2, mean)
   print(ret)
-  save("ret", file=str_c("data/simul/","iris_mean_", format(Sys.time(), "%Y%m%d-%H%M%S")))
+  # save("ret", file=str_c("data/simul/","iris_mean_", format(Sys.time(), "%Y%m%d-%H%M%S")))
 }
 
 # compare_methods(d=5, n=100, B=10L)
