@@ -130,7 +130,8 @@ load_iris <- function() {
 #' @return Classification Training and Classification Test Set
 #' @import dplyr
 #' @export
-prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL, sigma=0.0001) {
+prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL,
+                         sigma=NULL) {
   iris <- load_iris()
 
   iris$Species <- as.integer(iris$Species)
@@ -140,10 +141,12 @@ prepare_iris <- function(training_set_ratio = 0.8, training_split_indices=NULL, 
   iris$Species[iris$Species == "versicolor"] <- 2L
   iris$Species[iris$Species == "virginica"] <- 3L
 
-  # noising the data
-  eps <- matrix(rnorm(nrow(iris)*(ncol(iris)-1), mean=0, sd=sigma),
-                nrow=nrow(iris), ncol=ncol(iris)-1)
-  iris[1:4] <- iris[1:4] + eps
+  if (!is.null(sigma)) {
+    # noising the data
+    eps <- matrix(rnorm(nrow(iris)*(ncol(iris)-1), mean=0, sd=sigma),
+                  nrow=nrow(iris), ncol=ncol(iris)-1)
+    iris[1:4] <- iris[1:4] + eps
+  }
 
   rename(iris, y=Species) -> iris
 
