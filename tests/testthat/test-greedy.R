@@ -119,6 +119,11 @@ test_that("cart_predict", {
 
 test_that("cart_greedy, malformed data", {
   XY <- data.frame(x1 = c(1.5, 1.5, 2), x2 = c(2.2, 2.2, 3), y = c(2, 3, 2))
-  T2 <- cart_greedy(XY, depth=5, threshold=1)
+  T2 <- cart_greedy(XY)
   expect_null(T2$validate())
+
+  XY <- matrix(c(1.5, 1.5, 2, 2.2, 2.2, 3, 2, 3, 2), nrow=3)
+  dimnames(XY) <- list(NULL, c(1, 2, "y"))
+  T3 <- cart_greedy(XY)
+  expect_null(T3$validate())
 })

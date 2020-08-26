@@ -17,7 +17,7 @@ cart_part(s, j, A)
 \code{list} with the following elements:
 \itemize{
 \item \verb{$A1}: The rows \code{A[, j] < s}
-\item \verb{$A2}: The rows \code{A[, j] >= s} (taken by complment)
+\item \verb{$A2}: The rows \code{A[, j] >= s} (taken by complement)
 }
 }
 \description{

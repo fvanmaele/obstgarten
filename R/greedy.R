@@ -6,7 +6,7 @@
 #'
 #' @return `list` with the following elements:
 #' - `$A1`: The rows `A[, j] < s`
-#' - `$A2`: The rows `A[, j] >= s` (taken by complment)
+#' - `$A2`: The rows `A[, j] >= s` (taken by complement)
 #' @export
 #'
 #' @examples cart_part(0.5,1,generate_sin_data(10))
@@ -169,6 +169,7 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
                         random = FALSE, m = 0L, quantile = FALSE,
                         q_threshold = 100L, q_pct = 0.25) {
   stopifnot("XY is not an data.frame with more than one col and row"= (is.data.frame(XY) | is.matrix(XY)) & ncol(XY) > 1 & nrow(XY) > 1)
+  stopifnot("XY does not have an y column"= "y" %in% colnames(XY))
   stopifnot("depth is not numeric and greater than 0"= is.numeric(depth) & depth > 0L)
   stopifnot("threshold is not numeric and greater than 0"= is.numeric(threshold) & threshold > 0L)
   stopifnot("random is not logical"= is.logical(random))
@@ -213,7 +214,7 @@ cart_greedy <- function(XY, depth = 10L, mode="regression", threshold = 1L,
         if (nrow_X < nrow_Y) {
           # XXX: sample rows for R_min function (here: first row)
           warning("data not well defined, choosing unique rows")
-          node$points <- node$points[row.names(unique(node$points[, U, drop=FALSE])),]
+          node$points <- node$points[!duplicated(node$points[, U, drop=FALSE]), ]
         }
         # TODO: pass correct range to R_min (instead of d -> 1:d)
         # minimize with j out of S
